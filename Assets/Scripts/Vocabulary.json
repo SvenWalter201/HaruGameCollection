@@ -1,0 +1,27 @@
+﻿{
+  "template": [
+    "<at> the @position@ there <is> <a> @object@."
+  ],
+  "position": [
+
+  ],
+  "person": [
+    "grandma",
+    "boy",
+    "girl",
+    "construction worker",
+    "nurse"
+  ],
+  "animal": [
+    "cat",
+    "dog",
+    "parrot"
+  ],
+  "object": [
+    "house",
+    "tree",
+    "skyscraper",
+    "bush",
+    "lantern"
+  ]
+}
