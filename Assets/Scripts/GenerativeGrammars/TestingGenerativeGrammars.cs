@@ -1,13 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using Newtonsoft.Json;
+//using System.Text.Json;
 
 public class TestingGenerativeGrammars : MonoBehaviour
 {
+    private const string fileName = "/Resources/Vocabulary.json";
+    private Vocabulary vocabulary;
+
+    private void GetVocabulary()
+    {
+        string appDataPath = Application.dataPath;
+        string filePath = appDataPath + fileName;
+        string jsonString = File.ReadAllText(filePath);        
+        vocabulary = JsonConvert.DeserializeObject<Vocabulary>(jsonString);
+    }
+
+    private string GetThing()
+    {
+        int r = Random.Range(0, vocabulary.thing.Length);
+        return vocabulary.thing[r];
+    }
+
+    private string GetPosition()
+    {
+        int r = Random.Range(0, vocabulary.position.Length);
+        return vocabulary.position[r];
+    }
 
     public void GenerateSentence()
     {
-        string sentence = FillInTemplate("<at> the @position@ there <is> <a> @object@");
+        GetVocabulary();
+        string sentence = FillInTemplate("<at> the @position@ there <is> <a> @thing@");
         Debug.Log(sentence);
     }
 
@@ -25,7 +51,7 @@ public class TestingGenerativeGrammars : MonoBehaviour
                     }
                 case "position":
                     {
-                        replacement = "left";
+                        replacement =GetPosition();
                         break;
                     }
                 case "animal":
@@ -33,9 +59,9 @@ public class TestingGenerativeGrammars : MonoBehaviour
                         replacement = "randomAnimal";
                         break;
                     }
-                case "object":
+                case "thing":
                     {
-                        replacement = "tree";
+                        replacement = GetThing();
                         break;
                     }
             }

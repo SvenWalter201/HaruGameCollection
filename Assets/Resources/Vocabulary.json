@@ -3,7 +3,11 @@
     "<at> the @position@ there <is> <a> @object@."
   ],
   "position": [
-
+    "left",
+    "right",
+    "top",
+    "bottom",
+    "middle"
   ],
   "person": [
     "grandma",
@@ -17,7 +21,7 @@
     "dog",
     "parrot"
   ],
-  "object": [
+  "thing": [
     "house",
     "tree",
     "skyscraper",
