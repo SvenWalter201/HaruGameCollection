@@ -1,0 +1,359 @@
+Fragenkatalog
+{
+        "question": "How many rings are on the Olympic flag?",
+        "awnsers": [
+            "3",
+            "4",
+            "5",
+            "7"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+	"question": "In darts, what's the most points you can score with a single throw?",
+        "awnsers": [
+            "20",
+            "50",
+            "60",
+            "100"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "Which of these animals does NOT appear in the Chinese zodiac?",
+        "awnsers": [
+            "Rabbit",
+            "Dragon",
+            "Pig",
+            "Bear"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "How many holes are on a standard bowling ball?",
+        "awnsers": [
+            "3",
+            "2",
+            "5",
+            "10"
+        ],
+        "trueAnswer": 0
+
+    },
+{
+
+	"question": "What are the main colors on the flag of Spain?",
+        "awnsers": [
+            "Red and White",
+            "Red and Yellow",
+            "Yellow and White",
+            "Red and White"
+        ],
+        "trueAnswer": 1
+
+    },
+{
+
+	"question": "Which big cat can run the fastest?",
+        "awnsers": [
+            "Tiger",
+            "Puma",
+            "Cheetah",
+            "Lion"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "Which of the following animals doesn't have a brain?",
+        "awnsers": [
+            "Sea slug",
+            "Starfish",
+            "Shark",
+            "Ant"
+        ],
+        "trueAnswer": 1
+
+    },
+{
+
+	"question": "Which of these words do not fit in? Pick one",
+        "awnsers": [
+            "Love",
+            "Glove",
+            "Scarf",
+            "Hat"
+        ],
+        "trueAnswer": 0
+
+    },
+{
+
+	"question": "How many teeth does an adult have?",
+        "awnsers": [
+            "26",
+            "30",
+            "32",
+            "36"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "What is the largest organ of the human body?",
+        "awnsers": [
+            "Brain",
+            "Skin",
+            "Intestine",
+            "Heart"
+        ],
+        "trueAnswer": 1
+
+    },
+{
+
+	"question": "Who wrote 'Romeo and Juliet'?",
+        "awnsers": [
+            "Leonardo da Vinci",
+            "Johann Wolfgang von Goethe",
+            "Jane Austen",
+            "William Shakespeare"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "What is the capital of Canada?",
+        "awnsers": [
+            "Ottawa",
+            "Toronto",
+            "Montreal",
+            "Calgary"
+        ],
+        "trueAnswer": 0
+
+    },
+{
+
+	"question": "What is the percentage of earth surface which is covered by water?",
+        "awnsers": [
+            "2%",
+            "40%",
+            "85%",
+            "70%"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "When did the first World War end?",
+        "awnsers": [
+            "1915",
+            "1918",
+            "1933",
+            "1945"
+        ],
+        "trueAnswer": 1
+
+    },
+{
+
+	"question": "How many legs does a Spider have?",
+        "awnsers": [
+            "8",
+            "6",
+            "4",
+            "7"
+        ],
+        "trueAnswer": 0
+
+    },
+{
+
+	"question": "How many planets are in our solar system?",
+        "awnsers": [
+            "4",
+            "10",
+            "8",
+            "12"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "Which country has the highest population?",
+        "awnsers": [
+            "England",
+            "South Africa",
+            "India",
+            "China"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "Where is the Eiffel Tower located?",
+        "awnsers": [
+            "London",
+            "Paris",
+            "New York",
+            "Berlin"
+        ],
+        "trueAnswer": 1
+
+    },
+{
+
+	"question": "Which is the largest continent?",
+        "awnsers": [
+            "Africa",
+            "Antarctica",
+            "Asia",
+            "Europe"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "Which is the passanger ship that collided with an iceberg and sank in 1912?",
+        "awnsers": [
+            "Titanium",
+            "MS Amadea",
+            "MS Amera",
+            "Titanic"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "What function do the ears have besides hearing?",
+        "awnsers": [
+            "Air purification",
+            "Sense of balance",
+            "Heat resevoir",
+            "Hormone production"
+        ],
+        "trueAnswer": 1
+
+    },
+{
+
+	"question": "What color do you get when you mix blue and yellow?",
+        "awnsers": [
+            "Yellow",
+            "Red",
+            "Violet",
+            "Green"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "How many meters equal one kilometer?",
+        "awnsers": [
+            "1.000 m",
+            "100 m",
+            "10.000 m",
+            "100.000 m"
+        ],
+        "trueAnswer": 0
+
+    },
+{
+
+	"question": "What is the biggest mammal in the world?",
+        "awnsers": [
+            "Dolphin",
+            "Elephant",
+            "Blue whale",
+            "Giraffe"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "What color do you get when you mix red and yellow?",
+        "awnsers": [
+            "Blue",
+            "Green",
+            "Orange",
+            "Pink"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "What do you call a rectangle with all sides the same length?",
+        "awnsers": [
+            "Cylinder",
+            "Oblong",
+            "Square",
+            "Pyramid"
+        ],
+        "trueAnswer": 2
+
+    },
+{
+
+	"question": "Which of these animals sleeps standing up?",
+        "awnsers": [
+            "Hedgehogs",
+            "Ravens",
+            "Foxes",
+            "Flamingos"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "Which is the largest ocean in the world?",
+        "awnsers": [
+            "Arctic Ocean",
+            "Indian Ocean",
+            "Atlantic Ocean",
+            "Pacific Ocean"
+        ],
+        "trueAnswer": 3
+
+    },
+{
+
+	"question": "Where is the smallest bone in the human body located?",
+        "awnsers": [
+            "In the Ear",
+            "In the Finger",
+            "In the Nose",
+            "In the Wrist"
+        ],
+        "trueAnswer": 0
+
+    },
+{
+
+	"question": "Which blood type is compatible with any blood types?",
+        "awnsers": [
+            "A",
+            "B",
+            "AB",
+            "O"
+        ],
+        "trueAnswer": 3
+
+    }
