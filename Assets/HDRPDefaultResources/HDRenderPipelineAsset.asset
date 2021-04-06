@@ -225,7 +225,7 @@ MonoBehaviour:
     customBufferFormat: 12
     supportedLitShaderMode: 2
     planarReflectionResolution:
-      m_Values: 000100000004000000080000
+      m_Values: 000100000004000000040000
       m_SchemaId:
         m_Id: With3Levels
     supportDecals: 1
@@ -340,12 +340,12 @@ MonoBehaviour:
       - 8
       - 13
       DoFResolution: 040000000200000001000000
-      DoFHighQualityFiltering: 
-      DoFPhysicallyBased: 
+      DoFHighQualityFiltering: []
+      DoFPhysicallyBased: []
       MotionBlurSampleCount: 04000000080000000c000000
       BloomRes: 040000000200000002000000
-      BloomHighQualityFiltering: 
-      BloomHighQualityPrefiltering: 
+      BloomHighQualityFiltering: []
+      BloomHighQualityPrefiltering: []
       ChromaticAberrationMaxSamples: 03000000060000000c000000
     lightSettings:
       useContactShadow:
@@ -365,9 +365,9 @@ MonoBehaviour:
         m_Id: With3Levels
     lightingQualitySettings:
       AOStepCount: 040000000600000010000000
-      AOFullRes: 
+      AOFullRes: []
       AOMaximumRadiusPixels: 200000002800000050000000
-      AOBilateralUpsample: 
+      AOBilateralUpsample: []
       AODirectionCount: 010000000200000004000000
       ContactShadowSampleCount: 060000000a00000010000000
       SSRMaxRaySteps: 100000002000000040000000
@@ -376,7 +376,7 @@ MonoBehaviour:
       - 3
       - 20
       RTAOSampleCount: 010000000200000008000000
-      RTAODenoise: "\x01\x01\x01"
+      RTAODenoise: "\u0452"
       RTAODenoiserRadius:
       - 0.25
       - 0.5
@@ -385,19 +385,19 @@ MonoBehaviour:
       - 50
       - 50
       - 50
-      RTGIFullResolution: 
+      RTGIFullResolution: []
       RTGIClampValue:
       - 0.5
       - 0.8
       - 1.5
       RTGIUpScaleRadius: 040000000400000004000000
-      RTGIDenoise: "\x01\x01\x01"
-      RTGIHalfResDenoise: "\x01"
+      RTGIDenoise: "\u0452"
+      RTGIHalfResDenoise: []
       RTGIDenoiserRadius:
       - 0.75
       - 0.5
       - 0.25
-      RTGISecondDenoise: "\x01\x01\x01"
+      RTGISecondDenoise: "\u0452"
       RTGISecondDenoiserRadius:
       - 0
       - 0
@@ -419,8 +419,8 @@ MonoBehaviour:
       - 1
       - 1.2
       RTRUpScaleRadius: 040000000400000003000000
-      RTRFullResolution: 
-      RTRDenoise: "\x01\x01\x01"
+      RTRFullResolution: []
+      RTRDenoise: "\u0452"
       RTRDenoiserRadius: 080000000c00000010000000
       Fog_ControlMode: 000000000000000000000000
       Fog_Budget:
