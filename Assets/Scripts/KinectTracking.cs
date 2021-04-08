@@ -15,6 +15,7 @@ public class KinectTracking : MonoBehaviour
     public bool showColorImage;
     public bool showDepthImage;
 
+
     public void Init()
     {
         KinectDeviceManager.Instance.Init();

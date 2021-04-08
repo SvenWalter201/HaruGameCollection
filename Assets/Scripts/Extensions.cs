@@ -5,9 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Kinect.Sensor;
 using UnityEngine;
+using System.Numerics;
 
 public static class Extensions
 {
+    public static UnityEngine.Vector3 ToUnityVector3(this System.Numerics.Vector3 vec)
+    {
+        return new UnityEngine.Vector3(vec.X, vec.Y, vec.Z);
+    }
+
     public static Color[] CreateColourMap(this Image image, double dpiX = 300, double dpiY = 300)
     {
         Color[] pixels;

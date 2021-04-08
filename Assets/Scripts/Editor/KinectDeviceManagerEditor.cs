@@ -41,7 +41,7 @@ public class KinectDeviceManagerEditor : Editor
 
     private void OnEnable()
     {
-        EditorApplication.update += OnSceneGUI;
+        //EditorApplication.update += OnSceneGUI;
         kinectDeviceManager = target as KinectDeviceManager;
     }
 }

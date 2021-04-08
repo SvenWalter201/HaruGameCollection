@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.Azure.Kinect.Sensor;
+using Microsoft.Azure.Kinect.BodyTracking;
 using UnityEngine;
 
 public class KinectDeviceManager : Singleton<KinectDeviceManager>
 {
 
     public ImageType imageType;
+    public SkeletonDisplay skeletonDisplay;
 
     public ColorResolution colorResolution;
     public ImageFormat colorFormat;
@@ -41,12 +43,24 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     public int width;
     public int height;
-    public Color[] pixels;
+    private Color[] pixels;
 
     private bool applicationRunning = false;
 
+    private void Start()
+    {
+        Init();
+    }
+
+    private void OnApplicationQuit()
+    {
+        Close();
+    }
+
     public void Init()
     {
+        skeletonDisplay = SkeletonDisplay.Instance;
+
         int count = Device.GetInstalledCount();
         if (count == 0)
         {
@@ -76,7 +90,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         };
         device.StartCameras(config);
         device.StartImu();
-        var calibration = device.GetCalibration(depthMode, colorResolution);
+        calibration = device.GetCalibration(depthMode, colorResolution);
         transformation = calibration.CreateTransformation();
         colourWidth = calibration.ColorCameraCalibration.ResolutionWidth;
         colourHeight = calibration.ColorCameraCalibration.ResolutionHeight;
@@ -87,7 +101,73 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
         Task.Run(()=>CameraCapture());
         Task.Run(()=> ImuCapture());
+        Task.Run(()=> BodyCapture());
+        
     }
+
+    private void BodyCapture()
+    {
+        Tracker tracker = null; 
+        Frame bodyFrame = null;
+
+        try
+        {
+            tracker = Tracker.Create(calibration, TrackerConfiguration.Default);
+        }
+        catch (Exception e)
+        {
+            applicationRunning = false;
+            Debug.Log("An error occured: " + e.Message);
+        }
+        while (applicationRunning)
+        {
+            try
+            {
+                if (bodyFrame != null)
+                {
+                    bodyFrame.Dispose();
+                }
+
+                Capture sensorCapture = device.GetCapture(TimeSpan.MaxValue);
+                if (sensorCapture != null)
+                {
+                    tracker.EnqueueCapture(sensorCapture, TimeSpan.MaxValue);
+                    sensorCapture.Dispose();
+
+                    bodyFrame = tracker.PopResult(TimeSpan.MaxValue);
+                    if (bodyFrame != null)
+                    {
+                        // Successfully popped the body tracking result. Start your processing
+                        uint numBodies = bodyFrame.NumberOfBodies;
+                        if (numBodies > 0)
+                        {
+                            skeletonDisplay.skeleton = bodyFrame.GetBody(0).Skeleton;
+                            //Debug.Log("Tracking " + numBodies + " Bodies");
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                applicationRunning = false;
+                Debug.Log("An error occured: " + e.Message);
+                if (bodyFrame != null)
+                {
+                    bodyFrame.Dispose();
+                }
+            }
+
+            
+        }
+        if (bodyFrame != null)
+        {
+            bodyFrame.Dispose();
+        }
+        tracker.Shutdown();
+        tracker.Dispose();
+    
+}
 
     private void CameraCapture()
     {
