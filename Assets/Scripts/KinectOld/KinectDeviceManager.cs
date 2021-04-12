@@ -11,6 +11,12 @@ using UnityEngine;
 public class KinectDeviceManager : Singleton<KinectDeviceManager>
 {
 
+    [SerializeField] private UnityEngine.UI.Image colourImage;
+    [SerializeField] private UnityEngine.UI.Image depthImage;
+    [SerializeField] private UnityEngine.UI.Image irImage;
+
+    public bool enableBodyTracking = false;
+
     public ImageType imageType;
     public SkeletonDisplay skeletonDisplay;
 
@@ -40,10 +46,15 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     private Transformation transformation;
     private int colourWidth;
     private int colourHeight;
+    private int depthWidth;
+    private int depthHeight;
+    private int irWidth;
+    private int irHeight;
 
-    public int width;
-    public int height;
-    private Color[] pixels;
+
+    private Color[] colourPixels;
+    private Color[] depthPixels;
+    private Color[] irPixels;
 
     private bool applicationRunning = false;
 
@@ -55,6 +66,12 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     private void OnApplicationQuit()
     {
         Close();
+    }
+
+    private void Update()
+    {
+
+        ShowImage();
     }
 
     public void Init()
@@ -101,8 +118,11 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
         Task.Run(()=>CameraCapture());
         Task.Run(()=> ImuCapture());
-        Task.Run(()=> BodyCapture());
-        
+        if (enableBodyTracking)
+        {
+            Task.Run(() => BodyCapture());
+        }
+
     }
 
     private void BodyCapture()
@@ -177,24 +197,27 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             {
                 using (var  capture = device.GetCapture())
                 {
+                    BuildColourImageSource(capture);
+                    BuildDepthImageSource(capture);
+                    BuildIRImageSource(capture);
+
+                    /*
                     switch (imageType)
                     {
                         case ImageType.Colour: 
                             {
-                                BuildColourImageSource(capture);
                                 break;
                             }
                         case ImageType.Depth:
                             {
-                                BuildDepthImageSource(capture);
                                 break;
                             }
                         case ImageType.IR:
                             {
-                                BuildIRImageSource(capture);
                                 break;
                             }
                     }
+                    */
                 }
             }
             catch (Exception e)
@@ -212,12 +235,19 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         {
             return;
         }
-        width = img.WidthPixels;
-        height = img.HeightPixels;
+        colourWidth = img.WidthPixels;
+        colourHeight = img.HeightPixels;
 
-        pixels = img.CreateColourMap();
+        colourPixels = img.CreateColourMap();
 
     }
+
+    private const int Blue_MAX_VALUE = 500;
+    private const int RED_MAX_VALUE_LOWER = 1500;
+    private const int RED_MAX_VALUE_UPPER = 2000;
+    private const int GREEN_MAX_VALUE_LOWER = 1000;
+    private const int GREEN_MAX_VALUE_UPPER = 1500;
+
 
     private void BuildDepthImageSource(Capture capture)
     {
@@ -226,10 +256,10 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         {
             return;
         }
-        width = img.WidthPixels;
-        height = img.HeightPixels;
+        depthWidth = img.WidthPixels;
+        depthHeight = img.HeightPixels;
 
-        using (Image transformedDepth = new Image(ImageFormat.Depth16, width, height, width * sizeof(UInt16)))
+        using (Image transformedDepth = new Image(ImageFormat.Depth16, depthWidth, depthHeight, depthWidth * sizeof(UInt16)))
         {
             // Transform the depth image to the colour capera perspective.
             transformation.DepthImageToColorCamera(capture, transformedDepth);
@@ -237,39 +267,56 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             // Get the transformed pixels (colour camera perspective but depth pixels).
             Span<ushort> depthBuffer = transformedDepth.GetPixels<ushort>().Span;
 
-            pixels = img.CreateColourMap();
+            depthPixels = img.CreateColourMap();
 
             // Create a new image with data from the depth and colour image.
-            for (int i = 0; i < pixels.Length; i++)
+            for (int i = 0; i < depthPixels.Length; i++)
             {
                 // We'll use the colour image if the depth is less than 1 metre. 
                 var depth = depthBuffer[i];
 
                 if (depth == 0 || depth >= 2000) // No depth image.
                 {
-                    pixels[i].r = 0;
-                    pixels[i].g = 0;
-                    pixels[i].b = 0;
+                    depthPixels[i].r = 0;
+                    depthPixels[i].g = 0;
+                    depthPixels[i].b = 0;
                 }
 
-                if (depth >= 1000 && depth < 1200) // More than a meter away.
-                {
-                    pixels[i].r = Convert.ToByte(255 - (255 / (depth - 999)));
-                }
+                depthPixels[i].r = GetDepthColor(depth, RED_MAX_VALUE_LOWER, RED_MAX_VALUE_UPPER);
+                depthPixels[i].b = GetDepthColor(depth, Blue_MAX_VALUE, Blue_MAX_VALUE);
+                depthPixels[i].g = GetDepthColor(depth, GREEN_MAX_VALUE_LOWER, GREEN_MAX_VALUE_UPPER);
 
-                if (depth >= 1200 && depth < 1500)
-                {
-                    pixels[i].g = Convert.ToByte(255 - (255 / (depth - 1199)));
-                }
 
-                if (depth >= 1500 && depth < 2000)
-                {
-                    pixels[i].b = Convert.ToByte(255 - (255 / (depth - 1499)));
-                }
             }
         }
 
-        pixels = img.CreateColourMap();   
+        float GetDepthColor(int depth, int rangeLower, int rangeUpper)
+        {
+            int c;
+            if (depth <= rangeUpper && depth >= rangeLower)
+            {
+                c = 255;
+            }
+            else
+            {
+                if (depth < rangeLower)
+                {
+                    c = (500 - Mathf.Abs(depth - rangeLower)) / 2;
+                }
+                else
+                {
+                    c = (500 - Mathf.Abs(depth - rangeUpper)) / 2;
+                }
+            }
+
+            if (c < 0)
+            {
+                c = 0;
+            }
+            return c / 255f;
+        }
+
+        //depthPixels = img.CreateColourMap();   
     }
 
     private void BuildIRImageSource(Capture capture)
@@ -279,10 +326,10 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         {
             return;
         }
-        width = img.WidthPixels;
-        height = img.HeightPixels;
+        irWidth = img.WidthPixels;
+        irHeight = img.HeightPixels;
 
-        pixels = img.CreateIRMap();
+        irPixels = img.CreateIRMap();
     }
 
 
@@ -335,12 +382,20 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     public void ShowImage()
     {
-        if(pixels == null)
-        {
-            return;
+        if(colourPixels != null)
+        { 
+            colourImage.sprite = Sprite.Create(TextureGenerator.TextureFromColourMap(colourPixels, colourWidth, colourHeight), new Rect(0,0, colourWidth, colourHeight), Vector2.zero);
         }
-        Texture2D tex = TextureGenerator.TextureFromColourMap(pixels, width, height);
-        GetComponent<MeshRenderer>().sharedMaterial.mainTexture = tex;
+        if (depthPixels != null)
+        {
+            depthImage.sprite = Sprite.Create(TextureGenerator.TextureFromColourMap(depthPixels, depthWidth, depthHeight), new Rect(0, 0, depthWidth, depthHeight), Vector2.zero);
+        }
+        if (irPixels != null)
+        {
+            irImage.sprite = Sprite.Create(TextureGenerator.TextureFromColourMap(irPixels, irWidth, irHeight), new Rect(0, 0, irWidth, irHeight), Vector2.zero);
+        }
+        //Texture2D tex = TextureGenerator.TextureFromColourMap(colourPixels, width, height);
+        //GetComponent<MeshRenderer>().sharedMaterial.mainTexture = tex;
     }
 }
 

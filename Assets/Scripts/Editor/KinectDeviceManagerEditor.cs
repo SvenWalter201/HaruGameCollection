@@ -36,7 +36,7 @@ public class KinectDeviceManagerEditor : Editor
         {
             return;
         }
-        kinectDeviceManager.ShowImage();
+        //kinectDeviceManager.ShowImage();
     }
 
     private void OnEnable()
