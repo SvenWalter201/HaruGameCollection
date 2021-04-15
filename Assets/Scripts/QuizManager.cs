@@ -10,16 +10,20 @@ public class QuizManager : MonoBehaviour
     public GameObject[] options;
     public int currentQuestion;
 
-    public Text QuestionText;
-    public Text[] Answers;
+    [SerializeField] private Text QuestionText;
+    [SerializeField] private Text[] Answers;
 
-    public Image[] Lamps;
+    
+
+    [SerializeField] private GameObject[] AnswerPanel;
+    [SerializeField] private GameObject[] Lamps;
+    [SerializeField] private Mesh normal;
+    [SerializeField] private Mesh glowing;
 
 
+     
     [Header("LampSprites")]
 
-    [SerializeField] private Sprite[] LampsSprites;
-    [SerializeField] private Sprite[] glowingLampsSprites;
 
     [Space]
 
@@ -31,7 +35,7 @@ public class QuizManager : MonoBehaviour
 
     private void Start()
     {
-        // chooseQuestion();
+        
     }
 
     public void Correct()
@@ -49,14 +53,24 @@ public class QuizManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The disabled Lamps and answers get enabled to display the next or first question.
+    /// A random question with matching answers is chosen and gets displayed.
+    /// The Coroutine is started.
+    /// </summary>
+    /// <param name="Question"></param>
+    /// <returns></returns>
     private void ChooseQuestion()
     {
 
         for (int i = 0; i < 4; i++)
         {
-            Lamps[i].enabled = true;
+
+            Lamps[i].GetComponent<Renderer>().enabled = true;
+            AnswerPanel[i].SetActive(true);
             Answers[i].enabled = true;
-            Lamps[i].sprite = LampsSprites[i];
+            Lamps[i].GetComponent<MeshFilter>().mesh = normal;
+         
         }
         blocked = true;
 
@@ -75,7 +89,10 @@ public class QuizManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Bla Bla
+    /// The Lamps glow for the set "glowTime" while reading the available Answers.
+    /// The mesh filter changes from glowing to normal after the glowTime is finished.
+    /// The User has the set time "answerTime" to think what the right answer is.
+    /// The Lamp corresponding to the right answer glows up and the other Lamps and answers disappear (are disabled).
     /// </summary>
     /// <param name="Question"></param>
     /// <returns></returns>
@@ -85,9 +102,11 @@ public class QuizManager : MonoBehaviour
         yield return new WaitForSeconds(glowTime);
         for (int i = 0; i < Question.Answers.Length; i++)
         {
-            Lamps[i].sprite = glowingLampsSprites[i];
+
+            Lamps[i].GetComponent<MeshFilter>().mesh = glowing;
             yield return new WaitForSeconds(glowTime);
-            Lamps[i].sprite = LampsSprites[i];
+            Lamps[i].GetComponent<MeshFilter>().mesh = normal;
+
         }
 
         yield return new WaitForSeconds(answerTime);
@@ -96,12 +115,15 @@ public class QuizManager : MonoBehaviour
         {
             if (i != Question.CorrectAnswer)
             {
-                Lamps[i].enabled = false;
+                AnswerPanel[i].SetActive(false);
+                Lamps[i].GetComponent<Renderer>().enabled = false;
                 Answers[i].enabled = false;
             }
         }
-        Lamps[Question.CorrectAnswer].sprite = glowingLampsSprites[Question.CorrectAnswer];
-        //image1.enabled = false;
+
+
+        Lamps[Question.CorrectAnswer].GetComponent<MeshFilter>().mesh = glowing;
+        
         blocked = false;
     }
 }
