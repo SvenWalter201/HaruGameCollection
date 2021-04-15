@@ -1,32 +1,104 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Microsoft.Azure.Kinect.BodyTracking;
 using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 using Vector3 = UnityEngine.Vector3;
+using Quaternion = System.Numerics.Quaternion;
 
 public class SkeletonDisplay : Singleton<SkeletonDisplay>
 {
-    private void OnDrawGizmos()
-    {
-        List<JointConnection> jointConnections = ResolveSkeleton();
-        for (int i = 0; i < jointConnections.Count; i++)
-        {
-            JointConnection jC = jointConnections[i];
-            if (jC.posA != null && jC.posB != null)
-            {
-                if (jC.posA != Vector3.zero || jC.posB != Vector3.zero)
-                {
-                    jC.posA.y = -jC.posA.y; 
-                    jC.posB.y = -jC.posB.y; 
-                    Gizmos.DrawLine(jC.posA/100f, jC.posB/100f);
-                }
-            }
-        }
+    public bool record = false;
+    public bool display = false;
+    public bool replaying = false;
 
-    }
+    [SerializeField] private LineRenderer body = default;
+    [SerializeField] private LineRenderer leftLeg = default;
+    [SerializeField] private LineRenderer rightLeg = default;
+    [SerializeField] private LineRenderer leftArm = default;
+    [SerializeField] private LineRenderer rightArm = default;
 
     public Skeleton skeleton;
+    public int frame = 0;
+    private const float FPS_30_DELTA = 0.033f;
+    private float currentTimeStep;
+
+    private void Start()
+    {
+        currentTimeStep = FPS_30_DELTA;
+    }
+
+    private void Update()
+    {
+        if (replaying)
+        {
+            return;
+        }
+        //resolve skeleton at framerate = 30;
+        if(currentTimeStep <= 0f)
+        {
+            ResolveSkeleton();
+            currentTimeStep = FPS_30_DELTA;
+        }
+        else
+        {
+            currentTimeStep -= Time.deltaTime;
+        }
+    }
+
+    public IEnumerator Replay(Motion motion, Slider frameSlider, Button playPauseButton)
+    {
+        replaying = true;
+        int currentFrame = 0;
+        int totalFrames = motion.motion.Count;
+        float timer = 0f;
+        bool playing = true;
+        playPauseButton.onClick.AddListener(() => playing = !playing);
+
+        while(currentFrame < motion.motion.Count)
+        {
+            if(timer <= 0f)
+            {
+                frameSlider.value += 1/(float)totalFrames;
+                currentFrame = Mathf.RoundToInt(frameSlider.value * (totalFrames-1));
+                timer = 1/(float)motion.fps;
+            }
+            else
+            {
+                if (playing)
+                {
+                    timer -= Time.deltaTime;
+                }
+            }
+            currentFrame = Mathf.RoundToInt(frameSlider.value * (totalFrames - 1));
+            Display(motion.motion[currentFrame]);
+            yield return null;
+        }
+
+        frameSlider.gameObject.SetActive(false);
+        playPauseButton.gameObject.SetActive(false);
+        replaying = false;
+    }
+
+    public void OnBeginDisplay()
+    {
+        body.enabled = true;
+        leftLeg.enabled = true;
+        rightLeg.enabled = true;
+        leftArm.enabled = true;
+        rightArm.enabled = true;
+    }
+
+    public void OnStopDisplay()
+    {
+        body.enabled = false;
+        leftLeg.enabled = false;
+        rightLeg.enabled = false;
+        leftArm.enabled = false;
+        rightArm.enabled = false;
+    }
+
     public List<JointConnection> ResolveSkeleton()
     {
         List<JointConnection> jointConnections = new List<JointConnection>();
@@ -34,19 +106,44 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         //get all joint positions
         Joint[] joints = new Joint[27];
 
-
         for (int i = 0; i < 27; i++)
         {
             //Joint joint = skeleton.GetJoint(i);
             joints[i] = skeleton.GetJoint(i);
         }
 
+        if (record)
+        {
+            SkeletonTracker.Instance.StoreFrame(joints);
+        }
+
+        if (display)
+        {
+            if(body.enabled == false)
+            {
+                OnBeginDisplay();
+            }
+
+            Display(joints);
+        }
+        else
+        {
+            if(body.enabled == true)
+            {
+                OnStopDisplay();
+            }
+        }
+        
+
+        /**
         for (int i = 0; i < 3; i++)
         {
             ConnectJoints(joints[i], joints[i + 1]);
         }
         ConnectJoints(joints[3], joints[26]);
         ConnectJoints(joints[2], joints[4]);
+
+
 
         //connect left arm joints
         for (int i = 4; i < 9; i++)
@@ -76,7 +173,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         }
 
         ConnectJoints(joints[0], joints[18]);
-        ConnectJoints(joints[0], joints[22]);
+        ConnectJoints(joints[0], joints[22]);*/
 
         return jointConnections;
 
@@ -86,6 +183,84 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         }
     }
 
+    private void Display(Joint[] joints)
+    {
+        //body
+        body.Assign(0, joints[(int)JointId.Pelvis]);
+        body.Assign(1, joints[(int)JointId.SpineNavel]);
+        body.Assign(2, joints[(int)JointId.SpineChest]);
+        body.Assign(3, joints[(int)JointId.Neck]);
+        body.Assign(4, joints[(int)JointId.Head]);
+
+        //left arm
+        leftArm.Assign(0, joints[(int)JointId.SpineChest]);
+        leftArm.Assign(1, joints[(int)JointId.ClavicleLeft]);
+        leftArm.Assign(2, joints[(int)JointId.ShoulderLeft]);
+        leftArm.Assign(3, joints[(int)JointId.ElbowLeft]);
+        leftArm.Assign(4, joints[(int)JointId.WristLeft]);
+        leftArm.Assign(5, joints[(int)JointId.HandLeft]);
+        leftArm.Assign(6, joints[(int)JointId.HandTipLeft]);
+
+        //left arm
+        rightArm.Assign(0, joints[(int)JointId.SpineChest]);
+        rightArm.Assign(1, joints[(int)JointId.ClavicleRight]);
+        rightArm.Assign(2, joints[(int)JointId.ShoulderRight]);
+        rightArm.Assign(3, joints[(int)JointId.ElbowRight]);
+        rightArm.Assign(4, joints[(int)JointId.WristRight]);
+        rightArm.Assign(5, joints[(int)JointId.HandRight]);
+        rightArm.Assign(6, joints[(int)JointId.HandTipRight]);
+
+        leftLeg.Assign(0, joints[(int)JointId.Pelvis]);
+        leftLeg.Assign(1, joints[(int)JointId.HipLeft]);
+        leftLeg.Assign(2, joints[(int)JointId.KneeLeft]);
+        leftLeg.Assign(3, joints[(int)JointId.AnkleLeft]);
+        leftLeg.Assign(4, joints[(int)JointId.FootLeft]);
+
+        rightLeg.Assign(0, joints[(int)JointId.Pelvis]);
+        rightLeg.Assign(1, joints[(int)JointId.HipRight]);
+        rightLeg.Assign(2, joints[(int)JointId.KneeRight]);
+        rightLeg.Assign(3, joints[(int)JointId.AnkleRight]);
+        rightLeg.Assign(4, joints[(int)JointId.FootRight]);
+    }
+
+    public void ComparePoses(Joint[] originalPose, Joint[] comparePose)
+    {
+        Vector3 posDifferenceSum = Vector3.zero;
+
+        Vector3 originalPelvisPosition = originalPose[(int)JointId.Pelvis].Position.ToUnityVector3();
+        Vector3 comparePelvisPosition = comparePose[(int)JointId.Pelvis].Position.ToUnityVector3();
+
+        //handle unequal length arrays
+        if (originalPose.Length != comparePose.Length)
+        {
+            Debug.Log("poses had different amount of joints");
+            return;
+        }
+
+        int comparedJointsCount = 0;
+
+        for (int i = 1; i < originalPose.Length; i++)
+        {
+            Joint pI = originalPose[i];
+
+            //don't compare obstructed or out of range joints
+            if(pI.ConfidenceLevel == JointConfidenceLevel.Low ||pI.ConfidenceLevel == JointConfidenceLevel.None)
+            {
+                continue;
+            }
+
+            //get the position of the joint in relation to the pelvis
+            Vector3 relativeOriginalPosition = originalPose[i].Position.ToUnityVector3() - originalPelvisPosition;
+            Vector3 relativeComparePosition = comparePose[i].Position.ToUnityVector3() - comparePelvisPosition;
+
+            posDifferenceSum += relativeComparePosition - relativeOriginalPosition;
+            comparedJointsCount++;
+        }
+
+        //average positional difference in mm
+        Vector3 posDifference = posDifferenceSum /= comparedJointsCount;
+        Debug.Log("Positional difference in mm: " + posDifference);
+    }
 
 
     public struct JointConnection

@@ -8,7 +8,7 @@ using JointConnection = SkeletonDisplay.JointConnection;
 public class SkeletonDisplayEditor : Editor
 {
     private SkeletonDisplay skeletonDisplay;
-
+    /*
 
     private void OnSceneGUI()
     {
@@ -35,7 +35,7 @@ public class SkeletonDisplayEditor : Editor
                 Handles.DrawLine(jC.posA, jC.posB);
             }
         }
-    }
+    }*/
 
     private void OnEnable()
     {
