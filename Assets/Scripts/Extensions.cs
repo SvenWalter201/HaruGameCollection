@@ -4,11 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Kinect.Sensor;
+using Microsoft.Azure.Kinect.BodyTracking;
 using UnityEngine;
 using System.Numerics;
-
+using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 public static class Extensions
 {
+    public static void Assign(this LineRenderer lR, int index, Joint joint)
+    {
+        lR.SetPosition(index, -joint.Position.ToUnityVector3() / 200f);
+    }
+
+
     public static UnityEngine.Vector3 ToUnityVector3(this System.Numerics.Vector3 vec)
     {
         return new UnityEngine.Vector3(vec.X, vec.Y, vec.Z);

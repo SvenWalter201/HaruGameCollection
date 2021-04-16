@@ -17,7 +17,7 @@ public class KinectDeviceManagerEditor : Editor
         {
             return;
         }
-
+        /*
         if (GUILayout.Button("Init"))
         {
             kinectDeviceManager.Init();
@@ -26,17 +26,8 @@ public class KinectDeviceManagerEditor : Editor
         {
             kinectDeviceManager.Close();
         }
-
+        */
         base.OnInspectorGUI();
-    }
-
-    private void OnSceneGUI()
-    {
-        if(kinectDeviceManager == null)
-        {
-            return;
-        }
-        //kinectDeviceManager.ShowImage();
     }
 
     private void OnEnable()

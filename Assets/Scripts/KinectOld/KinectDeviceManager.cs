@@ -15,7 +15,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     [SerializeField] private UnityEngine.UI.Image depthImage;
     [SerializeField] private UnityEngine.UI.Image irImage;
 
-    public bool enableBodyTracking = false;
+    public bool bodyTracking = false;
 
     public ImageType imageType;
     public SkeletonDisplay skeletonDisplay;
@@ -39,9 +39,6 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     public Vector3 gyro;
     [Space]
     public float temperature;
-
-
-
 
     private Transformation transformation;
     private int colourWidth;
@@ -116,19 +113,25 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
         applicationRunning = true;
 
-        Task.Run(()=>CameraCapture());
-        Task.Run(()=> ImuCapture());
-        if (enableBodyTracking)
+        //Task.Run(()=>CameraCapture());
+        //Task.Run(()=> ImuCapture());
+        if (bodyTracking)
         {
             Task.Run(() => BodyCapture());
         }
+    }
 
+    public void BeginBodyTracking()
+    {
+        bodyTracking = true;
+        Task.Run(() => BodyCapture());
     }
 
     private void BodyCapture()
     {
         Tracker tracker = null; 
         Frame bodyFrame = null;
+        int btFrame = 0;
 
         try
         {
@@ -136,10 +139,10 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         }
         catch (Exception e)
         {
-            applicationRunning = false;
+            bodyTracking = false;
             Debug.Log("An error occured: " + e.Message);
         }
-        while (applicationRunning)
+        while (bodyTracking)
         {
             try
             {
@@ -148,7 +151,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                     bodyFrame.Dispose();
                 }
 
-                Capture sensorCapture = device.GetCapture(TimeSpan.MaxValue);
+                Capture sensorCapture = device.GetCapture();
                 if (sensorCapture != null)
                 {
                     tracker.EnqueueCapture(sensorCapture, TimeSpan.MaxValue);
@@ -161,24 +164,25 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                         uint numBodies = bodyFrame.NumberOfBodies;
                         if (numBodies > 0)
                         {
+                           
                             skeletonDisplay.skeleton = bodyFrame.GetBody(0).Skeleton;
+                            skeletonDisplay.frame = btFrame;
                             //Debug.Log("Tracking " + numBodies + " Bodies");
                         }
                     }
-
                 }
             }
             catch (Exception e)
             {
-                applicationRunning = false;
+                bodyTracking = false;
                 Debug.Log("An error occured: " + e.Message);
                 if (bodyFrame != null)
                 {
                     bodyFrame.Dispose();
                 }
+                tracker.Shutdown();
+                tracker.Dispose();
             }
-
-            
         }
         if (bodyFrame != null)
         {
@@ -198,7 +202,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 using (var  capture = device.GetCapture())
                 {
                     BuildColourImageSource(capture);
-                    BuildDepthImageSource(capture);
+                    //BuildDepthImageSource(capture);
                     BuildIRImageSource(capture);
 
                     /*
@@ -366,6 +370,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     public void Close()
     {
+        bodyTracking = false;
         applicationRunning = false;
         Task.WaitAny(Task.Delay(1000));
         if (device == null)
