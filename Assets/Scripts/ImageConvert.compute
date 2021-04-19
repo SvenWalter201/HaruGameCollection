@@ -1,0 +1,103 @@
+#pragma kernel ColourTex
+#pragma kernel IRTex
+#pragma kernel DepthTex
+
+#define Blue_MAX_VALUE = 500;
+#define RED_MAX_VALUE_LOWER = 1500;
+#define RED_MAX_VALUE_UPPER = 2000;
+#define GREEN_MAX_VALUE_LOWER = 1000;
+#define GREEN_MAX_VALUE_UPPER = 1500;
+
+RWTexture2D<float4> _ColourPixelsOut;
+RWStructuredBuffer<int> _ColourPixelsIn;
+int _Width;
+
+[numthreads(8,8,1)]
+void ColourTex (uint3 id : SV_DispatchThreadID)
+{
+    int rgba = _ColourPixelsIn[id.y * _Width + id.x];
+    _ColourPixelsOut[id.xy] = float4(((rgba >> 16) & 0xFF)/(float)255, ((rgba >> 8) & 0xFF)/ (float)255, (rgba & 0xFF)/ (float)255, 1);
+}
+//bytes[0] = (byte)(intValue >> 24);
+//bytes[1] = (byte)(intValue >> 16);
+//bytes[2] = (byte)(intValue >> 8);
+//bytes[3] = (byte)intValue;
+//Debug.Log("bgra: " + (byte)(bgra >> 24) + ", " + (byte)(bgra >> 16) + ", " + (byte)(bgra >> 8) + ", " + (byte)bgra);
+//myByte1 = myInt & 0xFF;
+//myByte2 = (myInt >> 8) & 0xFF;
+//myByte3 = (myInt >> 16) & 0xFF;
+//myByte4 = (myInt >> 24) & 0xFF;
+
+RWTexture2D<float4> _IRPixelsOut;
+RWStructuredBuffer<int> _IRPixelsIn;
+int _IRWidth;
+
+[numthreads(8,8,1)]
+void IRTex(uint3 id : SV_DispatchThreadID) 
+{
+    int ir = _IRPixelsIn[(id.y * _IRWidth + id.x)/2];
+
+    if (id.x % 2 == 0) {
+        ir = (ir >> 16) & 0xFFFF;
+    }
+    else {
+        ir = ir & 0xFFFF;
+    }
+    _IRPixelsOut[id.xy] = float4((float)ir/(float)255, (float)ir / (float)255, (float)ir / (float)255, 1);
+}
+
+RWTexture2D<float4> _DepthPixelsOut;
+RWStructuredBuffer<int> _DepthPixelsIn;
+int _DepthWidth;
+
+float GetDepthColor(int depth, int rangeLower, int rangeUpper)
+{
+    int c;
+    if (depth <= rangeUpper && depth >= rangeLower)
+    {
+        c = 255;
+    }
+    else
+    {
+        if (depth < rangeLower)
+        {
+            c = (500 - abs(depth - rangeLower)) / (float)2;
+        }
+        else
+        {
+            c = (500 - abs(depth - rangeUpper)) / (float)2;
+        }
+    }
+
+    if (c < 0)
+    {
+        c = 0;
+    }
+    return c / (float)255;
+}
+
+
+[numthreads(8, 8, 1)]
+void DepthTex(uint3 id : SV_DispatchThreadID)
+{
+    int depth = _DepthPixelsIn[(id.y * _DepthWidth + id.x) / 2];
+
+    if (id.x % 2 == 0) {
+        depth = (depth >> 16) & 0xFFFF;
+    }
+    else {
+        depth = depth & 0xFFFF;
+    }
+    
+    if (depth == 0 || depth >= 4000) // No depth image.
+    {
+        _DepthPixelsOut[id.xy] = float4(0,0,0, 1);
+    }
+    else {
+        _DepthPixelsOut[id.xy] = float4(
+            GetDepthColor(depth, 2500, 3500),
+            GetDepthColor(depth, 1500, 2500),
+            GetDepthColor(depth, 500, 1500),
+            1);
+    }
+}

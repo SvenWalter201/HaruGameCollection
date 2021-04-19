@@ -129,6 +129,12 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     public void DisplayLoaded()
     {
+        if(motion.motion.Count == 1)
+        {
+            Display(motion.motion[0]);
+            return;
+        }
+
         replayFrame = Mathf.RoundToInt(frameSlider.value * (motion.motion.Count));
         if (playing)
         {
@@ -171,6 +177,11 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             SkeletonTracker.Instance.StoreFrame(joints);
         }
         return joints;
+    }
+
+    public void CompareTrackedWithLoaded()
+    {
+        ComparePoses(joints, SkeletonTracker.Instance.loadedMotion.motion[0]);
     }
 
     private void Display(Joint[] joints)

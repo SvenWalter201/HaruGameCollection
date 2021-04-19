@@ -15,7 +15,9 @@ public class UIController : Singleton<UIController>
     [SerializeField] private Button playPauseButton;
     [SerializeField] private Button imageTracking;
     [SerializeField] private Button imageDisplay;
+    [SerializeField] private Button bodyCompare;
 
+    [SerializeField] private GameObject imageDisplayPanel;
     private GameObject savePoseGO;
     private GameObject bodyTrackingGO;
     private GameObject displayGO;
@@ -24,6 +26,7 @@ public class UIController : Singleton<UIController>
     private GameObject frameSliderGO;
     private GameObject playPauseButtonGO;
     private GameObject imageDisplayGO;
+    private GameObject bodyCompareGO;
 
     public readonly ColorBlock regularButtonColors = new ColorBlock
     {
@@ -61,6 +64,7 @@ public class UIController : Singleton<UIController>
         playPauseButtonGO = playPauseButton.gameObject;
         savePoseGO = savePose.gameObject;
         imageDisplayGO = imageDisplay.gameObject;
+        bodyCompareGO = bodyCompare.gameObject;
 
         imageTracking.onClick.AddListener(TrackImageData);
         imageTracking.colors = offStateColors;
@@ -78,6 +82,9 @@ public class UIController : Singleton<UIController>
         loadMotion.onClick.AddListener(LoadMotion);
         savePose.onClick.AddListener(SavePose);
 
+        bodyCompare.onClick.AddListener(RunBodyCompare);
+        bodyCompare.colors = offStateColors;
+
         imageDisplayGO.SetActive(false);
 
         recordGO.SetActive(false);
@@ -85,6 +92,7 @@ public class UIController : Singleton<UIController>
         playPauseButtonGO.SetActive(false);
         saveMotionGO.SetActive(false);
         savePoseGO.SetActive(false);
+        bodyCompareGO.SetActive(false);
 
         SkeletonDisplay.Instance.InitUIComponents(frameSlider, playPauseButton);
 
@@ -117,11 +125,21 @@ public class UIController : Singleton<UIController>
         {
             KinectDeviceManager.Instance.imageDisplay = false;
             imageDisplay.colors = offStateColors;
+            imageDisplayPanel.SetActive(false);
         }
         else
         {
+            imageDisplayPanel.SetActive(true);
             KinectDeviceManager.Instance.imageDisplay = true;
             imageDisplay.colors = onStateColors;
+        }
+    }
+
+    public void RunBodyCompare()
+    {
+        if (KinectDeviceManager.Instance.bodyTracking)
+        {
+            SkeletonDisplay.Instance.CompareTrackedWithLoaded();
         }
     }
 
@@ -133,6 +151,8 @@ public class UIController : Singleton<UIController>
             bodyTracking.colors = offStateColors;
 
             recordGO.SetActive(false);
+            bodyCompareGO.SetActive(false);
+
         }
         else
         {
@@ -142,6 +162,11 @@ public class UIController : Singleton<UIController>
 
                 //enable UI elements
                 recordGO.SetActive(true);
+                if (SkeletonTracker.Instance.loadedMotion != null)
+                {
+                    bodyCompareGO.SetActive(true);
+                    //compare enable
+                }
             }
         }
     }
@@ -163,13 +188,27 @@ public class UIController : Singleton<UIController>
     {
         if (motion == null)
         {
+            bodyCompareGO.SetActive(false);
             Debug.Log("couldn't load motion. File either doesn't exist or is broken");
             return;
         }
-        frameSliderGO.SetActive(true);
-        playPauseButtonGO.SetActive(true);
+        else if(motion.motion.Count > 1){
+            frameSliderGO.SetActive(true);
+            playPauseButtonGO.SetActive(true);
+            savePoseGO.SetActive(true);
+            bodyCompareGO.SetActive(false);
+        }
+        else
+        {
+            frameSliderGO.SetActive(false);
+            playPauseButtonGO.SetActive(false);
+            savePoseGO.SetActive(false);
+        }
         saveMotionGO.SetActive(true);
-        savePoseGO.SetActive(true);
+        if (KinectDeviceManager.Instance.bodyTracking)
+        {
+            bodyCompareGO.SetActive(true);
+        }
     }
 
     public void RecordCapture()

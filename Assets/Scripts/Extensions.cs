@@ -30,6 +30,7 @@ public static class Extensions
             int height = reference.HeightPixels;
 
             Memory<BGRA> mem = reference.GetPixels<BGRA>();
+          
             pixels = new Color[width * height];
             BGRA[] colorInfo = mem.ToArray();
 
@@ -63,6 +64,78 @@ public static class Extensions
             }
         }
         return pixels;
+    }
+
+    private const int Blue_MAX_VALUE = 500;
+    private const int RED_MAX_VALUE_LOWER = 1500;
+    private const int RED_MAX_VALUE_UPPER = 2000;
+    private const int GREEN_MAX_VALUE_LOWER = 1000;
+    private const int GREEN_MAX_VALUE_UPPER = 1500;
+
+    public static Color[] CreateDepthImage(this Capture capture, Transformation transformation)
+    {
+        Image img = capture.Color;
+        int colourWidth = img.WidthPixels;
+        int colourHeight = img.HeightPixels;
+
+        using (Image transformedDepth = new Image(ImageFormat.Depth16, colourWidth, colourHeight, colourWidth * sizeof(ushort)))
+        {
+            // Transform the depth image to the colour capera perspective.
+            transformation.DepthImageToColorCamera(capture, transformedDepth);
+
+            // Get the transformed pixels (colour camera perspective but depth pixels).
+            Span<ushort> depthBuffer = transformedDepth.GetPixels<ushort>().Span;
+
+            Color[] depthPixels = img.CreateColourMap();
+
+            // Create a new image with data from the depth and colour image.
+            for (int i = 0; i < depthPixels.Length; i++)
+            {
+                // We'll use the colour image if the depth is less than 1 metre. 
+                var depth = depthBuffer[i];
+
+                if (depth == 0 || depth >= 2000) // No depth image.
+                {
+                    depthPixels[i].r = 0;
+                    depthPixels[i].g = 0;
+                    depthPixels[i].b = 0;
+                }
+
+                depthPixels[i].r = GetDepthColor(depth, RED_MAX_VALUE_LOWER, RED_MAX_VALUE_UPPER);
+                depthPixels[i].b = GetDepthColor(depth, Blue_MAX_VALUE, Blue_MAX_VALUE);
+                depthPixels[i].g = GetDepthColor(depth, GREEN_MAX_VALUE_LOWER, GREEN_MAX_VALUE_UPPER);
+            }
+
+            return depthPixels;
+        }
+
+        float GetDepthColor(int depth, int rangeLower, int rangeUpper)
+        {
+            int c;
+            if (depth <= rangeUpper && depth >= rangeLower)
+            {
+                c = 255;
+            }
+            else
+            {
+                if (depth < rangeLower)
+                {
+                    c = (500 - Mathf.Abs(depth - rangeLower)) / 2;
+                }
+                else
+                {
+                    c = (500 - Mathf.Abs(depth - rangeUpper)) / 2;
+                }
+            }
+
+            if (c < 0)
+            {
+                c = 0;
+            }
+            return c / 255f;
+        }
+
+        //depthPixels = img.CreateColourMap();   
     }
 }
 
