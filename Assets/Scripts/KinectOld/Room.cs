@@ -54,7 +54,7 @@ class Room
             case "RIGHT_DOWN": return Corner.RIGHT_DOWN; 
             default:
                 throw new NotImplementedException();
-                Console.WriteLine("The configuration file seems to have invalid data");
+                //Console.WriteLine("The configuration file seems to have invalid data");
         }
     }
 

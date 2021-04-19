@@ -9,8 +9,9 @@ using Quaternion = System.Numerics.Quaternion;
 
 public class SkeletonDisplay : Singleton<SkeletonDisplay>
 {
+    public bool tracking = false;
     public bool record = false;
-    public bool display = false;
+    public DisplayOption display = DisplayOption.TRACKED;
     public bool replaying = false;
 
     [SerializeField] private LineRenderer body = default;
@@ -19,7 +20,9 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     [SerializeField] private LineRenderer leftArm = default;
     [SerializeField] private LineRenderer rightArm = default;
 
-    public Skeleton skeleton;
+    private GameObject bodyParentGO;
+
+    public Skeleton trackedBody;
     public int frame = 0;
     private const float FPS_30_DELTA = 0.033f;
     private float currentTimeStep;
@@ -27,18 +30,95 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     private void Start()
     {
         currentTimeStep = FPS_30_DELTA;
+        bodyParentGO = body.transform.parent.gameObject;
+    }
+
+    private Slider frameSlider;
+    //private Button playPauseButton;
+
+    private bool playing = true;
+    private Motion motion;
+    private int replayFrame;
+    private Joint[] joints;
+
+    public void InitUIComponents(Slider frameSlider, Button playPauseButton)
+    {
+        playPauseButton.onClick.AddListener(() => playing = !playing);
+
+        this.frameSlider = frameSlider;
+        //this.playPauseButton = playPauseButton;
+
+    }
+
+    public void SwitchDisplayType(int option)
+    {
+        switch (option)
+        {
+            case 0:
+                {
+                    display = DisplayOption.TRACKED;
+                    break;
+                }
+            case 1:
+                {
+                    replayFrame = 0;
+                    display = DisplayOption.LOADED;
+                    break;
+                }
+            case 2:
+                {
+                    display = DisplayOption.NONE;
+                    break;
+                }
+        }
     }
 
     private void Update()
     {
-        if (replaying)
+        if (currentTimeStep <= 0f)
         {
-            return;
-        }
-        //resolve skeleton at framerate = 30;
-        if(currentTimeStep <= 0f)
-        {
-            ResolveSkeleton();
+            if (KinectDeviceManager.Instance.bodyTracking)
+            {
+                joints = ResolveSkeleton();
+            }
+
+            switch (display)
+            {
+                case DisplayOption.TRACKED:
+                    {
+                        if (KinectDeviceManager.Instance.bodyTracking)
+                        {
+                            if (!bodyParentGO.activeInHierarchy)
+                            {
+                                OnBeginDisplay();
+                            }
+                            Display(joints);
+                        }
+                        break;
+                    }
+                case DisplayOption.LOADED:
+                    {
+
+                        motion = SkeletonTracker.Instance.loadedMotion;
+                        if(motion != null)
+                        {
+                            if (!bodyParentGO.activeInHierarchy)
+                            {
+                                OnBeginDisplay();
+                            }
+                            DisplayLoaded();
+                        }
+                        break;
+                    }
+                case DisplayOption.NONE:
+                    {
+                        if (bodyParentGO.activeInHierarchy)
+                        {
+                            OnStopDisplay();
+                        }
+                        break;
+                    }
+            }
             currentTimeStep = FPS_30_DELTA;
         }
         else
@@ -47,140 +127,50 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         }
     }
 
-    public IEnumerator Replay(Motion motion, Slider frameSlider, Button playPauseButton)
+    public void DisplayLoaded()
     {
-        replaying = true;
-        int currentFrame = 0;
-        int totalFrames = motion.motion.Count;
-        float timer = 0f;
-        bool playing = true;
-        playPauseButton.onClick.AddListener(() => playing = !playing);
-
-        while(currentFrame < motion.motion.Count)
+        replayFrame = Mathf.RoundToInt(frameSlider.value * (motion.motion.Count));
+        if (playing)
         {
-            if(timer <= 0f)
-            {
-                frameSlider.value += 1/(float)totalFrames;
-                currentFrame = Mathf.RoundToInt(frameSlider.value * (totalFrames-1));
-                timer = 1/(float)motion.fps;
-            }
-            else
-            {
-                if (playing)
-                {
-                    timer -= Time.deltaTime;
-                }
-            }
-            currentFrame = Mathf.RoundToInt(frameSlider.value * (totalFrames - 1));
-            Display(motion.motion[currentFrame]);
-            yield return null;
+            replayFrame = (replayFrame + 1) % motion.motion.Count;
+            frameSlider.value = replayFrame / (float)motion.motion.Count;
         }
-
-        frameSlider.gameObject.SetActive(false);
-        playPauseButton.gameObject.SetActive(false);
-        replaying = false;
+        else
+        {
+            if(replayFrame == motion.motion.Count)
+            {
+                replayFrame--;
+            }
+        }
+        Display(motion.motion[replayFrame]);
     }
 
     public void OnBeginDisplay()
     {
-        body.enabled = true;
-        leftLeg.enabled = true;
-        rightLeg.enabled = true;
-        leftArm.enabled = true;
-        rightArm.enabled = true;
+        bodyParentGO.SetActive(true);
     }
 
     public void OnStopDisplay()
     {
-        body.enabled = false;
-        leftLeg.enabled = false;
-        rightLeg.enabled = false;
-        leftArm.enabled = false;
-        rightArm.enabled = false;
+        bodyParentGO.SetActive(false);
     }
 
-    public List<JointConnection> ResolveSkeleton()
+    public Joint[] ResolveSkeleton()
     {
-        List<JointConnection> jointConnections = new List<JointConnection>();
-
         //get all joint positions
         Joint[] joints = new Joint[27];
 
         for (int i = 0; i < 27; i++)
         {
             //Joint joint = skeleton.GetJoint(i);
-            joints[i] = skeleton.GetJoint(i);
+            joints[i] = trackedBody.GetJoint(i);
         }
 
         if (record)
         {
             SkeletonTracker.Instance.StoreFrame(joints);
         }
-
-        if (display)
-        {
-            if(body.enabled == false)
-            {
-                OnBeginDisplay();
-            }
-
-            Display(joints);
-        }
-        else
-        {
-            if(body.enabled == true)
-            {
-                OnStopDisplay();
-            }
-        }
-        
-
-        /**
-        for (int i = 0; i < 3; i++)
-        {
-            ConnectJoints(joints[i], joints[i + 1]);
-        }
-        ConnectJoints(joints[3], joints[26]);
-        ConnectJoints(joints[2], joints[4]);
-
-
-
-        //connect left arm joints
-        for (int i = 4; i < 9; i++)
-        {
-            ConnectJoints(joints[i], joints[i + 1]);
-        }
-        ConnectJoints(joints[8], joints[10]);
-        ConnectJoints(joints[2], joints[11]);
-
-        //connect right arm joints
-        for (int i = 11; i < 16; i++)
-        {
-            ConnectJoints(joints[i], joints[i + 1]);
-        }
-        ConnectJoints(joints[15], joints[17]);
-
-        //connect left leg joints
-        for (int i = 18; i < 21; i++)
-        {
-            ConnectJoints(joints[i], joints[i + 1]);
-        }
-
-        //connect right leg joints
-        for (int i = 22; i < 25; i++)
-        {
-            ConnectJoints(joints[i], joints[i + 1]);
-        }
-
-        ConnectJoints(joints[0], joints[18]);
-        ConnectJoints(joints[0], joints[22]);*/
-
-        return jointConnections;
-
-        void ConnectJoints(Joint jointA, Joint jointB)
-        {
-            jointConnections.Add(new JointConnection { posA = jointA.Position.ToUnityVector3(), posB = jointB.Position.ToUnityVector3() });
-        }
+        return joints;
     }
 
     private void Display(Joint[] joints)
@@ -271,6 +261,12 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
 }
 
+public enum DisplayOption
+{
+    TRACKED,
+    LOADED,
+    NONE
+}
 
 
 

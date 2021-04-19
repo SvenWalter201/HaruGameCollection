@@ -16,6 +16,8 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     [SerializeField] private UnityEngine.UI.Image irImage;
 
     public bool bodyTracking = false;
+    public bool imageTracking = false;
+    public bool imageDisplay = false;
 
     public ImageType imageType;
     public SkeletonDisplay skeletonDisplay;
@@ -48,6 +50,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     private int irWidth;
     private int irHeight;
 
+    private float syncedUpdateTimer = 0f;
 
     private Color[] colourPixels;
     private Color[] depthPixels;
@@ -65,10 +68,22 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         Close();
     }
 
+
     private void Update()
     {
+        if(syncedUpdateTimer <= 0f)
+        {
+            syncedUpdateTimer = 0.033f;
+            if (imageDisplay)
+            {
+                ShowImage();
+            }
+        }
+        else
+        {
+            syncedUpdateTimer -= Time.deltaTime;
+        }
 
-        ShowImage();
     }
 
     public void Init()
@@ -110,21 +125,39 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         colourHeight = calibration.ColorCameraCalibration.ResolutionHeight;
 
         Debug.Log("Kinect started successfully");
+        //Task.Run(() => ImuCapture());
 
         applicationRunning = true;
+    }
 
-        //Task.Run(()=>CameraCapture());
-        //Task.Run(()=> ImuCapture());
-        if (bodyTracking)
+    public bool BeginImageTracking()
+    {
+        if (device != null)
         {
-            Task.Run(() => BodyCapture());
+            imageTracking = true;
+            Task.Run(()=> CameraCapture());
+            return true;
+        }
+        else
+        {
+            Debug.Log("Can't start imagetracking, because no k4a-device is attached");
+            return false;
         }
     }
 
-    public void BeginBodyTracking()
+    public bool BeginBodyTracking()
     {
-        bodyTracking = true;
-        Task.Run(() => BodyCapture());
+        if(device != null)
+        {
+            bodyTracking = true;
+            Task.Run(() => BodyCapture());
+            return true;
+        }
+        else
+        {
+            Debug.Log("Can't start bodytracking, because no k4a-device is attached");
+            return false;
+        }
     }
 
     private void BodyCapture()
@@ -142,47 +175,51 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             bodyTracking = false;
             Debug.Log("An error occured: " + e.Message);
         }
-        while (bodyTracking)
+        while (bodyTracking && applicationRunning)
         {
-            try
+            if(syncedUpdateTimer <= 0f)
             {
-                if (bodyFrame != null)
+                try
                 {
-                    bodyFrame.Dispose();
-                }
-
-                Capture sensorCapture = device.GetCapture();
-                if (sensorCapture != null)
-                {
-                    tracker.EnqueueCapture(sensorCapture, TimeSpan.MaxValue);
-                    sensorCapture.Dispose();
-
-                    bodyFrame = tracker.PopResult(TimeSpan.MaxValue);
                     if (bodyFrame != null)
                     {
-                        // Successfully popped the body tracking result. Start your processing
-                        uint numBodies = bodyFrame.NumberOfBodies;
-                        if (numBodies > 0)
+                        bodyFrame.Dispose();
+                    }
+
+                    Capture sensorCapture = device.GetCapture();
+                    if (sensorCapture != null)
+                    {
+                        tracker.EnqueueCapture(sensorCapture, TimeSpan.MaxValue);
+                        sensorCapture.Dispose();
+
+                        bodyFrame = tracker.PopResult(TimeSpan.MaxValue);
+                        if (bodyFrame != null)
                         {
-                           
-                            skeletonDisplay.skeleton = bodyFrame.GetBody(0).Skeleton;
-                            skeletonDisplay.frame = btFrame;
-                            //Debug.Log("Tracking " + numBodies + " Bodies");
+                            // Successfully popped the body tracking result. Start your processing
+                            uint numBodies = bodyFrame.NumberOfBodies;
+                            if (numBodies > 0)
+                            {
+
+                                skeletonDisplay.trackedBody = bodyFrame.GetBody(0).Skeleton;
+                                skeletonDisplay.frame = btFrame;
+                                //Debug.Log("Tracking " + numBodies + " Bodies");
+                            }
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                bodyTracking = false;
-                Debug.Log("An error occured: " + e.Message);
-                if (bodyFrame != null)
+                catch (Exception e)
                 {
-                    bodyFrame.Dispose();
+                    bodyTracking = false;
+                    Debug.Log("An error occured: " + e.Message);
+                    if (bodyFrame != null)
+                    {
+                        bodyFrame.Dispose();
+                    }
+                    tracker.Shutdown();
+                    tracker.Dispose();
                 }
-                tracker.Shutdown();
-                tracker.Dispose();
             }
+            
         }
         if (bodyFrame != null)
         {
@@ -195,39 +232,24 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     private void CameraCapture()
     {
-        while (applicationRunning)
+        while (imageTracking && applicationRunning)
         {
-            try
+            if (syncedUpdateTimer <= 0f)
             {
-                using (var  capture = device.GetCapture())
+                try
                 {
-                    BuildColourImageSource(capture);
-                    //BuildDepthImageSource(capture);
-                    BuildIRImageSource(capture);
-
-                    /*
-                    switch (imageType)
+                    using (var capture = device.GetCapture())
                     {
-                        case ImageType.Colour: 
-                            {
-                                break;
-                            }
-                        case ImageType.Depth:
-                            {
-                                break;
-                            }
-                        case ImageType.IR:
-                            {
-                                break;
-                            }
+                        BuildColourImageSource(capture);
+                        BuildDepthImageSource(capture);
+                        BuildIRImageSource(capture);
                     }
-                    */
                 }
-            }
-            catch (Exception e)
-            {
-                applicationRunning = false;
-                Debug.Log("An error occured: " + e.Message);
+                catch (Exception e)
+                {
+                    imageTracking = false;
+                    Debug.Log("An error occured: " + e.Message);
+                }
             }
         }
     }
@@ -289,8 +311,6 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 depthPixels[i].r = GetDepthColor(depth, RED_MAX_VALUE_LOWER, RED_MAX_VALUE_UPPER);
                 depthPixels[i].b = GetDepthColor(depth, Blue_MAX_VALUE, Blue_MAX_VALUE);
                 depthPixels[i].g = GetDepthColor(depth, GREEN_MAX_VALUE_LOWER, GREEN_MAX_VALUE_UPPER);
-
-
             }
         }
 
