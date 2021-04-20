@@ -14,10 +14,6 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     [SerializeField] private UnityEngine.UI.RawImage depthImage;
     [SerializeField] private UnityEngine.UI.RawImage irImage;
 
-    public bool bodyTracking = false;
-    public bool imageTracking = false;
-    public bool imageDisplay = false;
-
     public SkeletonDisplay skeletonDisplay;
 
     [Header("Configuration Parameters. Cant be changed at runtime")]
@@ -53,9 +49,8 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     private ushort[] depthPixels;
     private ushort[] irPixels;
 
-    private bool applicationRunning = false;
-
     static int colourKernelId, irKernelId, depthKernelId;
+
     private void Awake()
     {
         colourKernelId = computeShader.FindKernel("ColourTex");
@@ -124,7 +119,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         if(syncedUpdateTimer <= 0f)
         {
             syncedUpdateTimer = 0.033f;
-            if (imageDisplay)
+            if (AppState.imageDisplayRunning)
             {
                 ShowImage();
             }
@@ -177,14 +172,14 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         Debug.Log("Kinect started successfully");
         //Task.Run(() => ImuCapture());
 
-        applicationRunning = true;
+        AppState.applicationRunning = true;
     }
 
     public bool BeginImageTracking()
     {
         if (device != null)
         {
-            imageTracking = true;
+            AppState.imageTrackingRunning = true;
             Task.Run(()=> CameraCapture());
             return true;
         }
@@ -207,10 +202,10 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             catch (Exception e)
             {
                 Debug.Log("An error occured: " + e.Message);
-                bodyTracking = false;
+                AppState.bodyTrackingRunning = false;
                 return false;
             }
-            bodyTracking = true;
+            AppState.bodyTrackingRunning = true;
             return true;
         }
         else
@@ -225,7 +220,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         Frame bodyFrame = null;
         int btFrame = 0;
         
-        while (bodyTracking && applicationRunning)
+        while (AppState.bodyTrackingRunning && AppState.applicationRunning)
         {
             if(syncedUpdateTimer <= 0f)
             {
@@ -259,7 +254,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 }
                 catch (Exception e)
                 {
-                    bodyTracking = false;
+                    AppState.bodyTrackingRunning = false;
                     Debug.Log("An error occured: " + e.Message);
                     if (bodyFrame != null)
                     {
@@ -282,7 +277,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     private void CameraCapture()
     {
-        while (imageTracking && applicationRunning)
+        while (AppState.imageTrackingRunning && AppState.applicationRunning)
         {
             if (syncedUpdateTimer <= 0f)
             {
@@ -298,7 +293,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 }
                 catch (Exception e)
                 {
-                    imageTracking = false;
+                    AppState.imageTrackingRunning = false;
                     Debug.Log("An error occured: " + e.Message);
                 }
             }
@@ -354,7 +349,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     private void ImuCapture()
     {
-        while (applicationRunning)
+        while (AppState.applicationRunning)
         {
             try
             {
@@ -371,7 +366,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             }
             catch (Exception e)
             {
-                applicationRunning = false;
+                AppState.applicationRunning = false;
                 Debug.Log("An error occured: " + e.Message);
             }
         }
@@ -384,8 +379,8 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     public void Close()
     {
-        bodyTracking = false;
-        applicationRunning = false;
+        AppState.bodyTrackingRunning = false;
+        AppState.applicationRunning = false;
         Task.WaitAny(Task.Delay(1000));
         if (device == null)
         {

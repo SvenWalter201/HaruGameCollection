@@ -8,6 +8,8 @@ using Microsoft.Azure.Kinect.BodyTracking;
 using UnityEngine;
 using System.Numerics;
 using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
+using static UnityEngine.Mathf;
+using Vector3 = UnityEngine.Vector3;
 public static class Extensions
 {
     public static void Assign(this LineRenderer lR, int index, Joint joint)
@@ -16,9 +18,9 @@ public static class Extensions
     }
 
 
-    public static UnityEngine.Vector3 ToUnityVector3(this System.Numerics.Vector3 vec)
+    public static Vector3 ToUnityVector3(this System.Numerics.Vector3 vec)
     {
-        return new UnityEngine.Vector3(vec.X, vec.Y, vec.Z);
+        return new Vector3(vec.X, vec.Y, vec.Z);
     }
 
     public static Color[] CreateColourMap(this Image image, double dpiX = 300, double dpiY = 300)
@@ -120,11 +122,11 @@ public static class Extensions
             {
                 if (depth < rangeLower)
                 {
-                    c = (500 - Mathf.Abs(depth - rangeLower)) / 2;
+                    c = (500 - Abs(depth - rangeLower)) / 2;
                 }
                 else
                 {
-                    c = (500 - Mathf.Abs(depth - rangeUpper)) / 2;
+                    c = (500 - Abs(depth - rangeUpper)) / 2;
                 }
             }
 
@@ -136,6 +138,17 @@ public static class Extensions
         }
 
         //depthPixels = img.CreateColourMap();   
+    }
+
+    
+    public static Vector3 Absolute(this Vector3 v3)
+    {
+        return new Vector3(Abs(v3.x), Abs(v3.y), Abs(v3.z));
+    }
+
+    public static Vector3 Square(this Vector3 v3)
+    {
+        return new Vector3(v3.x * v3.x, v3.y * v3.y, v3.z * v3.z);
     }
 }
 

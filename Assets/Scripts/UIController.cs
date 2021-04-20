@@ -2,22 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class UIController : Singleton<UIController>
 {
-    [SerializeField] private Button bodyTracking;
-    [SerializeField] private Dropdown display;
-    [SerializeField] private Button record;
-    [SerializeField] private Button loadMotion;
-    [SerializeField] private Button saveMotion;
-    [SerializeField] private InputField fileNameField;
-    [SerializeField] private Button savePose;
-    [SerializeField] public Slider frameSlider;
-    [SerializeField] private Button playPauseButton;
+    [Header("ImageSection")]
     [SerializeField] private Button imageTracking;
     [SerializeField] private Button imageDisplay;
+    [Space]
+    [Header("BTSection")]
+    [SerializeField] private Button bodyTracking;
+    [SerializeField] private Button record;
     [SerializeField] private Button bodyCompare;
-
+    [Space]
+    [Header("FileManagementSection")]
+    [SerializeField] private InputField fileNameField;
+    [SerializeField] private Button loadMotion;
+    [SerializeField] private Button saveMotion;
+    [SerializeField] private Button savePose;
+    [Space]
+    [Header("ReplaySection")]
+    [SerializeField] public Slider frameSlider;
+    [SerializeField] private Button playPauseButton;
+    [SerializeField] private Dropdown display;
+    [Space]
+    [Header("3D Viewport")]
+    [SerializeField] private TextMeshProUGUI compareAccuracy;
+    [Header("ImageDisplayPanel")]
     [SerializeField] private GameObject imageDisplayPanel;
+
     private GameObject savePoseGO;
     private GameObject bodyTrackingGO;
     private GameObject displayGO;
@@ -94,15 +106,15 @@ public class UIController : Singleton<UIController>
         savePoseGO.SetActive(false);
         bodyCompareGO.SetActive(false);
 
-        SkeletonDisplay.Instance.InitUIComponents(frameSlider, playPauseButton);
+        SkeletonDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy);
 
     }
 
     public void TrackImageData()
     {
-        if (KinectDeviceManager.Instance.imageTracking)
+        if (AppState.imageTrackingRunning)
         {
-            KinectDeviceManager.Instance.imageTracking = false;
+            AppState.imageTrackingRunning = false;
             imageTracking.colors = offStateColors;
 
             imageDisplayGO.SetActive(false);
@@ -121,37 +133,47 @@ public class UIController : Singleton<UIController>
 
     public void DisplayImageData()
     {
-        if (KinectDeviceManager.Instance.imageDisplay)
+        if (AppState.imageDisplayRunning)
         {
-            KinectDeviceManager.Instance.imageDisplay = false;
+            AppState.imageDisplayRunning = false;
             imageDisplay.colors = offStateColors;
             imageDisplayPanel.SetActive(false);
         }
         else
         {
             imageDisplayPanel.SetActive(true);
-            KinectDeviceManager.Instance.imageDisplay = true;
+            AppState.imageDisplayRunning = true;
             imageDisplay.colors = onStateColors;
         }
     }
 
     public void RunBodyCompare()
     {
-        if (KinectDeviceManager.Instance.bodyTracking)
+        if (AppState.bodyTrackingRunning)
         {
-            SkeletonDisplay.Instance.CompareTrackedWithLoaded();
+            if (AppState.bodyCompareRunning)
+            {
+                AppState.bodyCompareRunning = false;
+            }
+            else
+            {
+                AppState.bodyCompareRunning = true;
+                StartCoroutine(SkeletonDisplay.Instance.BodyCompareCoroutine());
+            }
         }
     }
 
     public void TrackBodyData()
     {
-        if (KinectDeviceManager.Instance.bodyTracking)
+        if (AppState.bodyTrackingRunning)
         {
-            KinectDeviceManager.Instance.bodyTracking = false;
+            AppState.bodyTrackingRunning = false;
             bodyTracking.colors = offStateColors;
 
             recordGO.SetActive(false);
+            AppState.bodyCompareRunning = false;
             bodyCompareGO.SetActive(false);
+            
 
         }
         else
@@ -162,7 +184,7 @@ public class UIController : Singleton<UIController>
 
                 //enable UI elements
                 recordGO.SetActive(true);
-                if (SkeletonTracker.Instance.loadedMotion != null)
+                if (AppState.motionLoaded)
                 {
                     bodyCompareGO.SetActive(true);
                     //compare enable
@@ -186,7 +208,7 @@ public class UIController : Singleton<UIController>
 
     private void CheckMotionLoaded(Motion motion)
     {
-        if (motion == null)
+        if (!AppState.motionLoaded)
         {
             bodyCompareGO.SetActive(false);
             Debug.Log("couldn't load motion. File either doesn't exist or is broken");
@@ -205,7 +227,7 @@ public class UIController : Singleton<UIController>
             savePoseGO.SetActive(false);
         }
         saveMotionGO.SetActive(true);
-        if (KinectDeviceManager.Instance.bodyTracking)
+        if (AppState.bodyTrackingRunning)
         {
             bodyCompareGO.SetActive(true);
         }
@@ -213,15 +235,15 @@ public class UIController : Singleton<UIController>
 
     public void RecordCapture()
     {
-        if (SkeletonDisplay.Instance.record)
+        if (AppState.recording)
         {
-            SkeletonDisplay.Instance.record = false;
+            AppState.recording = false;
             record.colors = offStateColors;
             CheckMotionLoaded(SkeletonTracker.Instance.StoreMotion());
         }
         else
         {
-            SkeletonDisplay.Instance.record = true;
+            AppState.recording = true;
             SkeletonTracker.Instance.BeginMotionCapture();
             record.colors = onStateColors;
         }
@@ -235,9 +257,9 @@ public class UIController : Singleton<UIController>
 
     public void SavePose()
     {
-        Motion loaded = SkeletonTracker.Instance.loadedMotion;
-        if(loaded != null)
+        if(AppState.motionLoaded)
         {
+            Motion loaded = SkeletonTracker.Instance.loadedMotion;
             int frame = Mathf.RoundToInt(frameSlider.value * loaded.motion.Count);
             if (frame >= loaded.motion.Count)
             {

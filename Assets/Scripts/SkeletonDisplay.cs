@@ -6,11 +6,11 @@ using Microsoft.Azure.Kinect.BodyTracking;
 using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 using Vector3 = UnityEngine.Vector3;
 using Quaternion = System.Numerics.Quaternion;
+using TMPro;
 
 public class SkeletonDisplay : Singleton<SkeletonDisplay>
 {
     public bool tracking = false;
-    public bool record = false;
     public DisplayOption display = DisplayOption.TRACKED;
     public bool replaying = false;
 
@@ -34,6 +34,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     }
 
     private Slider frameSlider;
+    private TextMeshProUGUI compareAccuracy;
     //private Button playPauseButton;
 
     private bool playing = true;
@@ -41,11 +42,12 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     private int replayFrame;
     private Joint[] joints;
 
-    public void InitUIComponents(Slider frameSlider, Button playPauseButton)
+    public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy)
     {
         playPauseButton.onClick.AddListener(() => playing = !playing);
 
         this.frameSlider = frameSlider;
+        this.compareAccuracy = compareAccuracy;
         //this.playPauseButton = playPauseButton;
 
     }
@@ -77,7 +79,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     {
         if (currentTimeStep <= 0f)
         {
-            if (KinectDeviceManager.Instance.bodyTracking)
+            if (AppState.bodyTrackingRunning)
             {
                 joints = ResolveSkeleton();
             }
@@ -86,7 +88,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             {
                 case DisplayOption.TRACKED:
                     {
-                        if (KinectDeviceManager.Instance.bodyTracking)
+                        if (AppState.bodyTrackingRunning)
                         {
                             if (!bodyParentGO.activeInHierarchy)
                             {
@@ -100,7 +102,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                     {
 
                         motion = SkeletonTracker.Instance.loadedMotion;
-                        if(motion != null)
+                        if(motion != null && motion.motion != null)
                         {
                             if (!bodyParentGO.activeInHierarchy)
                             {
@@ -172,16 +174,44 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             joints[i] = trackedBody.GetJoint(i);
         }
 
-        if (record)
+        if (AppState.recording)
         {
             SkeletonTracker.Instance.StoreFrame(joints);
         }
         return joints;
     }
 
-    public void CompareTrackedWithLoaded()
+    private bool bodyCompareRunning = false;
+    public void RunBodyCompare()
     {
-        ComparePoses(joints, SkeletonTracker.Instance.loadedMotion.motion[0]);
+        if (bodyCompareRunning)
+        {
+            bodyCompareRunning = false;
+        }
+        else
+        {
+            StartCoroutine(BodyCompareCoroutine());
+        }
+    }
+
+    public IEnumerator BodyCompareCoroutine()
+    {
+        float timer = 0f;
+        while (AppState.bodyCompareRunning)
+        {
+            if(timer <= 0f)
+            {
+                ComparePoses(joints, SkeletonTracker.Instance.loadedMotion.motion[0]);
+                timer = 0.033f;
+            }
+            else
+            {
+                timer -= Time.deltaTime;
+            }
+
+            yield return null;
+        }
+        compareAccuracy.text = "";
     }
 
     private void Display(Joint[] joints)
@@ -254,13 +284,34 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             Vector3 relativeOriginalPosition = originalPose[i].Position.ToUnityVector3() - originalPelvisPosition;
             Vector3 relativeComparePosition = comparePose[i].Position.ToUnityVector3() - comparePelvisPosition;
 
-            posDifferenceSum += relativeComparePosition - relativeOriginalPosition;
+            //take absolute values?
+            Vector3 difference = relativeComparePosition - relativeOriginalPosition;
+            posDifferenceSum += difference.Square();
             comparedJointsCount++;
         }
 
         //average positional difference in mm
         Vector3 posDifference = posDifferenceSum /= comparedJointsCount;
-        Debug.Log("Positional difference in mm: " + posDifference);
+        float posDifferenceD = Mathf.Sqrt(posDifference.x * posDifference.x + posDifference.y + posDifference.y + posDifference.z + posDifference.z);
+
+        int percent;
+        //20000 = 0% |100 = 100%
+        if(posDifferenceD > 35000)
+        {
+            percent = 0;
+        }
+        else if(posDifferenceD < 200)
+        {
+            percent = 100;
+        }
+        else
+        {
+            //1% = 348
+            percent = 100 - Mathf.RoundToInt((posDifferenceD-200) / 348);
+        }
+
+        compareAccuracy.text = "Accuracy: " + percent + " %";
+        //Debug.Log("Positional difference in mm: " + posDifference);
     }
 
 

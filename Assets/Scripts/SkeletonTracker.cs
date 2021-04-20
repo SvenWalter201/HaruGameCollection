@@ -53,8 +53,10 @@ public class SkeletonTracker : Singleton<SkeletonTracker>
             string jsonString = File.ReadAllText(path);
             Motion motion = JsonConvert.DeserializeObject<Motion>(jsonString);
             loadedMotion = motion;
+            AppState.motionLoaded = true;
             return motion;
         }
+        AppState.motionLoaded = false;
         return null;
     }
 
