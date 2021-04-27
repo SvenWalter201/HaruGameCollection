@@ -11,6 +11,11 @@ public class Vocabulary
     public string[] person;
     public string[] animal;
     public string[] thing;
+    public string[] mood;
+    public string[] action;
+    public string[] linkingword;
+    public string[] setting;
+    public string[] settingdescription;
 }
 
 

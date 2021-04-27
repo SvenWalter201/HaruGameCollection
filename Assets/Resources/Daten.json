@@ -1,0 +1,81 @@
+﻿{
+  "template": [
+    "Das ganze spielt @setting@, wobei @animal@ @position@ @action@",
+    "@position@ <ist> @thing@.",
+    "@linkingword@ @position@ @action@ @mood@ @person@.",
+    "@animal@ @action@ @position@ "
+  ],
+  "position": [
+    "links",
+    "rechts",
+    "unten",
+    "im Vordergrung",
+    "im Hintergrund",
+    "vorne links",
+    "vorne rechts",
+    "hinten links",
+    "vorne rechts"
+  ],
+  "person": [
+    "eine Großmutter f",
+    "ein Junge m",
+    "ein Mädchen f",
+    "eine Bäckerin f",
+    "ein Bäcker m",
+    "eine Krankenschwester f",
+    "ein Rollstuhlfahrer m",
+    "eine Rollstuhlfahrerin f"
+  ],
+  "animal": [
+    "Eine Katze f",
+    "Ein Hund m",
+    "Ein Papagei m",
+    "Haru n"
+  ],
+  "thing": [
+    "Haus n",
+    "Baum m",
+    "Wolkenkratzer m",
+    "Busch m",
+    "Laterne f"
+  ],
+  "mood":[
+    "[gelangweilt, gelangweilter, gelangweilte, gelangweiltes]",
+    "[aufgeret, aufgereter, aufgerete, aufgeretes]",
+    "[erbost, erboster, erboste, erbostes]",
+    "[freundlich, freundlicher, freundliche, freundliches]",
+    "[erschrocken, erschrockener, erschrockene, erschrockenes]",
+    "[bunt, bunter, bunte, buntes]",
+    "[unförmig, unförmiger, unförmige, unförmiges]"
+  ],
+  "action":[
+    "wartet",
+    "isst",
+    "arbeitet",
+    "malt",
+    "überlegt",
+    "musiziert",
+    "läuft",
+  ],
+  "linkingword":[
+    "Weiter",
+    "Und",
+    "Nicht zu vergessen,",
+    "Auch",
+    "",
+    "Fast vergessen, ",
+    "Huch, was ist das denn? "
+  ],
+  "setting":[
+    "in [der heutigen Zeit, in der Zukunft, in den 80ern]",
+    "unter Wasser",
+    "in einer [tristen, außerirdischen, mit Regenbögen bedeckten, märchenahnlichen, dschungelartigen] Welt",
+    "auf [einem anderen Planeten, einem hohen Berg]"
+  ],
+  "settingdescription":[
+    "[auf einer schönen Wiese, ]",
+    "entgegen aller Erwartungen []",
+    "",
+  ]
+  
+}

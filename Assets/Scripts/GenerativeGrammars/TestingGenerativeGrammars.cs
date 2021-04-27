@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
 //using System.Text.Json;
-
+/*
 public class TestingGenerativeGrammars : MonoBehaviour
 {
     private const string fileName = "/Resources/Vocabulary.json";
@@ -119,3 +119,4 @@ public class TestingGenerativeGrammars : MonoBehaviour
         return text.Substring(beginIndex, endIndex - beginIndex).Trim();
     }
 }
+*/
