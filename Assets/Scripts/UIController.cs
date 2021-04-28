@@ -27,6 +27,7 @@ public class UIController : Singleton<UIController>
     [Space]
     [Header("3D Viewport")]
     [SerializeField] private TextMeshProUGUI compareAccuracy;
+    [SerializeField] private TMP_InputField smoothingFrames;
     [Header("ImageDisplayPanel")]
     [SerializeField] private GameObject imageDisplayPanel;
 
@@ -68,6 +69,8 @@ public class UIController : Singleton<UIController>
 
     private void Start()
     {
+
+
         bodyTrackingGO = bodyTracking.gameObject;
         displayGO = display.gameObject;
         recordGO = record.gameObject;
@@ -106,7 +109,7 @@ public class UIController : Singleton<UIController>
         savePoseGO.SetActive(false);
         bodyCompareGO.SetActive(false);
 
-        SkeletonDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy);
+        SkeletonDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy, smoothingFrames);
 
     }
 

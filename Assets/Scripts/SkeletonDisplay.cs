@@ -35,6 +35,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     private Slider frameSlider;
     private TextMeshProUGUI compareAccuracy;
+    private TMP_InputField smoothingFrames;
     //private Button playPauseButton;
 
     private bool playing = true;
@@ -42,12 +43,13 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     private int replayFrame;
     private Joint[] joints;
 
-    public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy)
+    public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy, TMP_InputField smoothingFrames)
     {
         playPauseButton.onClick.AddListener(() => playing = !playing);
 
         this.frameSlider = frameSlider;
         this.compareAccuracy = compareAccuracy;
+        this.smoothingFrames = smoothingFrames;
         //this.playPauseButton = playPauseButton;
 
     }
@@ -94,7 +96,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                             {
                                 OnBeginDisplay();
                             }
-                            Display(joints);
+                            //Display(joints);
                         }
                         break;
                     }
@@ -133,7 +135,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     {
         if(motion.motion.Count == 1)
         {
-            Display(motion.motion[0]);
+            Display(GetVectors(motion.motion[0]));
             return;
         }
 
@@ -150,7 +152,55 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                 replayFrame--;
             }
         }
-        Display(motion.motion[replayFrame]);
+        Display(GetInterpolatedValue(motion.motion, replayFrame)); //motion.motion[replayFrame]);
+    }
+
+    private int interpolationFrames = 6; //0.267 sec
+    public Vector3[] GetInterpolatedValue(List<Joint[]> motion, int currentFrame)
+    {
+        string x = smoothingFrames.text;
+        if(int.TryParse(x, out int f))
+        {
+            interpolationFrames = f;
+        }
+        else
+        {
+            interpolationFrames = 1;
+        }
+        Joint[] joints = motion[currentFrame];
+        Vector3[] interpolatedFrames = new Vector3[joints.Length];
+
+        for (int i = 0; i < joints.Length; i++)
+        {
+            Vector3 joint = Vector3.zero;
+            float divisor = 0;
+            float p = interpolationFrames + 1;
+            for (int j = 0; j <= interpolationFrames; j++, p/=2f)
+            {
+                if(currentFrame-j < 0)
+                {
+                    break;
+                }
+                divisor += p;
+                joint += motion[currentFrame - j][i].Position.ToUnityVector3() * p;
+            }
+            joint /= (divisor * -200f);
+            interpolatedFrames[i] = joint;
+        }
+
+        return interpolatedFrames;
+    }
+
+    public Vector3[] GetVectors(Joint[] jointPositions)
+    {
+        Vector3[] positionFrame = new Vector3[jointPositions.Length];
+        for (int i = 0; i < jointPositions.Length; i++)
+        {
+            positionFrame[i] = jointPositions[i].Position.ToUnityVector3() / -200f;
+
+        }
+        return positionFrame;
+
     }
 
     public void OnBeginDisplay()
@@ -214,47 +264,70 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         compareAccuracy.text = "";
     }
 
-    private void Display(Joint[] joints)
+    public int comparePercentage;
+    public IEnumerator BodyCompareCoroutine(Joint[] pose, float compareTime)
     {
-        //body
-        body.Assign(0, joints[(int)JointId.Pelvis]);
-        body.Assign(1, joints[(int)JointId.SpineNavel]);
-        body.Assign(2, joints[(int)JointId.SpineChest]);
-        body.Assign(3, joints[(int)JointId.Neck]);
-        body.Assign(4, joints[(int)JointId.Head]);
+        float timer = 0f;
+        comparePercentage = 0;
+        while (compareTime > 0f)
+        {
+            compareTime -= Time.deltaTime;
+            if (timer <= 0f)
+            {
+                comparePercentage = ComparePoses(joints, pose);
+                timer = 0.033f;
+            }
+            else
+            {
+                timer -= Time.deltaTime;
+            }
 
-        //left arm
-        leftArm.Assign(0, joints[(int)JointId.SpineChest]);
-        leftArm.Assign(1, joints[(int)JointId.ClavicleLeft]);
-        leftArm.Assign(2, joints[(int)JointId.ShoulderLeft]);
-        leftArm.Assign(3, joints[(int)JointId.ElbowLeft]);
-        leftArm.Assign(4, joints[(int)JointId.WristLeft]);
-        leftArm.Assign(5, joints[(int)JointId.HandLeft]);
-        leftArm.Assign(6, joints[(int)JointId.HandTipLeft]);
-
-        //left arm
-        rightArm.Assign(0, joints[(int)JointId.SpineChest]);
-        rightArm.Assign(1, joints[(int)JointId.ClavicleRight]);
-        rightArm.Assign(2, joints[(int)JointId.ShoulderRight]);
-        rightArm.Assign(3, joints[(int)JointId.ElbowRight]);
-        rightArm.Assign(4, joints[(int)JointId.WristRight]);
-        rightArm.Assign(5, joints[(int)JointId.HandRight]);
-        rightArm.Assign(6, joints[(int)JointId.HandTipRight]);
-
-        leftLeg.Assign(0, joints[(int)JointId.Pelvis]);
-        leftLeg.Assign(1, joints[(int)JointId.HipLeft]);
-        leftLeg.Assign(2, joints[(int)JointId.KneeLeft]);
-        leftLeg.Assign(3, joints[(int)JointId.AnkleLeft]);
-        leftLeg.Assign(4, joints[(int)JointId.FootLeft]);
-
-        rightLeg.Assign(0, joints[(int)JointId.Pelvis]);
-        rightLeg.Assign(1, joints[(int)JointId.HipRight]);
-        rightLeg.Assign(2, joints[(int)JointId.KneeRight]);
-        rightLeg.Assign(3, joints[(int)JointId.AnkleRight]);
-        rightLeg.Assign(4, joints[(int)JointId.FootRight]);
+            yield return null;
+        }
+        //compareAccuracy.text = "";
     }
 
-    public void ComparePoses(Joint[] originalPose, Joint[] comparePose)
+    public void Display(Vector3[] joints)
+    {
+        //body
+        body.SetPosition(0, joints[(int)JointId.Pelvis]);
+        body.SetPosition(1, joints[(int)JointId.SpineNavel]);
+        body.SetPosition(2, joints[(int)JointId.SpineChest]);
+        body.SetPosition(3, joints[(int)JointId.Neck]);
+        body.SetPosition(4, joints[(int)JointId.Head]);
+
+        //left arm
+        leftArm.SetPosition(0, joints[(int)JointId.SpineChest]);
+        leftArm.SetPosition(1, joints[(int)JointId.ClavicleLeft]);
+        leftArm.SetPosition(2, joints[(int)JointId.ShoulderLeft]);
+        leftArm.SetPosition(3, joints[(int)JointId.ElbowLeft]);
+        leftArm.SetPosition(4, joints[(int)JointId.WristLeft]);
+        leftArm.SetPosition(5, joints[(int)JointId.HandLeft]);
+        leftArm.SetPosition(6, joints[(int)JointId.HandTipLeft]);
+
+        //left arm
+        rightArm.SetPosition(0, joints[(int)JointId.SpineChest]);
+        rightArm.SetPosition(1, joints[(int)JointId.ClavicleRight]);
+        rightArm.SetPosition(2, joints[(int)JointId.ShoulderRight]);
+        rightArm.SetPosition(3, joints[(int)JointId.ElbowRight]);
+        rightArm.SetPosition(4, joints[(int)JointId.WristRight]);
+        rightArm.SetPosition(5, joints[(int)JointId.HandRight]);
+        rightArm.SetPosition(6, joints[(int)JointId.HandTipRight]);
+
+        leftLeg.SetPosition(0, joints[(int)JointId.Pelvis]);
+        leftLeg.SetPosition(1, joints[(int)JointId.HipLeft]);
+        leftLeg.SetPosition(2, joints[(int)JointId.KneeLeft]);
+        leftLeg.SetPosition(3, joints[(int)JointId.AnkleLeft]);
+        leftLeg.SetPosition(4, joints[(int)JointId.FootLeft]);
+
+        rightLeg.SetPosition(0, joints[(int)JointId.Pelvis]);
+        rightLeg.SetPosition(1, joints[(int)JointId.HipRight]);
+        rightLeg.SetPosition(2, joints[(int)JointId.KneeRight]);
+        rightLeg.SetPosition(3, joints[(int)JointId.AnkleRight]);
+        rightLeg.SetPosition(4, joints[(int)JointId.FootRight]);
+    }
+
+    public int ComparePoses(Joint[] originalPose, Joint[] comparePose)
     {
         Vector3 posDifferenceSum = Vector3.zero;
 
@@ -265,7 +338,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         if (originalPose.Length != comparePose.Length)
         {
             Debug.Log("poses had different amount of joints");
-            return;
+            return -1;
         }
 
         int comparedJointsCount = 0;
@@ -312,6 +385,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
         compareAccuracy.text = "Accuracy: " + percent + " %";
         //Debug.Log("Positional difference in mm: " + posDifference);
+        return percent;
     }
 
 

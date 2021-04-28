@@ -10,9 +10,9 @@ using UnityEngine;
 
 public class KinectDeviceManager : Singleton<KinectDeviceManager>
 {
-    [SerializeField] private UnityEngine.UI.RawImage colourImage;
-    [SerializeField] private UnityEngine.UI.RawImage depthImage;
-    [SerializeField] private UnityEngine.UI.RawImage irImage;
+    [SerializeField] private UnityEngine.UI.RawImage colourImage = default;
+    [SerializeField] private UnityEngine.UI.RawImage depthImage = default;
+    [SerializeField] private UnityEngine.UI.RawImage irImage = default;
 
     public SkeletonDisplay skeletonDisplay;
 
@@ -198,6 +198,8 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             {
                 Tracker tracker = Tracker.Create(calibration, TrackerConfiguration.Default);
                 Task.Run(() => BodyCapture(tracker));
+                AppState.bodyTrackingRunning = true;
+                return true;
             }
             catch (Exception e)
             {
@@ -205,8 +207,6 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 AppState.bodyTrackingRunning = false;
                 return false;
             }
-            AppState.bodyTrackingRunning = true;
-            return true;
         }
         else
         {
