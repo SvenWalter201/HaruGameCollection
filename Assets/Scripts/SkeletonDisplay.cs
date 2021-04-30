@@ -96,7 +96,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                             {
                                 OnBeginDisplay();
                             }
-                            //Display(joints);
+                            Display(GetVectors(joints));
                         }
                         break;
                     }
@@ -120,6 +120,10 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                         {
                             OnStopDisplay();
                         }
+                        break;
+                    }
+                case DisplayOption.IGNORE:
+                    {
                         break;
                     }
             }
@@ -251,8 +255,10 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         {
             if(timer <= 0f)
             {
-                ComparePoses(joints, SkeletonTracker.Instance.loadedMotion.motion[0]);
-                timer = 0.033f;
+                int percent = ComparePoses(joints, SkeletonTracker.Instance.loadedMotion.motion[0]);
+                compareAccuracy.text = "Accuracy: " + percent + " %";
+
+                timer = FPS_30_DELTA;
             }
             else
             {
@@ -264,7 +270,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         compareAccuracy.text = "";
     }
 
-    public int comparePercentage;
+    public int comparePercentage = -1;
     public IEnumerator BodyCompareCoroutine(Joint[] pose, float compareTime)
     {
         float timer = 0f;
@@ -275,7 +281,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             if (timer <= 0f)
             {
                 comparePercentage = ComparePoses(joints, pose);
-                timer = 0.033f;
+                timer = FPS_30_DELTA;
             }
             else
             {
@@ -284,7 +290,6 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
             yield return null;
         }
-        //compareAccuracy.text = "";
     }
 
     public void Display(Vector3[] joints)
@@ -329,6 +334,10 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     public int ComparePoses(Joint[] originalPose, Joint[] comparePose)
     {
+        if(originalPose == null || comparePose == null)
+        {
+            return -1;
+        }
         Vector3 posDifferenceSum = Vector3.zero;
 
         Vector3 originalPelvisPosition = originalPose[(int)JointId.Pelvis].Position.ToUnityVector3();
@@ -365,11 +374,12 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
         //average positional difference in mm
         Vector3 posDifference = posDifferenceSum /= comparedJointsCount;
-        float posDifferenceD = Mathf.Sqrt(posDifference.x * posDifference.x + posDifference.y + posDifference.y + posDifference.z + posDifference.z);
+
+        float posDifferenceD = Mathf.Sqrt(posDifference.x * posDifference.x + posDifference.y * posDifference.y + posDifference.z * posDifference.z);
 
         int percent;
         //20000 = 0% |100 = 100%
-        if(posDifferenceD > 35000)
+        if(posDifferenceD > 80000)
         {
             percent = 0;
         }
@@ -380,11 +390,11 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         else
         {
             //1% = 348
-            percent = 100 - Mathf.RoundToInt((posDifferenceD-200) / 348);
+            percent = 100 - Mathf.RoundToInt((posDifferenceD-200) / 798);
         }
 
-        compareAccuracy.text = "Accuracy: " + percent + " %";
-        //Debug.Log("Positional difference in mm: " + posDifference);
+        //compareAccuracy.text = "Accuracy: " + percent + " %";
+        //Debug.Log("Positional difference in mm: " + posDifferenceD);
         return percent;
     }
 
@@ -401,7 +411,8 @@ public enum DisplayOption
 {
     TRACKED,
     LOADED,
-    NONE
+    NONE,
+    IGNORE
 }
 
 

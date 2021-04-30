@@ -23,6 +23,16 @@ public static class Extensions
         return new Vector3(vec.X, vec.Y, vec.Z);
     }
 
+    public static Vector3 ToXZVector3(this UnityEngine.Vector2 v2)
+    {
+        return v2.ToXZVector3(0f);
+    }
+
+    public static Vector3 ToXZVector3(this UnityEngine.Vector2 v2, float y)
+    {
+        return new Vector3(v2.x, y, v2.y);
+    }
+
     public static Color[] CreateColourMap(this Image image, double dpiX = 300, double dpiY = 300)
     {
         Color[] pixels;

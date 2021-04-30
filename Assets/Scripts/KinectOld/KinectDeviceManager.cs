@@ -199,6 +199,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 Tracker tracker = Tracker.Create(calibration, TrackerConfiguration.Default);
                 Task.Run(() => BodyCapture(tracker));
                 AppState.bodyTrackingRunning = true;
+                Debug.Log("Bodytracking started");
                 return true;
             }
             catch (Exception e)
@@ -244,10 +245,10 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                             uint numBodies = bodyFrame.NumberOfBodies;
                             if (numBodies > 0)
                             {
+                                //Debug.Log("tracking Body");
 
                                 skeletonDisplay.trackedBody = bodyFrame.GetBody(0).Skeleton;
                                 skeletonDisplay.frame = btFrame;
-                                //Debug.Log("Tracking " + numBodies + " Bodies");
                             }
                         }
                     }

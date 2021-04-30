@@ -22,6 +22,7 @@ public class MotionMemory : MonoBehaviour
     [SerializeField] private int maxGroupSize = 2;
     [SerializeField] private float cardShowingTime = 3;
     [SerializeField] private float motionGuessingTime = 2;
+    [SerializeField] private float timeBeforeMotionTracking = 1f;
     [SerializeField] private int maximumRounds = 3;
     [SerializeField] private float timeBetweenRounds = 2f;
     [SerializeField] private float timeBetweenShowingAndGuessing = 2f;
@@ -35,6 +36,7 @@ public class MotionMemory : MonoBehaviour
     [SerializeField] private Image progressBarMask;
     [SerializeField] private TextMeshProUGUI startScreenCountdown;
     [SerializeField] private TextMeshProUGUI startScreenText;
+    [SerializeField] private TextMeshProUGUI comparePercentage;
 
     private List<MemoryCard> unsolved;
     private List<MemoryCard> solved;
@@ -52,6 +54,7 @@ public class MotionMemory : MonoBehaviour
         List<Motion> poses = GetRandomSetOfPoses();
         MemoryCard[] cards = ConstructUI(poses);
         StartCoroutine(Memory(cards));
+        SkeletonDisplay.Instance.display = DisplayOption.IGNORE;
     }
 
     public List<Motion> GetRandomSetOfPoses()
@@ -85,6 +88,8 @@ public class MotionMemory : MonoBehaviour
 
     public IEnumerator Memory(MemoryCard[] cards)
     {
+        KinectDeviceManager.Instance.BeginBodyTracking();
+
         memoryCanvas.SetActive(false);
         startScreen.SetActive(true);
         startScreenText.text = "Get Ready!";
@@ -94,6 +99,7 @@ public class MotionMemory : MonoBehaviour
         startScreenText.text = "";
         startScreen.SetActive(false);
         memoryCanvas.SetActive(true);
+
 
         SkeletonDisplay.Instance.OnBeginDisplay();
 
@@ -109,7 +115,7 @@ public class MotionMemory : MonoBehaviour
 
             yield return CardShowingStage();
 
-            taskText.text = "Guess which motion was behind a card";
+            taskText.text = "Guess which motion was behind which card";
 
             yield return Timer(timeBetweenShowingAndGuessing);
 
@@ -137,22 +143,27 @@ public class MotionMemory : MonoBehaviour
         {
             startScreenText.text = "You win!";
         }
+
+        AppState.bodyTrackingRunning = false;
     }
 
     private IEnumerator CardShowingStage()
     {
         taskText.text = "Memorize the shown poses";
+
+        yield return Timer(timeBetweenCardsShowing);
+
         int remainingGroupSize = unsolved.Count < maxGroupSize ? unsolved.Count : maxGroupSize;
         for (int i = 0; i < remainingGroupSize; i++)
         {
-            MemoryCard pose = unsolved[GetRandom(unsolved.Count)];
-            BeginShowPose(pose);
+            MemoryCard card = unsolved[GetRandom(unsolved.Count)];
+            BeginShowPose(card);
             //wait for minimum accuracy or minimum time to pass
             yield return Timer(cardShowingTime, remainingTimeText);
-            StopShowPose(pose);
+            StopShowPose(card);
 
-            tempStack.Add(pose);
-            unsolved.Remove(pose);
+            tempStack.Add(card);
+            unsolved.Remove(card);
             if (i < remainingGroupSize)
             {
                 yield return Timer(timeBetweenCardsShowing);
@@ -162,19 +173,20 @@ public class MotionMemory : MonoBehaviour
 
     private IEnumerator CardGuessingPhase()
     {
-        KinectDeviceManager.Instance.BeginBodyTracking();
+        yield return Timer(2f);
         int tempStackSize = tempStack.Count;
         for (int i = 0; i < tempStackSize; i++)
         {
-            MemoryCard pose = tempStack[GetRandom(tempStack.Count)];
+            MemoryCard card = tempStack[GetRandom(tempStack.Count)];
             int maxAccuracy = 0;
-            BeginOutline(pose);
-            float remainingTime = motionGuessingTime;
-            if (AppState.bodyTrackingRunning)
-            {
-                StartCoroutine(SkeletonDisplay.Instance.BodyCompareCoroutine(pose.pose.motion[0], motionGuessingTime));
-            }
+            BeginOutline(card);
+            float remainingTime = motionGuessingTime- timeBeforeMotionTracking;
+            comparePercentage.text = "";
+            SkeletonDisplay.Instance.comparePercentage = 0;
 
+            yield return Timer(timeBeforeMotionTracking);
+            Coroutine cR = StartCoroutine(SkeletonDisplay.Instance.BodyCompareCoroutine(card.pose.motion[0], remainingTime));
+            
             progressBar.enabled = true;
             while (remainingTime > 0f)
             {
@@ -185,30 +197,34 @@ public class MotionMemory : MonoBehaviour
                 }
                 if (maxAccuracy > 80)
                 {
-                    solved.Add(pose);
+                    solved.Add(card);
+                    StopCoroutine(cR);
                     break;
                 }
+                comparePercentage.text = maxAccuracy.ToString();
+
                 remainingTime -= Time.deltaTime;
                 progressBarMask.fillAmount = 1 - remainingTime / motionGuessingTime;
                 remainingTimeText.text = Mathf.RoundToInt(remainingTime).ToString();
                 yield return null;
             }
-
+            comparePercentage.text = "";
             remainingTimeText.text = "";
             progressBarMask.fillAmount = 0f;
             progressBar.enabled = false;
 
-            StopOutline(pose);
+            StopOutline(card);
+            //Debug.Log("Acc: "+ maxAccuracy);
             if (maxAccuracy <= 80)
             {
-                unsolved.Add(pose);
+                unsolved.Add(card);
             }
 
-            tempStack.Remove(pose);
+            tempStack.Remove(card);
 
-            BeginShowPose(pose);
+            BeginShowPose(card);
             yield return Timer(cardShowingTime);
-            StopShowPose(pose);
+            StopShowPose(card);
 
 
             if (i < tempStackSize)
