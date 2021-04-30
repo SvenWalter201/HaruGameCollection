@@ -1,18 +1,18 @@
 ﻿{
   "template": [
     "Das ganze spielt @setting@, wobei @animal@ @position@ @action@",
-    "@position@ <ist> @thing@.",
+    "@position@ <ist> {ein} @thing@.",
     "@linkingword@ @position@ @action@ @mood@ @person@.",
-    "@animal@ @action@ @position@ "
+    "@animal@ @action@ @position@"
   ],
   "position": [
     "links",
+    "vorne links",
     "rechts",
+    "vorne rechts",
     "unten",
     "im Vordergrung",
     "im Hintergrund",
-    "vorne links",
-    "vorne rechts",
     "hinten links",
     "vorne rechts"
   ],
@@ -27,9 +27,9 @@
     "eine Rollstuhlfahrerin f"
   ],
   "animal": [
-    "Eine Katze f",
-    "Ein Hund m",
-    "Ein Papagei m",
+    "eine Katze f",
+    "ein Hund m",
+    "ein Papagei m",
     "Haru n"
   ],
   "thing": [
@@ -67,10 +67,10 @@
     "Huch, was ist das denn? "
   ],
   "setting":[
-    "in [der heutigen Zeit, in der Zukunft, in den 80ern]",
+    "in [der heutigen Zeit, der Zukunft,den 80ern]",
     "unter Wasser",
-    "in einer [tristen, außerirdischen, mit Regenbögen bedeckten, märchenahnlichen, dschungelartigen] Welt",
-    "auf [einem anderen Planeten, einem hohen Berg]"
+    "in einer [tristen,außerirdischen,mit Regenbögen bedeckten,märchenahnlichen,dschungelartigen] Welt",
+    "auf [einem anderen Planeten,einem hohen Berg]"
   ],
   "settingdescription":[
     "[auf einer schönen Wiese, ]",

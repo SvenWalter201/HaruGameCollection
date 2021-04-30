@@ -37,9 +37,9 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
     public GameObject skyscraper;
     public GameObject bush;
     public GameObject tree;
-    public GameObject house; 
+    public GameObject house;
 
-
+    private GenerativeGrammatiken grammars;
     public SentenceInformation[] sentences = new SentenceInformation[5];
     public int count = 0;
     const int MAX_SENTENCES = 5;
@@ -54,17 +54,8 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
     private void Start()
     {
         presentGameObjects = new List<GameObject>();
-        //GenerateMaterial();
+        grammars = GenerativeGrammatiken.Instance;
     }
-    /*
-    private void GenerateMaterial()
-    {
-        Material ins = Instantiate(baseMaterial);
-
-        //ins = SetTexture();
-        GetComponent<MeshRenderer>().material = ins;
-    }
-    */ 
 
     //setting the informatioin sent by the grammar generator
     public void SendToPGMAnager(SentenceInformation si)
@@ -75,7 +66,7 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
         if(count < MAX_SENTENCES)
         {
             
-            Debug.Log(count);
+            //Debug.Log(count);
             sentences[count] = si;
             //generate the new texture here
             PaintPicture(si);
@@ -92,10 +83,10 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
             }
             colliderBounds.Clear();
             presentGameObjects.Clear();
+            grammars.ClearRecentlyUsed();
             for(int i= 0; i < MAX_SENTENCES; i ++)
             {
                 Debug.Log(this.sentences[i].PrintToString());
-                
             }
             count = 0;
         }
@@ -104,40 +95,48 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
 
     private void PaintPicture(SentenceInformation si)
     {
-        /* group or single object spawning
-        if(si.Singular = false)
+        // group or single object spawning
+        if(si.Singular == false)
         {
+            int r = UnityEngine.Random.Range(2, 5);
+            for (int i = 0; i < r;i++)
+            {
+                PlaceObjectAt(si) ;
+                Debug.Log(si.Singular + " mit " + i + " von " + r + "objekten");
+            }
+        }
+        else
+        {
+            PlaceObjectAt(si);
+        }
 
-        }*/
-
-        PlaceObjectAt(si);
         ChangeMoodTo(si);
         
     }
 
-    private GameObject SpawnObject(string placableObject)
+    private GameObject SpawnObject(string placableObject, Vector3 p, Quaternion q)
     {
         
         switch (placableObject)
         {
             case "Wolkenkratzer":
                 {
-                    return Instantiate(skyscraper);
+                    return Instantiate(skyscraper, p, q);
                 }
             case "Haus":
                 {
-                    return Instantiate(house);
+                    return Instantiate(house, p, q);
                 }
             case "Baum":
                 {
-                    return Instantiate(tree);
+                    return Instantiate(tree, p, q);
                 }
             case "Busch":
                 {
-                    return Instantiate(bush);
+                    return Instantiate(bush, p, q);
                 }
             default:
-                return Instantiate(head);
+                return Instantiate(head, p, q);
         }
 
     }
@@ -155,14 +154,11 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
         return false;
     }
 
+
     private void PlaceObjectAt(SentenceInformation si)
     {
-        float radius = 5f;
-        //float X = 0;
-        //float Z = 0;
+        float radius = 3f;
 
-        GameObject gameObject = SpawnObject(si.Person);
-        current = gameObject;
 
         Vector3 position;
 
@@ -170,52 +166,37 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
         {
             case "links": case "vorne links":
                 {
-                    //Vector3 position = left.position + (UnityEngine.Random.insideUnitCircle * radius);
                     position = left.position;
-                    //X = UnityEngine.Random.Range(left.position.x + radius, left.position.x - radius);
-                    //Z = UnityEngine.Random.Range(left.position.z + radius, left.position.z + radius);
                     break;
                 }
             case "rechts": case "vorne rechts":
                 {
                     position = right.position;
-                    //X = UnityEngine.Random.Range(right.position.x + radius, right.position.x - radius) ;
-                    //Z = UnityEngine.Random.Range(right.position.z + radius, right.position.z - radius);
                     break;
                 }
             case "im Vordergrung":
                 {
                     position = foreground.position;
-                    //X = UnityEngine.Random.Range(foreground.position.x + radius, foreground.position.x - radius);
-                    //Z = UnityEngine.Random.Range(foreground.position.z + radius, foreground.position.z - radius);
                     break;
                 }
             case "im Hintergrund":
                 {
                     position = background.position;
-                    //X = UnityEngine.Random.Range(background.position.x + radius, background.position.x - radius);
-                    //Z = UnityEngine.Random.Range(background.position.z + radius, background.position.z - radius);
                     break;
                 }
             case "hinten links":
                 {
                     position = backLeft.position;
-                    //X = UnityEngine.Random.Range(backLeft.position.x + radius, backLeft.position.x - radius);
-                    //Z = UnityEngine.Random.Range(backLeft.position.z + radius, backLeft.position.z + radius);
                     break;
                 }
             case "hinten rechts":
                 {
                     position = backRright.position;
-                    //X = UnityEngine.Random.Range(backLeft.position.x + radius, backLeft.position.x - radius);
-                    //Z = UnityEngine.Random.Range(backLeft.position.z + radius, backLeft.position.z - radius);
                     break;
                 }
             case "unten":
                 {
                     position = down.position;
-                    //X = UnityEngine.Random.Range(down.position.x + radius, down.position.x - radius);
-                    //Z = UnityEngine.Random.Range(down.position.z + radius, down.position.z - radius);
                     //gameObject.transform.localScale = new Vector3(SCALE_OBJECT, SCALE_OBJECT, SCALE_OBJECT);
                     break;
                 }
@@ -227,16 +208,18 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
 
         }
 
-        Collider c = current.GetComponent<Collider>();
 
         int max_iter = 100;
         int iter = 0;
         while (true && iter < max_iter) //while, colliding generate new position and check if its working
         {
             Vector2 pv = UnityEngine.Random.insideUnitCircle * radius;
-            current.transform.position = new Vector3(pv.x, 0, pv.y) + position ;
-            Debug.Log(current.transform.position);
-            Debug.Log("Placing object!!!!");
+            Vector3 positionObject = new Vector3(pv.x, 0, pv.y) + position;
+            GameObject gameObject = SpawnObject(si.Person, positionObject, Quaternion.identity);
+            current = gameObject;
+            Collider c = current.GetComponent<Collider>();
+            //Debug.Log(current.transform.position);
+            //Debug.Log("Placing object!!!!");
 
             if (c != null) //check if object has collider
             {
@@ -248,6 +231,7 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
                 else
                 {
                     colliderBounds.Add(c.bounds);
+                    radius = radius + 0.2f;
                     break;
                 }
                 
@@ -268,7 +252,7 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
         // _renderHead = head.GetComponent<MeshRenderer>();
 
         GameObject gameObject = current;
-        Debug.Log("Game object " + current);
+        //Debug.Log("Game object " + current);
         _renderHead = gameObject.GetComponent<MeshRenderer>();
         
 
@@ -330,7 +314,7 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
                     }
                 case "bunt":
                     {
-                        _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
+                        //_renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
                         break;
                     }
             }

@@ -7,14 +7,14 @@ using System;
 using UnityEngine.UI;
 //using System.Text.Json;
 
-public class GenerativeGrammatiken : MonoBehaviour
+public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 {
     private const string fileName = "/Resources/Daten.json";
     private PictureGenerationManager pgManager;
     private Vocabulary vocabulary;
     public List<string> recentlyUsed = new List<string>();
     const int MAX_SENTENCES = 5;
-    private bool probability = true;
+    private bool probability = true; //singular
     private SentenceInformation si;
     public Text sentenceText;
 
@@ -22,6 +22,11 @@ public class GenerativeGrammatiken : MonoBehaviour
     {
         Debug.Log("pgManager");
         pgManager = PictureGenerationManager.Instance;
+        ClearRecentlyUsed();
+    }
+
+    public void ClearRecentlyUsed()
+    {
         recentlyUsed.Clear();
     }
     private void GetVocabulary()
@@ -35,8 +40,8 @@ public class GenerativeGrammatiken : MonoBehaviour
     public void GenerateSentence()
     {
         GetVocabulary();
+        GetProbability();
         if (recentlyUsed.Count <= MAX_SENTENCES*4) {
-            //clear sentenceStructure
             si = new SentenceInformation();
             si.ClearInformation();
             string template = GetTemplate();
@@ -47,7 +52,7 @@ public class GenerativeGrammatiken : MonoBehaviour
         }
         else
         {
-            recentlyUsed.Clear();
+            ClearRecentlyUsed();
             Debug.Log("cleared recently used words");
         }
     }
@@ -81,9 +86,10 @@ public class GenerativeGrammatiken : MonoBehaviour
                 case "thing":
                     {
                         replacement = GetThing();
-                        if (probability)
+                        si.Singular = true;
+                        Debug.Log(probability + " true für singular, false für plural");
+                        if (!probability)
                         {
-                           
                             replacement = pluralize(replacement);
                         }
                         break;
@@ -121,18 +127,20 @@ public class GenerativeGrammatiken : MonoBehaviour
         {
             template = resolveOptions(template);
         }
-        /*
-        //Artikel
+        
+        //Verbform
         if (template.Contains("<"))
         {
-            string first_word = FindTextBetween();
-            Debug.Log(first_word);
-            string replacement = GetArticle(first_word);
-            template = ReplaceBetweenTags(template, replacement, '<', '>');
-            // recursively fill in all commands
-            return FillInTemplate(template);
+            template = ResolveVerb(template);
         }
-        */
+
+        //unbestimmter Artikel
+        if (template.Contains("{"))
+        {
+            template = ResolveUndefinedArticle(template);
+        }
+        
+
         Debug.Log(si.PrintToString());
         pgManager.SendToPGMAnager(si);
         return template;
@@ -178,19 +186,13 @@ public class GenerativeGrammatiken : MonoBehaviour
         }
         recentlyUsed.Add(vocabulary.animal[r]);
         si.Gender = vocabulary.animal[r][vocabulary.animal[r].Length - 1];
-        Debug.Log(si.Gender);
+        //Debug.Log(si.Gender);
         si.Person = vocabulary.animal[r].Substring(0, vocabulary.animal[r].Length - 2);
         si.Singular = true;
         return vocabulary.animal[r].Substring(0, vocabulary.animal[r].Length - 2);
     }
-    private string GetArticle(string word)
-    {
-        if (si.Singular.Equals("plural"))
-        {
-            return "sind";
-        }
-        else return "ist";
-    }
+
+
     private string GetThing()
     {
         //avoid duplicates
@@ -241,6 +243,13 @@ public class GenerativeGrammatiken : MonoBehaviour
                 break;
             }
         }
+        if(vocabulary.position[r] == "links" || vocabulary.position[r] == "rechts")
+        {
+            recentlyUsed.Add(vocabulary.position[r+1]);
+        }else if(vocabulary.position[r] == "vorne links" || vocabulary.position[r] == "vorne rechts")
+        {
+            recentlyUsed.Add(vocabulary.position[r - 1]);
+        }
         recentlyUsed.Add(vocabulary.position[r]);
         si.Position = vocabulary.position[r];
         return vocabulary.position[r];
@@ -258,7 +267,7 @@ public class GenerativeGrammatiken : MonoBehaviour
         } 
         else
         {
-           int r = UnityEngine.Random.Range(0, vocabulary.template.Length);
+           int r = UnityEngine.Random.Range(1, vocabulary.template.Length);
             Debug.Log(vocabulary.template[r]);
             return vocabulary.template[r];
         }
@@ -519,7 +528,7 @@ public class GenerativeGrammatiken : MonoBehaviour
     {
         if (text.Contains("["))
         {
-            string options = FindTextBetweenTags(text, '[', ']'); //getTextBetweenTags
+            string options = FindTextBetweenTags(text, '[', ']'); 
             string option = pickRandomFromList(options.Split(','));
             text = ReplaceBetweenTags(text, option, '[', ']');
             // recursively fill in all options
@@ -528,6 +537,71 @@ public class GenerativeGrammatiken : MonoBehaviour
         return text;
     }
 
+    private string ResolveVerb(string text)
+    {
+        string verbform;
+
+        if (text.Contains("<")) {
+
+
+            if (si.Singular == false && text.Contains("Gruppe"))
+            {
+                verbform = "ist";
+            }
+            else if (si.Singular == false)
+            {
+                verbform = "sind";
+            }
+            else 
+            {
+                verbform = "ist";
+            }
+            text = ReplaceBetweenTags(text, verbform, '<', '>');
+
+            return ResolveVerb(text);
+        }
+        return text;
+    }
+
+    private string ResolveUndefinedArticle(string text)
+    {
+        string article = "";
+
+        if (text.Contains("{"))
+        {
+            if (si.Singular == false && text.Contains("Gruppe"))
+            {
+                article = "";
+            }
+            else if (si.Singular == false)
+            {
+                article = "";
+            }
+            else if(si.Singular == true)
+            {
+                if(si.Gender == 'f')
+                {
+                    article = "eine";
+                }
+                article = "ein";
+            }
+            text = ReplaceBetweenTags(text, article, '{', '}');
+
+            return ResolveVerb(text);
+        }
+        return text;
+    }
+
+    private void GetProbability()
+    {
+        //50/50 chance for plural or singular
+        int r = UnityEngine.Random.Range(0, 10);
+        if (r < 5)
+        {
+            probability = true;
+        }
+        else probability = false;
+    }
     //if you have extra options pick a random option form them
     public string pickRandomFromList(string[] list)
     {
@@ -543,14 +617,16 @@ public class GenerativeGrammatiken : MonoBehaviour
         si.Singular = false;
         switch (word)
         {
-            case "Baum":
-                return "eine @mood@ Gruppe von Bäumen";
-            case "Haus":
-                return "eine @mood@ Gruppe von Häusern";
-            case "Busch":
-                return "eine @mood@ Gruppe von Büschen";
-            default:
-                return "eine Gruppe von " + word + "en";
+            case "Baum": //,einige Bäume,ein paar Bäume
+                return "[eine @mood@ Gruppe von Bäumen,einige Bäume,ein paar Bäume]";
+            case "Haus": //,einige Häuser,ein paar Häuser
+                return "[eine @mood@ Gruppe von Häusern,einige Häuser,ein paar Häuser]";
+            case "Busch"://,einige Büsche,ein paar Büsche
+                return "[eine @mood@ Gruppe von Büschen,einige Büsche,ein paar Büsche]";
+            case "Wolkenkratzer":
+                return "[eine @mood@ Gruppe von Wolkenkratzern,einige Wolkenkratzer, ein paar Wolkenkratzer]";
+            default://,einige" + word + "en,ein paar " + word + "en 
+                return "[eine Gruppe von " + word + "en,einige " + word + "en, ein paar " + word + "en ]";
         }
     }
 
