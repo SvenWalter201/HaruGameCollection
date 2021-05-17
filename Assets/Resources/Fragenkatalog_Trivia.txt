@@ -1,7 +1,7 @@
 Fragenkatalog
 {
         "question": "How many rings are on the Olympic flag?",
-        "awnsers": [
+        "answers": [
             "3",
             "4",
             "5",
@@ -12,7 +12,7 @@ Fragenkatalog
     },
 {
 	"question": "In darts, what's the most points you can score with a single throw?",
-        "awnsers": [
+        "answers": [
             "20",
             "50",
             "60",
@@ -24,7 +24,7 @@ Fragenkatalog
 {
 
 	"question": "Which of these animals does NOT appear in the Chinese zodiac?",
-        "awnsers": [
+        "answers": [
             "Rabbit",
             "Dragon",
             "Pig",
@@ -36,7 +36,7 @@ Fragenkatalog
 {
 
 	"question": "How many holes are on a standard bowling ball?",
-        "awnsers": [
+        "answers": [
             "3",
             "2",
             "5",
@@ -48,7 +48,7 @@ Fragenkatalog
 {
 
 	"question": "What are the main colors on the flag of Spain?",
-        "awnsers": [
+        "answers": [
             "Red and White",
             "Red and Yellow",
             "Yellow and White",
@@ -60,7 +60,7 @@ Fragenkatalog
 {
 
 	"question": "Which big cat can run the fastest?",
-        "awnsers": [
+        "answers": [
             "Tiger",
             "Puma",
             "Cheetah",
@@ -72,7 +72,7 @@ Fragenkatalog
 {
 
 	"question": "Which of the following animals doesn't have a brain?",
-        "awnsers": [
+        "answers": [
             "Sea slug",
             "Starfish",
             "Shark",
@@ -84,7 +84,7 @@ Fragenkatalog
 {
 
 	"question": "Which of these words do not fit in? Pick one",
-        "awnsers": [
+        "answers": [
             "Love",
             "Glove",
             "Scarf",
@@ -96,7 +96,7 @@ Fragenkatalog
 {
 
 	"question": "How many teeth does an adult have?",
-        "awnsers": [
+        "answers": [
             "26",
             "30",
             "32",
@@ -108,7 +108,7 @@ Fragenkatalog
 {
 
 	"question": "What is the largest organ of the human body?",
-        "awnsers": [
+        "answers": [
             "Brain",
             "Skin",
             "Intestine",
@@ -120,7 +120,7 @@ Fragenkatalog
 {
 
 	"question": "Who wrote 'Romeo and Juliet'?",
-        "awnsers": [
+        "answers": [
             "Leonardo da Vinci",
             "Johann Wolfgang von Goethe",
             "Jane Austen",
@@ -132,7 +132,7 @@ Fragenkatalog
 {
 
 	"question": "What is the capital of Canada?",
-        "awnsers": [
+        "answers": [
             "Ottawa",
             "Toronto",
             "Montreal",
@@ -144,7 +144,7 @@ Fragenkatalog
 {
 
 	"question": "What is the percentage of earth surface which is covered by water?",
-        "awnsers": [
+        "answers": [
             "2%",
             "40%",
             "85%",
@@ -156,7 +156,7 @@ Fragenkatalog
 {
 
 	"question": "When did the first World War end?",
-        "awnsers": [
+        "answers": [
             "1915",
             "1918",
             "1933",
@@ -168,7 +168,7 @@ Fragenkatalog
 {
 
 	"question": "How many legs does a Spider have?",
-        "awnsers": [
+        "answers": [
             "8",
             "6",
             "4",
@@ -180,7 +180,7 @@ Fragenkatalog
 {
 
 	"question": "How many planets are in our solar system?",
-        "awnsers": [
+        "answers": [
             "4",
             "10",
             "8",
@@ -192,7 +192,7 @@ Fragenkatalog
 {
 
 	"question": "Which country has the highest population?",
-        "awnsers": [
+        "answers": [
             "England",
             "South Africa",
             "India",
@@ -204,7 +204,7 @@ Fragenkatalog
 {
 
 	"question": "Where is the Eiffel Tower located?",
-        "awnsers": [
+        "answers": [
             "London",
             "Paris",
             "New York",
@@ -216,7 +216,7 @@ Fragenkatalog
 {
 
 	"question": "Which is the largest continent?",
-        "awnsers": [
+        "answers": [
             "Africa",
             "Antarctica",
             "Asia",
@@ -228,7 +228,7 @@ Fragenkatalog
 {
 
 	"question": "Which is the passanger ship that collided with an iceberg and sank in 1912?",
-        "awnsers": [
+        "answers": [
             "Titanium",
             "MS Amadea",
             "MS Amera",
@@ -240,7 +240,7 @@ Fragenkatalog
 {
 
 	"question": "What function do the ears have besides hearing?",
-        "awnsers": [
+        "answers": [
             "Air purification",
             "Sense of balance",
             "Heat resevoir",
@@ -252,7 +252,7 @@ Fragenkatalog
 {
 
 	"question": "What color do you get when you mix blue and yellow?",
-        "awnsers": [
+        "answers": [
             "Yellow",
             "Red",
             "Violet",
@@ -264,7 +264,7 @@ Fragenkatalog
 {
 
 	"question": "How many meters equal one kilometer?",
-        "awnsers": [
+        "answers": [
             "1.000 m",
             "100 m",
             "10.000 m",
@@ -276,7 +276,7 @@ Fragenkatalog
 {
 
 	"question": "What is the biggest mammal in the world?",
-        "awnsers": [
+        "answers": [
             "Dolphin",
             "Elephant",
             "Blue whale",
@@ -288,7 +288,7 @@ Fragenkatalog
 {
 
 	"question": "What color do you get when you mix red and yellow?",
-        "awnsers": [
+        "answers": [
             "Blue",
             "Green",
             "Orange",
@@ -300,7 +300,7 @@ Fragenkatalog
 {
 
 	"question": "What do you call a rectangle with all sides the same length?",
-        "awnsers": [
+        "answers": [
             "Cylinder",
             "Oblong",
             "Square",
@@ -312,7 +312,7 @@ Fragenkatalog
 {
 
 	"question": "Which of these animals sleeps standing up?",
-        "awnsers": [
+        "answers": [
             "Hedgehogs",
             "Ravens",
             "Foxes",
@@ -324,7 +324,7 @@ Fragenkatalog
 {
 
 	"question": "Which is the largest ocean in the world?",
-        "awnsers": [
+        "answers": [
             "Arctic Ocean",
             "Indian Ocean",
             "Atlantic Ocean",
@@ -336,7 +336,7 @@ Fragenkatalog
 {
 
 	"question": "Where is the smallest bone in the human body located?",
-        "awnsers": [
+        "answers": [
             "In the Ear",
             "In the Finger",
             "In the Nose",
@@ -348,7 +348,7 @@ Fragenkatalog
 {
 
 	"question": "Which blood type is compatible with any blood types?",
-        "awnsers": [
+        "answers": [
             "A",
             "B",
             "AB",
