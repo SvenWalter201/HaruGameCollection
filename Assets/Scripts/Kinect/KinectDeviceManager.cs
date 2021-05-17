@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
 using Microsoft.Azure.Kinect.Sensor;
 using Microsoft.Azure.Kinect.BodyTracking;
 using UnityEngine;
 
 public class KinectDeviceManager : Singleton<KinectDeviceManager>
 {
-    [SerializeField] private UnityEngine.UI.RawImage colourImage = default;
-    [SerializeField] private UnityEngine.UI.RawImage depthImage = default;
-    [SerializeField] private UnityEngine.UI.RawImage irImage = default;
+    [SerializeField]
+    bool uiEnabled;
+    [SerializeField] 
+    UnityEngine.UI.RawImage colourImage, depthImage, irImage;
 
     public SkeletonDisplay skeletonDisplay;
 
@@ -38,20 +35,38 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     public float temperature;
 
     private Transformation transformation;
-    private int colourWidth;
-    private int colourHeight;
-    private const int irWidth = 640;
-    private const int irHeight = 576;
 
-    private float syncedUpdateTimer = 0f;
+    int colourWidth, colourHeight, depthWidth, depthHeight;
 
-    private BGRA[] colourPixels;
-    private ushort[] depthPixels;
-    private ushort[] irPixels;
+    const int irWidth = 640, irHeight = 576;
+
+    float syncedUpdateTimer = 0f;
+
+    BGRA[] colourPixels;
+
+    ushort[] depthPixels, irPixels;
 
     static int colourKernelId, irKernelId, depthKernelId;
 
-    private void Awake()
+    ComputeBuffer colourBuffer, irBuffer, depthBuffer;
+
+    public ComputeShader computeShader;
+    RenderTexture colourTex, irTex, depthTex;
+
+    static readonly int
+    colourPixelsInID = Shader.PropertyToID("_ColourPixelsIn"),
+    colourPixelsOutID = Shader.PropertyToID("_ColourPixelsOut"),
+    colourWidthID = Shader.PropertyToID("_Width"),
+    irWidthID = Shader.PropertyToID("_IRWidth"),
+    irPixelsInID = Shader.PropertyToID("_IRPixelsIn"),
+    irPixelsOutID = Shader.PropertyToID("_IRPixelsOut"),
+    depthWidthID = Shader.PropertyToID("_DepthWidth"),
+    depthPixelsInID = Shader.PropertyToID("_DepthPixelsIn"),
+    depthPixelsOutID = Shader.PropertyToID("_DepthPixelsOut");
+
+    Image transformedDepth;
+
+    void Awake()
     {
         colourKernelId = computeShader.FindKernel("ColourTex");
         irKernelId = computeShader.FindKernel("IRTex");
@@ -80,41 +95,43 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 }
         }
 
-        colourTex = new RenderTexture(colourWidth, colourHeight, 24)
+        if (uiEnabled)
         {
-            enableRandomWrite = true
-        };
-        colourTex.Create();
-        colourImage.texture = colourTex;
+            colourTex = new RenderTexture(colourWidth, colourHeight, 24)
+            {
+                enableRandomWrite = true
+            };
+            colourTex.Create();
+            colourImage.texture = colourTex;
 
-        irTex = new RenderTexture(irWidth, irHeight, 24)
-        {
-            enableRandomWrite = true
-        };
-        irTex.Create();
-        irImage.texture = irTex;
+            irTex = new RenderTexture(irWidth, irHeight, 24)
+            {
+                enableRandomWrite = true
+            };
+            irTex.Create();
+            irImage.texture = irTex;
 
-        depthTex = new RenderTexture(colourWidth, colourHeight, 24)
-        {
-            enableRandomWrite = true
-        };
-        depthTex.Create();
-        depthImage.texture = depthTex;
-
+            depthTex = new RenderTexture(colourWidth, colourHeight, 24)
+            {
+                enableRandomWrite = true
+            };
+            depthTex.Create();
+            depthImage.texture = depthTex;
+        }
     }
 
-    private void Start()
+    void Start()
     {
         Init();
     }
 
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {
         Close();
     }
 
 
-    private void Update()
+    void Update()
     {
         if(syncedUpdateTimer <= 0f)
         {
@@ -216,7 +233,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         }
     }
 
-    private void BodyCapture(Tracker tracker)
+    void BodyCapture(Tracker tracker)
     {
         Frame bodyFrame = null;
         int btFrame = 0;
@@ -228,9 +245,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 try
                 {
                     if (bodyFrame != null)
-                    {
                         bodyFrame.Dispose();
-                    }
 
                     Capture sensorCapture = device.GetCapture();
                     if (sensorCapture != null)
@@ -258,25 +273,22 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                     AppState.bodyTrackingRunning = false;
                     Debug.Log("An error occured: " + e.Message);
                     if (bodyFrame != null)
-                    {
                         bodyFrame.Dispose();
-                    }
                     tracker.Shutdown();
                     tracker.Dispose();
                 }
             }
-            
         }
+
         if (bodyFrame != null)
-        {
             bodyFrame.Dispose();
-        }
+
         tracker.Shutdown();
         tracker.Dispose();
     
 }
 
-    private void CameraCapture()
+    void CameraCapture()
     {
         while (AppState.imageTrackingRunning && AppState.applicationRunning)
         {
@@ -301,7 +313,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         }
     }
 
-    private void BuildColourImageSource(Capture capture)
+    void BuildColourImageSource(Capture capture)
     {
         Image img = capture.Color;
         if (img == null)
@@ -313,11 +325,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     }
 
-
-    private Image transformedDepth;
-    private int DepthWidth;
-    private int DepthHeight;
-    private void BuildDepthImageSource(Capture capture)
+    void BuildDepthImageSource(Capture capture)
     {
         if (capture.Color == null || capture.Depth == null)
         {
@@ -329,13 +337,13 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         transformation.DepthImageToColorCamera(capture, transformedDepth);
         depthPixels = transformedDepth.GetPixels<ushort>().ToArray();
         //depthPixels = capture.CreateDepthImage(transformation);
-        DepthWidth = transformedDepth.WidthPixels;
-        DepthHeight = transformedDepth.HeightPixels;
+        depthWidth = transformedDepth.WidthPixels;
+        depthHeight = transformedDepth.HeightPixels;
 
         transformedDepth.Dispose();
     }
 
-    private void BuildIRImageSource(Capture capture)
+    void BuildIRImageSource(Capture capture)
     {
         Image img = capture.IR;
         if (img == null)
@@ -346,9 +354,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         irPixels = img.GetPixels<ushort>().ToArray();
     }
 
-
-
-    private void ImuCapture()
+    void ImuCapture()
     {
         while (AppState.applicationRunning)
         {
@@ -363,7 +369,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 System.Numerics.Vector3 accelerometerSample = imu.AccelerometerSample;
                 accel = new Vector3(accelerometerSample.X, accelerometerSample.Y, accelerometerSample.Z);
                 gyroTimeStamp = imu.GyroTimestamp.ToString(@"hh\:mm\:ss");
-                AddOrUpdateDeviceData("Accelerometer timestamp: ", imu.AccelerometerTimestamp.ToString(@"hh\:mm\:ss"));
+                //AddOrUpdateDeviceData("Accelerometer timestamp: ", imu.AccelerometerTimestamp.ToString(@"hh\:mm\:ss"));
             }
             catch (Exception e)
             {
@@ -371,11 +377,6 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 Debug.Log("An error occured: " + e.Message);
             }
         }
-    }
-
-    private void AddOrUpdateDeviceData(string key, string value)
-    {
-        //find out if the value already exists
     }
 
     public void Close()
@@ -394,27 +395,11 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         Debug.Log("Kinect closed successfully");
     }
 
-    public ComputeShader computeShader;
-    private RenderTexture colourTex;
-    private RenderTexture irTex;
-    private RenderTexture depthTex;
-
-    static readonly int
-    colourPixelsInID = Shader.PropertyToID("_ColourPixelsIn"),
-    colourPixelsOutID = Shader.PropertyToID("_ColourPixelsOut"),
-    colourWidthID = Shader.PropertyToID("_Width"),
-    irWidthID = Shader.PropertyToID("_IRWidth"),
-    irPixelsInID = Shader.PropertyToID("_IRPixelsIn"),
-    irPixelsOutID = Shader.PropertyToID("_IRPixelsOut"),
-    depthWidthID = Shader.PropertyToID("_DepthWidth"),
-    depthPixelsInID = Shader.PropertyToID("_DepthPixelsIn"),
-    depthPixelsOutID = Shader.PropertyToID("_DepthPixelsOut");
-
-    private ComputeBuffer colourBuffer;
-    private ComputeBuffer irBuffer;
-    private ComputeBuffer depthBuffer;
     public void ShowImage()
     {
+        if (!uiEnabled) 
+            return;
+
         if(colourPixels != null)
         {
             colourBuffer = new ComputeBuffer(colourPixels.Length, sizeof(int));
@@ -430,9 +415,9 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             depthBuffer = new ComputeBuffer(depthPixels.Length/2, sizeof(int));
             depthBuffer.SetData(depthPixels);
             computeShader.SetBuffer(depthKernelId, depthPixelsInID, depthBuffer);
-            computeShader.SetInt(depthWidthID, DepthWidth);
+            computeShader.SetInt(depthWidthID, depthWidth);
             computeShader.SetTexture(depthKernelId, depthPixelsOutID, depthTex);
-            computeShader.Dispatch(depthKernelId, DepthWidth / 8, DepthHeight / 8, 1);
+            computeShader.Dispatch(depthKernelId, depthWidth / 8, depthHeight / 8, 1);
             depthBuffer.Dispose();
         }
         if (irPixels != null)

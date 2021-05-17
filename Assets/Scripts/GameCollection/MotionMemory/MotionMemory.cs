@@ -3,48 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
-public class MotionMemory : MonoBehaviour
+public class MotionMemory : Game
 {
-    [SerializeField] private int width = 2;
-    [SerializeField] private int height = 2;
+    [SerializeField] int width = 2;
+    [SerializeField] int height = 2;
     [Space]
-    [SerializeField] private GameObject startScreen = default;
-    [SerializeField] private GameObject memoryCanvas = default;
-    [SerializeField] private GameObject memoryCardRow = default;
-    [SerializeField] private GameObject memoryCardPrefab = default;
-    [SerializeField] private RenderTexture cameraRenderTexture = default;
-    [SerializeField] private Texture2D backsideTexture = default;
+    [SerializeField] GameObject startScreen = default;
+    [SerializeField] GameObject memoryCanvas = default;
+    [SerializeField] GameObject memoryCardRow = default;
+    [SerializeField] GameObject memoryCardPrefab = default;
+    [SerializeField] RenderTexture cameraRenderTexture = default;
+    [SerializeField] Texture2D backsideTexture = default;
     [Space]
     [Header("Timing")]
     //how many cards get turned around after one another
-    [SerializeField] private float timeBeforeStart = 2;
-    [SerializeField] private int maxGroupSize = 2;
-    [SerializeField] private float cardShowingTime = 3;
-    [SerializeField] private float motionGuessingTime = 2;
-    [SerializeField] private float timeBeforeMotionTracking = 1f;
-    [SerializeField] private int maximumRounds = 3;
-    [SerializeField] private float timeBetweenRounds = 2f;
-    [SerializeField] private float timeBetweenShowingAndGuessing = 2f;
-    [SerializeField] private float timeBetweenCardsShowing = 2f;
-    [SerializeField] private float timeBetweenCardsGuessing = 1f;
+    [SerializeField] float timeBeforeStart = 2;
+    [SerializeField] int maxGroupSize = 2;
+    [SerializeField] float cardShowingTime = 3;
+    [SerializeField] float motionGuessingTime = 2;
+    [SerializeField] float timeBeforeMotionTracking = 1f;
+    [SerializeField] int maximumRounds = 3;
+    [SerializeField] float timeBetweenRounds = 2f, timeBetweenShowingAndGuessing = 2f, timeBetweenCardsShowing = 2f, timeBetweenCardsGuessing = 1f;
     [Space]
     [Header("UIElements")]
-    [SerializeField] private TextMeshProUGUI taskText;
-    [SerializeField] private TextMeshProUGUI remainingTimeText;
-    [SerializeField] private Image progressBar;
-    [SerializeField] private Image progressBarMask;
-    [SerializeField] private TextMeshProUGUI startScreenCountdown;
-    [SerializeField] private TextMeshProUGUI startScreenText;
-    [SerializeField] private TextMeshProUGUI comparePercentage;
+    [SerializeField] TextMeshProUGUI taskText;
+    [SerializeField] TextMeshProUGUI remainingTimeText;
+    [SerializeField] Image progressBar;
+    [SerializeField] Image progressBarMask;
+    [SerializeField] TextMeshProUGUI startScreenCountdown;
+    [SerializeField] TextMeshProUGUI startScreenText;
+    [SerializeField] TextMeshProUGUI comparePercentage;
 
-    private List<MemoryCard> unsolved;
-    private List<MemoryCard> solved;
-    private List<MemoryCard> tempStack;
+    List<MemoryCard> unsolved, solved, tempStack;
+    readonly CoroutineTimer timer = new CoroutineTimer();
+    readonly string[] motions = new string[]{ "w", "m", "c", "a"};
+    MemoryCard[] cards;
 
-    private readonly string[] motions = new string[]{ "w", "m", "c", "a"};
+    void Start()
+    {
+        PlayGame();
+    }
 
-    private void Start()
+    protected override IEnumerator Init()
     {
         //initialize UI-components
         progressBar.enabled = false;
@@ -52,41 +52,13 @@ public class MotionMemory : MonoBehaviour
         remainingTimeText.text = "";
 
         List<Motion> poses = GetRandomSetOfPoses();
-        MemoryCard[] cards = ConstructUI(poses);
-        StartCoroutine(Memory(cards));
+        cards = ConstructUI(poses);
         SkeletonDisplay.Instance.display = DisplayOption.IGNORE;
+
+        yield break;
     }
 
-    public List<Motion> GetRandomSetOfPoses()
-    {
-        if((width * height) - 1 > motions.Length)
-        {
-            Debug.LogWarning("memory width * height is bigger than the available poses");
-        }
-
-        List<string> motionNames = new List<string>();
-        motionNames.AddRange((string[])motions.Clone());
-
-        List<Motion> poses = new List<Motion>();
-        for (int i = 0; i < (width * height); i++)
-        {
-            string motionName = motionNames[GetRandom(motionNames.Count)];
-            motionNames.Remove(motionName);
-            Motion motion = SkeletonTracker.Instance.Load(motionName);
-            if (motion != null)
-            {
-                poses.Add(motion);
-                Debug.Log("Added motion");
-            }
-            if(motionNames.Count == 0)
-            {
-                break;
-            }
-        }
-        return poses;
-    }
-
-    public IEnumerator Memory(MemoryCard[] cards)
+    protected override IEnumerator Execute()
     {
         KinectDeviceManager.Instance.BeginBodyTracking();
 
@@ -94,7 +66,9 @@ public class MotionMemory : MonoBehaviour
         startScreen.SetActive(true);
         startScreenText.text = "Get Ready!";
 
-        yield return Timer(timeBeforeStart, startScreenCountdown);
+        progressBar.enabled = true;
+        yield return timer.UITimer(timeBeforeStart, progressBarMask, startScreenCountdown);
+        progressBar.enabled = false;
 
         startScreenText.text = "";
         startScreen.SetActive(false);
@@ -117,15 +91,15 @@ public class MotionMemory : MonoBehaviour
 
             taskText.text = "Guess which motion was behind which card";
 
-            yield return Timer(timeBetweenShowingAndGuessing);
+            yield return timer.SimpleTimer(timeBetweenShowingAndGuessing);
 
             yield return CardGuessingPhase();
 
-            if(remainingRounds == 0)
+            if (remainingRounds == 0)
             {
                 break;
             }
-            yield return Timer(timeBetweenRounds);   
+            yield return timer.SimpleTimer(timeBetweenRounds);
         }
 
         SkeletonDisplay.Instance.OnStopDisplay();
@@ -147,11 +121,40 @@ public class MotionMemory : MonoBehaviour
         AppState.bodyTrackingRunning = false;
     }
 
-    private IEnumerator CardShowingStage()
+    public List<Motion> GetRandomSetOfPoses()
+    {
+        if((width * height) - 1 > motions.Length)
+        {
+            Debug.LogWarning("memory width * height is bigger than the available poses");
+        }
+
+        List<string> motionNames = new List<string>();
+        motionNames.AddRange((string[])motions.Clone());
+
+        List<Motion> poses = new List<Motion>();
+        for (int i = 0; i < (width * height); i++)
+        {
+            string motionName = motionNames[GetRandom(motionNames.Count)];
+            motionNames.Remove(motionName);
+            Motion motion = SkeletonTracker.Instance.Load(motionName);
+            if (motion != null)
+            {
+                poses.Add(motion);
+                //Debug.Log("Added motion");
+            }
+            if(motionNames.Count == 0)
+            {
+                break;
+            }
+        }
+        return poses;
+    }
+
+    IEnumerator CardShowingStage()
     {
         taskText.text = "Memorize the shown poses";
 
-        yield return Timer(timeBetweenCardsShowing);
+        yield return timer.SimpleTimer(timeBetweenCardsShowing);
 
         int remainingGroupSize = unsolved.Count < maxGroupSize ? unsolved.Count : maxGroupSize;
         for (int i = 0; i < remainingGroupSize; i++)
@@ -159,21 +162,23 @@ public class MotionMemory : MonoBehaviour
             MemoryCard card = unsolved[GetRandom(unsolved.Count)];
             BeginShowPose(card);
             //wait for minimum accuracy or minimum time to pass
-            yield return Timer(cardShowingTime, remainingTimeText);
+            progressBar.enabled = true;
+            yield return timer.UITimer(cardShowingTime, progressBarMask, remainingTimeText);
+            progressBar.enabled = false;
             StopShowPose(card);
 
             tempStack.Add(card);
             unsolved.Remove(card);
             if (i < remainingGroupSize)
             {
-                yield return Timer(timeBetweenCardsShowing);
+                yield return timer.SimpleTimer(timeBetweenCardsShowing);
             }
         }
     }
 
-    private IEnumerator CardGuessingPhase()
+    IEnumerator CardGuessingPhase()
     {
-        yield return Timer(2f);
+        yield return timer.SimpleTimer(2f);
         int tempStackSize = tempStack.Count;
         for (int i = 0; i < tempStackSize; i++)
         {
@@ -184,7 +189,7 @@ public class MotionMemory : MonoBehaviour
             comparePercentage.text = "";
             SkeletonDisplay.Instance.comparePercentage = 0;
 
-            yield return Timer(timeBeforeMotionTracking);
+            yield return timer.SimpleTimer(timeBeforeMotionTracking);
             Coroutine cR = StartCoroutine(SkeletonDisplay.Instance.BodyCompareCoroutine(card.pose.motion[0], remainingTime));
             
             progressBar.enabled = true;
@@ -223,58 +228,18 @@ public class MotionMemory : MonoBehaviour
             tempStack.Remove(card);
 
             BeginShowPose(card);
-            yield return Timer(cardShowingTime);
+            yield return timer.SimpleTimer(cardShowingTime);
             StopShowPose(card);
 
 
             if (i < tempStackSize)
             {
-                yield return Timer(timeBetweenCardsGuessing);
+                yield return timer.SimpleTimer(timeBetweenCardsGuessing);
             }
         }
     }
 
-    /// <summary>
-    /// Simple timer
-    /// </summary>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    private IEnumerator Timer(float time)
-    {
-        float remainingTime = time;
-        while (remainingTime > 0f)
-        {
-            remainingTime -= Time.deltaTime;
-            yield return null;
-        }
-    }
-
-    /// <summary>
-    /// A timer with UI components  (progressBar and countDown Text)
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="progressBar"></param>
-    /// <param name="text"></param>
-    /// <returns></returns>
-    private IEnumerator Timer(float time, TextMeshProUGUI text)
-    {
-        float remainingTime = time;
-        progressBar.enabled = true;
-        while (remainingTime > 0f)
-        {
-            progressBarMask.fillAmount = 1 - remainingTime / time;
-            text.text = Mathf.CeilToInt(remainingTime).ToString();
-            
-
-            remainingTime -= Time.deltaTime;
-            yield return null;
-        }
-        text.text = "";
-        progressBarMask.fillAmount = 0f;
-        progressBar.enabled = false;
-    }
-
-    private MemoryCard[] ConstructUI(List<Motion> j)
+    MemoryCard[] ConstructUI(List<Motion> j)
     {
         MemoryCard[] memory = new MemoryCard[j.Count];
         for (int y = 0; y < height; y++)
@@ -296,29 +261,29 @@ public class MotionMemory : MonoBehaviour
         return memory;
     }
 
-    private void BeginShowPose(MemoryCard card)
+    void BeginShowPose(MemoryCard card)
     {
         Vector3[] vecs = SkeletonDisplay.Instance.GetVectors(card.pose.motion[0]);
         SkeletonDisplay.Instance.Display(vecs);
         card.uiElement.GetComponent<RawImage>().texture = cameraRenderTexture;
     }
 
-    private void StopShowPose(MemoryCard card)
+    void StopShowPose(MemoryCard card)
     {
         card.uiElement.GetComponent<RawImage>().texture = backsideTexture;
     }
 
-    private void BeginOutline(MemoryCard card)
+    void BeginOutline(MemoryCard card)
     {
         card.uiElement.GetComponent<Outline>().enabled = true;
     }
 
-    private void StopOutline(MemoryCard card)
+    void StopOutline(MemoryCard card)
     {
         card.uiElement.GetComponent<Outline>().enabled = false;
     }
 
-    private int GetRandom(int length)
+    int GetRandom(int length)
     {
         return UnityEngine.Random.Range(0, length);
     }

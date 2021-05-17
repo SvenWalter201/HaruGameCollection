@@ -1,25 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Microsoft.Azure.Kinect.BodyTracking;
 using Newtonsoft.Json;
 using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 using System.IO;
 
 public class SkeletonTracker : Singleton<SkeletonTracker>
 {
-    private List<Joint[]> currentMotion;
+    List<Joint[]> currentMotion;
     public Motion loadedMotion;
 
-    public void BeginMotionCapture()
-    {
-        currentMotion = new List<Joint[]>();
-    }
+    public void BeginMotionCapture() => currentMotion = new List<Joint[]>();
 
-    public void StoreFrame(Joint[] joints)
-    {
-        currentMotion.Add(joints);
-    }
+    public void StoreFrame(Joint[] joints) => currentMotion.Add(joints);
 
     public Motion StoreMotion()
     {

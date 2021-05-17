@@ -1,37 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Azure.Kinect.Sensor;
-using Microsoft.Azure.Kinect.BodyTracking;
 using UnityEngine;
-using System.Numerics;
 using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 using static UnityEngine.Mathf;
 using Vector3 = UnityEngine.Vector3;
+using Quaternion = UnityEngine.Quaternion;
 public static class Extensions
 {
-    public static void Assign(this LineRenderer lR, int index, Joint joint)
-    {
+    public static void Assign(this LineRenderer lR, int index, Joint joint) => 
         lR.SetPosition(index, -joint.Position.ToUnityVector3() / 200f);
-    }
 
+    public static Vector3 ToUnityVector3(this System.Numerics.Vector3 vec) => 
+        new Vector3(vec.X, vec.Y, vec.Z);
 
-    public static Vector3 ToUnityVector3(this System.Numerics.Vector3 vec)
-    {
-        return new Vector3(vec.X, vec.Y, vec.Z);
-    }
+    public static Quaternion ToUnityQuaternion(this System.Numerics.Quaternion q) => 
+        new Quaternion(q.X, q.Y, q.Z, q.W);
 
-    public static Vector3 ToXZVector3(this UnityEngine.Vector2 v2)
-    {
-        return v2.ToXZVector3(0f);
-    }
+    public static Vector3 ToXZVector3(this Vector2 v2) => 
+        v2.ToXZVector3(0f);
 
-    public static Vector3 ToXZVector3(this UnityEngine.Vector2 v2, float y)
-    {
-        return new Vector3(v2.x, y, v2.y);
-    }
+    public static Vector3 ToXZVector3(this Vector2 v2, float y) => 
+        new Vector3(v2.x, y, v2.y);
 
     public static Color[] CreateColourMap(this Image image, double dpiX = 300, double dpiY = 300)
     {
@@ -78,11 +68,12 @@ public static class Extensions
         return pixels;
     }
 
-    private const int Blue_MAX_VALUE = 500;
-    private const int RED_MAX_VALUE_LOWER = 1500;
-    private const int RED_MAX_VALUE_UPPER = 2000;
-    private const int GREEN_MAX_VALUE_LOWER = 1000;
-    private const int GREEN_MAX_VALUE_UPPER = 1500;
+    const int 
+        Blue_MAX_VALUE = 500, 
+        RED_MAX_VALUE_LOWER = 1500, 
+        RED_MAX_VALUE_UPPER = 2000, 
+        GREEN_MAX_VALUE_LOWER = 1000, 
+        GREEN_MAX_VALUE_UPPER = 1500;
 
     public static Color[] CreateDepthImage(this Capture capture, Transformation transformation)
     {
@@ -151,14 +142,61 @@ public static class Extensions
     }
 
     
-    public static Vector3 Absolute(this Vector3 v3)
+    public static Vector3 Absolute(this Vector3 v3) => new Vector3(Abs(v3.x), Abs(v3.y), Abs(v3.z));
+
+    public static Vector3 Square(this Vector3 v3) => new Vector3(v3.x * v3.x, v3.y * v3.y, v3.z * v3.z);
+
+    public static bool IntersectSphere(this Bounds box, Vector3 sphereCenter, float sphereRadius)
     {
-        return new Vector3(Abs(v3.x), Abs(v3.y), Abs(v3.z));
+        // get box closest point to sphere center by clamping
+        var x = Max(box.min.x, Min(sphereCenter.x, box.max.x));
+        var y = Max(box.min.y, Min(sphereCenter.y, box.max.y));
+        var z = Max(box.min.z, Min(sphereCenter.z, box.max.z));
+
+        // this is the same as isPointInsideSphere
+        var distance = Sqrt((x - sphereCenter.x) * (x - sphereCenter.x) +
+                                 (y - sphereCenter.y) * (y - sphereCenter.y) +
+                                 (z - sphereCenter.z) * (z - sphereCenter.z));
+
+        return distance < sphereRadius;
     }
 
-    public static Vector3 Square(this Vector3 v3)
+    public static bool IntersectXZCircle(this Bounds box, Vector3 sphereCenter, float sphereRadius)
     {
-        return new Vector3(v3.x * v3.x, v3.y * v3.y, v3.z * v3.z);
+        // get box closest point to sphere center by clamping
+        var x = Max(box.min.x, Min(sphereCenter.x, box.max.x));
+        var z = Max(box.min.z, Min(sphereCenter.z, box.max.z));
+
+        // this is the same as isPointInsideSphere
+        var distance = Sqrt((x - sphereCenter.x) * (x - sphereCenter.x) + (z - sphereCenter.z) * (z - sphereCenter.z));
+
+        return distance < sphereRadius;
+    }
+
+    public static Bounds GetBoundingBox(this List<Vector3> v3s)
+    {
+        Vector3 lL = v3s[0];
+        Vector3 uR = v3s[0];
+
+        foreach (var p in v3s)
+        {
+            if (p.x < lL.x) { lL.x = p.x; }
+            if (p.y < lL.y) { lL.y = p.y; }
+            if (p.z < lL.z) { lL.z = p.z; }
+            if (p.x > uR.x) { uR.x = p.x; }
+            if (p.y > uR.y) { uR.y = p.y; }
+            if (p.z > uR.z) { uR.z = p.z; }
+        }
+
+        Vector3 extents = uR - lL / 2f;
+
+        return new Bounds
+        {
+            center = lL + extents,
+            min = lL,
+            max = uR,
+            extents = extents
+        };
     }
 }
 

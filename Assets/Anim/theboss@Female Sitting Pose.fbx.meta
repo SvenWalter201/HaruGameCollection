@@ -1,14 +1,12 @@
 fileFormatVersion: 2
-guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c
+guid: d0108feb951a25948a67ead2880685bd
 ModelImporter:
   serializedVersion: 20200
-  internalIDToNameTable: []
-  externalObjects:
+  internalIDToNameTable:
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.001
-    second: {fileID: 2100000, guid: 8dfa63ac27db7ca4bb5f983215d59898, type: 2}
+      74: -203655887218126122
+    second: mixamo.com
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -36,7 +34,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 1

@@ -4,117 +4,93 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
+using UnityEngine;
 
-
-class QuestionManager
+class QuestionManager : Singleton<QuestionManager>
 {
-    private static readonly QuestionManager instance = new QuestionManager();
 
-    static QuestionManager()
-    {
-    }
-    private QuestionManager()
-    {
+    QuestionCard[] allQuestions;
 
-    }
-    public static QuestionManager Instance
+    QuestionCard[] defaultQuestions = new QuestionCard[]
     {
-        get
+        new QuestionCard("What is the biggest animal", new List<string>(){ "Elefant","Anakonda","Whaleshark","Blue whale" }, 3),
+        new QuestionCard("What color is blue", new List<string>(){ "blue","yellow","red","green" }, 0)
+    };
+
+    void LoadQuestions()
+    {
+        if(JsonFileManager.Load("", out QuestionCard[] allQuestions)){
+            this.allQuestions = allQuestions;
+        }
+        else
         {
-            return instance;
+            this.allQuestions = defaultQuestions;
         }
     }
 
-
-    public int GetQuestionAmount()
+    void Awake()
     {
-        int questionAmount;
-        Console.WriteLine("How many questions should be asked?");
-        while (true)
+        LoadQuestions();
+    }
+
+    public List<QuestionCard> GetQuestions(int amount)
+    {
+        if(allQuestions == null)
         {
-            string input = Console.ReadLine();
-            try
-            {
-                questionAmount = int.Parse(input);
-                break;
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Please type an Integer number");
-            }
+            Debug.LogError("allQuestions was null");
+            return null;
+        }
+        else if (allQuestions.Length < amount)
+        {
+            Debug.LogError("not enough Questions available");
+            return null;
         }
 
-        return questionAmount;
-    }
-
-    public QuestionCard[] GetQuestions(int amount)
-    {
-        string questionary = File.ReadAllText(@"Questionary4Answers.json");
-
-        QuestionCard[] allQuestions = JsonConvert.DeserializeObject<QuestionCard[]>(questionary);
-
-        return allQuestions;
-    }
-
-    public QuestionCard[] TrimQuestions(QuestionCard[] questionCatalog, int trimToXAnswers)
-    {
-        QuestionCard[] newQuestionCatalog = new QuestionCard[questionCatalog.Length];
-
-        Array.Copy(questionCatalog, newQuestionCatalog,questionCatalog.Length);
-
-        for (int i = 0; i < questionCatalog.Length; i++)
+        List<QuestionCard> questions = new List<QuestionCard>((QuestionCard[])allQuestions.Clone());
+        while(questions.Count > amount)
         {
-            QuestionCard currentCard = questionCatalog[i];
-            List<string> newAnswers = currentCard.Answers.ToList();
-            string trueAnswer = currentCard.Answers[currentCard.TrueAnswer];
-            int amountToRemove = currentCard.Answers.Length - trimToXAnswers;
+            int r = UnityEngine.Random.Range(0, questions.Count);
+            questions.RemoveAt(r);
+        }
+        return questions;
+    }
+
+    /// <summary>
+    /// reduces the amount of answers in each question to the specified amount
+    /// </summary>
+    /// <param name="questionCatalog"></param>
+    /// <param name="newAnswerCount"></param>
+    /// <returns></returns>
+    public List<QuestionCard> TrimQuestions(List<QuestionCard> questionCatalog, int newAnswerCount, bool shuffleAnswers)
+    {
+        List<QuestionCard> newQuestionCatalog = new List<QuestionCard>(questionCatalog.Count);
+
+        for (int i = 0; i < questionCatalog.Count; i++)
+        {
+            QuestionCard currentCard = (QuestionCard)questionCatalog[i].Clone();
+            List<string> answers = currentCard.Answers;
+            int amountToRemove = answers.Count - newAnswerCount;
 
             for (int removed = 0; removed < amountToRemove;)
             {
-                Random r = new Random();
-                byte rnd = (byte)r.Next(0, newAnswers.Count);
+                int r = UnityEngine.Random.Range(0, answers.Count);
 
-                if (newAnswers.ElementAt(rnd) != trueAnswer)
+                if (r != currentCard.TrueAnswer)
                 {
-                    newAnswers.RemoveAt(rnd);
+                    answers.RemoveAt(r);
                     removed++;
                 }
             }
-            newQuestionCatalog[i].Answers = newAnswers.ToArray();
-            Reshuffle(currentCard, trueAnswer);
-            
-            
-        }
 
+            if (shuffleAnswers)
+            {
+                currentCard.Reshuffle();
+            }
+            newQuestionCatalog[i] = currentCard;
+        }
+        
         return newQuestionCatalog;
     }
-
-
-    private void Reshuffle(QuestionCard qc, string currentTrueAnswer)
-    {
-        // Knuth shuffle algorithm :: courtesy of Wikipedia
-        string[] texts = qc.Answers;
-        for (int t = 0; t < texts.Length; t++)
-        {
-            string tmp = texts[t];
-
-            Random r = new Random();
-            byte random = (byte)r.Next(t, texts.Length);
-            texts[t] = texts[random];
-            texts[random] = tmp;
-        }
-
-        for (int i = 0; i < texts.Length - 1; i++)
-        {
-            if (texts[i].Equals(currentTrueAnswer))
-            {
-                qc.TrueAnswer = (byte)i;
-                break;
-            }
-        }
-
-    }
-
 }
 
 

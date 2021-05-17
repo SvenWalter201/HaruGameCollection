@@ -5,43 +5,41 @@ using UnityEngine.UI;
 using Microsoft.Azure.Kinect.BodyTracking;
 using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 using Vector3 = UnityEngine.Vector3;
-using Quaternion = System.Numerics.Quaternion;
 using TMPro;
 
 public class SkeletonDisplay : Singleton<SkeletonDisplay>
 {
-    public bool tracking = false;
+    public bool tracking = false, replaying = false;
     public DisplayOption display = DisplayOption.TRACKED;
-    public bool replaying = false;
 
-    [SerializeField] private LineRenderer body = default;
-    [SerializeField] private LineRenderer leftLeg = default;
-    [SerializeField] private LineRenderer rightLeg = default;
-    [SerializeField] private LineRenderer leftArm = default;
-    [SerializeField] private LineRenderer rightArm = default;
+    [SerializeField] 
+    LineRenderer body = default, leftLeg = default, rightLeg = default, leftArm = default, rightArm = default;
 
-    private GameObject bodyParentGO;
+    GameObject bodyParentGO;
 
     public Skeleton trackedBody;
-    public int frame = 0;
-    private const float FPS_30_DELTA = 0.033f;
-    private float currentTimeStep;
 
-    private void Start()
+    public int frame = 0, comparePercentage = -1;
+
+    float currentTimeStep;
+    const float FPS_30_DELTA = 0.033f;
+
+
+    Slider frameSlider;
+    TextMeshProUGUI compareAccuracy;
+    TMP_InputField smoothingFrames;
+
+    bool playing = true, bodyCompareRunning = false;
+    Motion motion;
+    int replayFrame, interpolationFrames = 6; //0.267 sec
+
+    Joint[] joints;
+
+    void Start()
     {
         currentTimeStep = FPS_30_DELTA;
         bodyParentGO = body.transform.parent.gameObject;
     }
-
-    private Slider frameSlider;
-    private TextMeshProUGUI compareAccuracy;
-    private TMP_InputField smoothingFrames;
-    //private Button playPauseButton;
-
-    private bool playing = true;
-    private Motion motion;
-    private int replayFrame;
-    private Joint[] joints;
 
     public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy, TMP_InputField smoothingFrames)
     {
@@ -59,21 +57,15 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         switch (option)
         {
             case 0:
-                {
-                    display = DisplayOption.TRACKED;
-                    break;
-                }
+                display = DisplayOption.TRACKED;
+                break;
             case 1:
-                {
-                    replayFrame = 0;
-                    display = DisplayOption.LOADED;
-                    break;
-                }
+                replayFrame = 0;
+                display = DisplayOption.LOADED;
+                break;
             case 2:
-                {
-                    display = DisplayOption.NONE;
-                    break;
-                }
+                display = DisplayOption.NONE;
+                break;
         }
     }
 
@@ -82,62 +74,48 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         if (currentTimeStep <= 0f)
         {
             if (AppState.bodyTrackingRunning)
-            {
                 joints = ResolveSkeleton();
-            }
 
             switch (display)
             {
                 case DisplayOption.TRACKED:
+                    if (AppState.bodyTrackingRunning)
                     {
-                        if (AppState.bodyTrackingRunning)
+                        if (!bodyParentGO.activeInHierarchy)
                         {
-                            if (!bodyParentGO.activeInHierarchy)
-                            {
-                                OnBeginDisplay();
-                            }
-                            Display(GetVectors(joints));
+                            OnBeginDisplay();
                         }
-                        break;
+                        Display(GetVectors(joints));
                     }
+                    break;
                 case DisplayOption.LOADED:
+                    motion = SkeletonTracker.Instance.loadedMotion;
+                    if (motion != null && motion.motion != null)
                     {
-
-                        motion = SkeletonTracker.Instance.loadedMotion;
-                        if(motion != null && motion.motion != null)
+                        if (!bodyParentGO.activeInHierarchy)
                         {
-                            if (!bodyParentGO.activeInHierarchy)
-                            {
-                                OnBeginDisplay();
-                            }
-                            DisplayLoaded();
+                            OnBeginDisplay();
                         }
-                        break;
+                        DisplayLoaded();
                     }
+                    break;
                 case DisplayOption.NONE:
-                    {
-                        if (bodyParentGO.activeInHierarchy)
-                        {
-                            OnStopDisplay();
-                        }
-                        break;
-                    }
+                    if (bodyParentGO.activeInHierarchy)
+                        OnStopDisplay();
+
+                    break;
                 case DisplayOption.IGNORE:
-                    {
-                        break;
-                    }
+                    break;
             }
             currentTimeStep = FPS_30_DELTA;
         }
         else
-        {
             currentTimeStep -= Time.deltaTime;
-        }
     }
 
     public void DisplayLoaded()
     {
-        if(motion.motion.Count == 1)
+        if (motion.motion.Count == 1)
         {
             Display(GetVectors(motion.motion[0]));
             return;
@@ -149,28 +127,17 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             replayFrame = (replayFrame + 1) % motion.motion.Count;
             frameSlider.value = replayFrame / (float)motion.motion.Count;
         }
-        else
-        {
-            if(replayFrame == motion.motion.Count)
-            {
+        else if (replayFrame == motion.motion.Count)
                 replayFrame--;
-            }
-        }
+
         Display(GetInterpolatedValue(motion.motion, replayFrame)); //motion.motion[replayFrame]);
     }
 
-    private int interpolationFrames = 6; //0.267 sec
     public Vector3[] GetInterpolatedValue(List<Joint[]> motion, int currentFrame)
     {
         string x = smoothingFrames.text;
-        if(int.TryParse(x, out int f))
-        {
-            interpolationFrames = f;
-        }
-        else
-        {
-            interpolationFrames = 1;
-        }
+        interpolationFrames = int.TryParse(x, out int f) ? f : 1;
+
         Joint[] joints = motion[currentFrame];
         Vector3[] interpolatedFrames = new Vector3[joints.Length];
 
@@ -179,12 +146,11 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             Vector3 joint = Vector3.zero;
             float divisor = 0;
             float p = interpolationFrames + 1;
-            for (int j = 0; j <= interpolationFrames; j++, p/=2f)
+            for (int j = 0; j <= interpolationFrames; j++, p /= 2f)
             {
-                if(currentFrame-j < 0)
-                {
+                if (currentFrame - j < 0)
                     break;
-                }
+
                 divisor += p;
                 joint += motion[currentFrame - j][i].Position.ToUnityVector3() * p;
             }
@@ -198,24 +164,18 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     public Vector3[] GetVectors(Joint[] jointPositions)
     {
         Vector3[] positionFrame = new Vector3[jointPositions.Length];
+
         for (int i = 0; i < jointPositions.Length; i++)
-        {
             positionFrame[i] = jointPositions[i].Position.ToUnityVector3() / -200f;
 
-        }
         return positionFrame;
 
     }
 
-    public void OnBeginDisplay()
-    {
-        bodyParentGO.SetActive(true);
-    }
+    public void OnBeginDisplay() => bodyParentGO.SetActive(true);
 
-    public void OnStopDisplay()
-    {
-        bodyParentGO.SetActive(false);
-    }
+    public void OnStopDisplay() => bodyParentGO.SetActive(false);
+    
 
     public Joint[] ResolveSkeleton()
     {
@@ -223,29 +183,22 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         Joint[] joints = new Joint[27];
 
         for (int i = 0; i < 27; i++)
-        {
-            //Joint joint = skeleton.GetJoint(i);
             joints[i] = trackedBody.GetJoint(i);
-        }
 
         if (AppState.recording)
-        {
             SkeletonTracker.Instance.StoreFrame(joints);
-        }
+
         return joints;
     }
 
-    private bool bodyCompareRunning = false;
+
     public void RunBodyCompare()
     {
         if (bodyCompareRunning)
-        {
             bodyCompareRunning = false;
-        }
+
         else
-        {
             StartCoroutine(BodyCompareCoroutine());
-        }
     }
 
     public IEnumerator BodyCompareCoroutine()
@@ -253,7 +206,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         float timer = 0f;
         while (AppState.bodyCompareRunning)
         {
-            if(timer <= 0f)
+            if (timer <= 0f)
             {
                 int percent = ComparePoses(joints, SkeletonTracker.Instance.loadedMotion.motion[0]);
                 compareAccuracy.text = "Accuracy: " + percent + " %";
@@ -261,16 +214,13 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                 timer = FPS_30_DELTA;
             }
             else
-            {
                 timer -= Time.deltaTime;
-            }
 
             yield return null;
         }
         compareAccuracy.text = "";
     }
 
-    public int comparePercentage = -1;
     public IEnumerator BodyCompareCoroutine(Joint[] pose, float compareTime)
     {
         float timer = 0f;
@@ -291,6 +241,53 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             yield return null;
         }
     }
+
+    public bool GetBodyBoundingBox(Joint[] joints, out Bounds b)
+    {
+        b = new Bounds();
+
+        if (joints.Length < 22)
+        {
+            Debug.LogWarning("Not enough joint information to compose bounding box");
+            return false;
+        }
+        List<Vector3> jointPositions = new List<Vector3>();
+
+        foreach(var i in bodyJoints)
+        {
+            Joint j = joints[(int)i];
+            if (j.ConfidenceLevel == JointConfidenceLevel.Low || j.ConfidenceLevel == JointConfidenceLevel.None)
+            {
+                continue;
+            }
+            jointPositions.Add(j.Position.ToUnityVector3());
+        }
+
+        if(jointPositions.Count == 0)
+        {
+            Debug.LogWarning("Not enough joint information to compose bounding box");
+            return false;
+        }
+
+        b = jointPositions.GetBoundingBox();
+        return true;
+    }
+
+    static JointId[] bodyJoints = new JointId[]
+    {
+        JointId.Pelvis,
+        JointId.SpineNavel,
+        JointId.SpineChest,
+        JointId.Neck,
+        JointId.Head,
+        JointId.ClavicleLeft,
+        JointId.ShoulderLeft,
+        JointId.ClavicleRight,
+        JointId.ShoulderRight,
+        JointId.HipLeft,
+        JointId.HipRight,
+
+    };
 
     public void Display(Vector3[] joints)
     {
@@ -335,9 +332,8 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     public int ComparePoses(Joint[] originalPose, Joint[] comparePose)
     {
         if(originalPose == null || comparePose == null)
-        {
             return -1;
-        }
+
         Vector3 posDifferenceSum = Vector3.zero;
 
         Vector3 originalPelvisPosition = originalPose[(int)JointId.Pelvis].Position.ToUnityVector3();
@@ -372,6 +368,11 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             comparedJointsCount++;
         }
 
+        if(comparedJointsCount == 0)
+        {
+            Debug.LogWarning("All joints had JointConfidenceLevel.Low or .None");
+        }
+
         //average positional difference in mm
         Vector3 posDifference = posDifferenceSum /= comparedJointsCount;
 
@@ -380,18 +381,14 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         int percent;
         //20000 = 0% |100 = 100%
         if(posDifferenceD > 80000)
-        {
             percent = 0;
-        }
+
         else if(posDifferenceD < 200)
-        {
             percent = 100;
-        }
+
         else
-        {
             //1% = 348
             percent = 100 - Mathf.RoundToInt((posDifferenceD-200) / 798);
-        }
 
         //compareAccuracy.text = "Accuracy: " + percent + " %";
         //Debug.Log("Positional difference in mm: " + posDifferenceD);

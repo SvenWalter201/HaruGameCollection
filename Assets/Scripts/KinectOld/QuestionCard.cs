@@ -1,56 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
-using System.Threading;
 using UnityEngine;
 
-    class QuestionCard
+class QuestionCard : ICloneable
+{
+    public static List<Color> colorList = new List<Color> { Color.red, Color.green, Color.blue, Color.white };
+
+    readonly string question;
+    readonly List<string> answers;
+    int trueAnswer;
+    public string Question => question;
+    public List<string> Answers => answers;
+
+    //index of true answer
+    public int TrueAnswer { get => trueAnswer; set => trueAnswer = value; }
+
+    public QuestionCard(string question, List<string> answers, int trueAnswer)
     {
+        this.question = question;
+        this.answers = answers;
+        this.trueAnswer = trueAnswer;
+    }
 
-
-        public List<Color> ColorList = new List<Color>{ Color.red, Color.green, Color.blue, Color.white };
-        public String[] AnswerCount = new String[] { "A:", "B:", "C:", "D:" };
-
-        public string Question { get; set; }
-
-        public string[] Answers { get; set; }
-
-        //numerical value for true answer
-        public byte TrueAnswer { get; set; }
-
-
-        public void Print()
-        {
-            Console.WriteLine(Question);
-            for (int i = 0; i < Answers.Length; i++)
-            {
-                Console.WriteLine(Answers[i]);
-            }
-            //Console.WriteLine("True answer: " + answers[trueAnswer]);
-
-        }
-
-        public void PrintWithLights()
-        {
-            LightManager lm = LightManager.Instance;
-
-            Console.WriteLine(Question);
-            for (int i = 0; i < Answers.Length; i++)
-            {
-            lm.SetLights(Command.BRIGHTEN, new List<string> { lm.availableIndizes[i] }, ColorList[i]);
-            lm.SetLights(Command.ON, new List<string> { lm.availableIndizes[i] }, ColorList[i]);
-                Console.WriteLine(AnswerCount[i] + Answers[i]);
-                Thread.Sleep(5000);
-                lm.SetLights(Command.OFF, new List<string> { lm.availableIndizes[i] }, ColorList[i]);
-        }
-
-            //Console.WriteLine("True answer: " + answers[trueAnswer]);
-        }
-
-    public bool ValidateAnswer(byte answer)
-        {
+    public bool ValidateAnswer(int answer)
+    {
         return answer == TrueAnswer;
+    }
+
+    public void Reshuffle()
+    {
+        string trueAnswer = Answers[TrueAnswer];
+        // Knuth shuffle algorithm :: courtesy of Wikipedia
+        List<string> answers = Answers;
+        for (int i = 0; i < answers.Count; i++)
+        {
+
+            int r = UnityEngine.Random.Range(0, answers.Count);
+            if (r == i)
+            {
+                continue;
+            }
+            string tmp = answers[i];
+            answers[i] = answers[r];
+            answers[r] = tmp;
+        }
+
+        for (int i = 0; i < answers.Count; i++)
+        {
+            if (answers[i] == trueAnswer)
+            {
+                TrueAnswer = i;
+                break;
+            }
         }
     }
+
+    public object Clone()
+    {
+        return new QuestionCard(question, answers, trueAnswer);
+    }
+}
 

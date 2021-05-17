@@ -23,6 +23,7 @@ class PositionRecognitionProgram : IKinectProgram
     private readonly RoomManager instance = RoomManager.Instance;
     public void Execute()
     {
+        /*
         LightManager lightManager = LightManager.Instance;
         
         instance.m_Room = new Room();
@@ -66,6 +67,7 @@ class PositionRecognitionProgram : IKinectProgram
             Thread.Sleep(500);
         }
         lightManager.TurnOffLights();
+        */
     }
 
     public void PositionRecognitionProgram_OnFrameArrived(object sender, BodyFrameArrivedEventArgs e)
