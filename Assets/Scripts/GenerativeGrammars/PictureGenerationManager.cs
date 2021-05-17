@@ -28,16 +28,23 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
 
     //component
     private MeshRenderer _renderHead;
-    private MeshRenderer _renderSkyscraper;
-    private MeshRenderer _renderBush;
-    private MeshRenderer _renderTree;
-    private MeshRenderer _renderHouse;
 
-    public GameObject head;
+    public GameObject charcter;
     public GameObject skyscraper;
     public GameObject bush;
     public GameObject tree;
     public GameObject house;
+    public GameObject guitar;
+    public GameObject car;
+    public GameObject chefhat;
+    public GameObject colourpalette;
+    public GameObject Laterne;
+    public GameObject paintbrush;
+    public GameObject Vulcano;
+    public GameObject pizza;
+    public GameObject microphone;
+
+     
 
     private GenerativeGrammatiken grammars;
     public SentenceInformation[] sentences = new SentenceInformation[5];
@@ -111,6 +118,7 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
         }
 
         ChangeMoodTo(si);
+        SetActionTo(si);
         
     }
 
@@ -135,8 +143,20 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
                 {
                     return Instantiate(bush, p, q);
                 }
+            case "Guitar":
+                {
+                    return Instantiate(guitar, p, q);
+                }
+            case "Microphone":
+                {
+                    return Instantiate(microphone, p, q);
+                }
+            case "Laterne":
+                {
+                    return Instantiate(Laterne, p, q);
+                }
             default:
-                return Instantiate(head, p, q);
+                return Instantiate(bush, p, q);
         }
 
     }
@@ -217,6 +237,7 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
             Vector3 positionObject = new Vector3(pv.x, 0, pv.y) + position;
             GameObject gameObject = SpawnObject(si.Person, positionObject, Quaternion.identity);
             current = gameObject;
+            current.transform.localScale = new Vector3(0.7f,0.7f,0.7f);
             Collider c = current.GetComponent<Collider>();
             //Debug.Log(current.transform.position);
             //Debug.Log("Placing object!!!!");
@@ -245,7 +266,23 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
     
     private void SetActionTo(SentenceInformation si)
     {
+        //_renderHead = current.GetComponent<MeshRenderer>();
 
+        if (current.TryGetComponent<AssetHolder>(out AssetHolder ah) == true)
+        {
+            current.GetComponent<AssetHolder>().GetPosition(0);
+
+            switch (si.Action)
+            {
+                case "musiziert":
+                    SpawnObject("Guitar", current.GetComponent<AssetHolder>().GetPosition(0), Quaternion.identity);
+                    break;
+                case "singt":
+                    SpawnObject("Microphone", current.GetComponent<AssetHolder>().GetPosition(0), Quaternion.identity);
+                    break;
+            }
+        } 
+        
     }
     public void ChangeMoodTo(SentenceInformation si)
     {

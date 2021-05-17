@@ -23,6 +23,8 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         Debug.Log("pgManager");
         pgManager = PictureGenerationManager.Instance;
         ClearRecentlyUsed();
+            
+        
     }
 
     public void ClearRecentlyUsed()
@@ -625,8 +627,10 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 return "[eine @mood@ Gruppe von Büschen,einige Büsche,ein paar Büsche]";
             case "Wolkenkratzer":
                 return "[eine @mood@ Gruppe von Wolkenkratzern,einige Wolkenkratzer, ein paar Wolkenkratzer]";
+            case "Auto":
+                return "einige Autos";
             default://,einige" + word + "en,ein paar " + word + "en 
-                return "[eine Gruppe von " + word + "en,einige " + word + "en, ein paar " + word + "en ]";
+                return "[eine Gruppe von " + word + "n,einige " + word + "n, ein paar " + word + "n ]";
         }
     }
 
