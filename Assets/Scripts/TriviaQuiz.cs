@@ -22,12 +22,25 @@ public class TriviaQuiz : Game
     int questionAmount = 2, answerAmount = 4;
     [SerializeField]
     Material bulbMaterial;
+    [SerializeField]
+    CountMode countMode;
+
+    enum CountMode
+    {
+        Numeric,
+        Alphabetic,
+        Roman
+    }
 
     CoroutineTimer timer = new CoroutineTimer();
     AnswerPanel[] panels;
 
     static readonly Color[] colorsDimm = new Color[] { Color.red/4f, Color.yellow/4f, Color.green/4f, Color.cyan/4f};
     static readonly Color[] colorsBright = new Color[] { Color.red*3f, Color.yellow*3f, Color.green*3f, Color.cyan*3f};
+
+    static readonly string[] numeric = new string[] { "1", "2", "3", "4", "5", "6", "7" };
+    static readonly string[] alphabetic = new string[] { "A", "B", "C", "D", "E", "F", "G" };
+    static readonly string[] roman = new string[] { "I", "II", "III", "IV", "V", "VI", "VII" };
 
     private void Awake()
     {
@@ -70,8 +83,9 @@ public class TriviaQuiz : Game
             questions.Remove(q);
         }
 
-        Debug.Log("Triviaquiz finished");
-        //ClearQuestionUI();
+        yield return new WaitForSeconds(3);
+
+        ClearQuestionUI();
     }
 
     /// <summary>
@@ -128,7 +142,22 @@ public class TriviaQuiz : Game
         {
             AnswerPanel p = panels[i];
             p.gameObject.SetActive(true);
-            p.AnswerNumber.text = (i + 1).ToString();
+            switch (countMode)
+            {
+                case CountMode.Numeric:
+                    p.AnswerNumber.text = numeric[i];
+                    break;
+                case CountMode.Alphabetic:
+                    p.AnswerNumber.text = alphabetic[i];
+                    break;
+                case CountMode.Roman:
+                    p.AnswerNumber.text = roman[i];
+                    break;
+                default:
+                    p.AnswerNumber.text = numeric[i];
+                    break;
+            }
+
             p.AnswerText.text = q.Answers[i];
             p.Bulb.GetComponent<MeshRenderer>().enabled = true;
             p.Bulb.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", colorsDimm[i]);
@@ -150,5 +179,5 @@ public class TriviaQuiz : Game
         Material ins = Instantiate(bulbMaterial);
         ins.SetColor("_EmissionColor", color);
         return ins;
-    }  
+    }
 }

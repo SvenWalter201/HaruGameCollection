@@ -154,8 +154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracking: 0
-  display: 0
   replaying: 0
+  display: 0
   body: {fileID: 496412944}
   leftLeg: {fileID: 408445725}
   rightLeg: {fileID: 1359628799}
@@ -441,7 +441,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -666,7 +666,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -951,7 +951,6 @@ GameObject:
   - component: {fileID: 663015649}
   - component: {fileID: 663015648}
   - component: {fileID: 663015647}
-  - component: {fileID: 663015651}
   m_Layer: 5
   m_Name: MemoryUI
   m_TagString: Untagged
@@ -1067,43 +1066,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 663015645}
   m_CullTransparentMesh: 1
---- !u!114 &663015651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 663015645}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b227f0c7317fffb4aaeac997eda48f24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  width: 2
-  height: 2
-  startScreen: {fileID: 2087272424}
-  memoryCanvas: {fileID: 1242425576}
-  memoryCardRow: {fileID: 1005658687219221264, guid: 80b3402a1dab1934485c1af96f601f29, type: 3}
-  memoryCardPrefab: {fileID: 3751902545660278343, guid: 8022ccc3d87ff3c48971d7596df68bb7, type: 3}
-  cameraRenderTexture: {fileID: 8400000, guid: 4de44eac66524c3409f38fd68129e960, type: 2}
-  backsideTexture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
-  timeBeforeStart: 5
-  maxGroupSize: 2
-  cardShowingTime: 5
-  motionGuessingTime: 8
-  timeBeforeMotionTracking: 1
-  maximumRounds: 3
-  timeBetweenRounds: 2
-  timeBetweenShowingAndGuessing: 2
-  timeBetweenCardsShowing: 1
-  timeBetweenCardsGuessing: 1
-  taskText: {fileID: 601264485}
-  remainingTimeText: {fileID: 1484551271}
-  progressBar: {fileID: 1553586070}
-  progressBarMask: {fileID: 818839436}
-  startScreenCountdown: {fileID: 1686079973}
-  startScreenText: {fileID: 1729117966}
-  comparePercentage: {fileID: 1926000957}
 --- !u!1 &697857852
 GameObject:
   m_ObjectHideFlags: 0
@@ -1154,7 +1116,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1522,7 +1484,7 @@ GameObject:
   - component: {fileID: 846369834}
   - component: {fileID: 846369833}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: BodyCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1790,7 +1752,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2366,7 +2328,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3137,3 +3099,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2087272424}
   m_CullTransparentMesh: 1
+--- !u!1 &2102186781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2102186783}
+  - component: {fileID: 2102186782}
+  m_Layer: 0
+  m_Name: MotionMemory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2102186782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102186781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b227f0c7317fffb4aaeac997eda48f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 2
+  height: 2
+  startScreen: {fileID: 2087272424}
+  memoryCanvas: {fileID: 1242425576}
+  memoryCardRow: {fileID: 1005658687219221264, guid: 80b3402a1dab1934485c1af96f601f29, type: 3}
+  memoryCardPrefab: {fileID: 3751902545660278343, guid: 8022ccc3d87ff3c48971d7596df68bb7, type: 3}
+  cameraRenderTexture: {fileID: 8400000, guid: 4de44eac66524c3409f38fd68129e960, type: 2}
+  backsideTexture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+  timeBeforeStart: 5
+  maxGroupSize: 2
+  maximumRounds: 1
+  cardShowingTime: 5
+  motionGuessingTime: 8
+  timeBeforeMotionTracking: 1
+  timeBetweenRounds: 2
+  timeBetweenShowingAndGuessing: 2
+  timeBetweenCardsShowing: 1
+  timeBetweenCardsGuessing: 1
+  taskText: {fileID: 601264485}
+  remainingTimeText: {fileID: 1484551271}
+  progressBar: {fileID: 1553586070}
+  progressBarMask: {fileID: 818839436}
+  startScreenCountdown: {fileID: 1686079973}
+  startScreenText: {fileID: 1729117966}
+  comparePercentage: {fileID: 1926000957}
+--- !u!4 &2102186783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102186781}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

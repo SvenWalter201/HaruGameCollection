@@ -8,14 +8,10 @@ using UnityEngine;
 
 class QuestionManager : Singleton<QuestionManager>
 {
+    [SerializeField]
+    QuestionCatalogue defaultCatalogue;
 
     QuestionCard[] allQuestions;
-
-    QuestionCard[] defaultQuestions = new QuestionCard[]
-    {
-        new QuestionCard("What is the biggest animal", new List<string>(){ "Elefant","Anakonda","Whaleshark","Blue whale" }, 3),
-        new QuestionCard("What color is blue", new List<string>(){ "blue","yellow","red","green" }, 0)
-    };
 
     void LoadQuestions()
     {
@@ -24,7 +20,7 @@ class QuestionManager : Singleton<QuestionManager>
         }
         else
         {
-            this.allQuestions = defaultQuestions;
+            this.allQuestions = defaultCatalogue.QuestionCards.ToArray();
         }
     }
 

@@ -5,34 +5,45 @@ using UnityEngine.UI;
 using TMPro;
 public class MotionMemory : Game
 {
-    [SerializeField] int width = 2;
-    [SerializeField] int height = 2;
+    [SerializeField] int width = 2, height = 2;
     [Space]
-    [SerializeField] GameObject startScreen = default;
-    [SerializeField] GameObject memoryCanvas = default;
-    [SerializeField] GameObject memoryCardRow = default;
-    [SerializeField] GameObject memoryCardPrefab = default;
-    [SerializeField] RenderTexture cameraRenderTexture = default;
-    [SerializeField] Texture2D backsideTexture = default;
+    [SerializeField] 
+    GameObject startScreen = default, memoryCanvas = default, memoryCardRow = default, memoryCardPrefab = default;
+
+    [SerializeField] 
+    RenderTexture cameraRenderTexture = default;
+    [SerializeField] 
+    Texture2D backsideTexture = default;
     [Space]
     [Header("Timing")]
     //how many cards get turned around after one another
-    [SerializeField] float timeBeforeStart = 2;
-    [SerializeField] int maxGroupSize = 2;
-    [SerializeField] float cardShowingTime = 3;
-    [SerializeField] float motionGuessingTime = 2;
-    [SerializeField] float timeBeforeMotionTracking = 1f;
-    [SerializeField] int maximumRounds = 3;
-    [SerializeField] float timeBetweenRounds = 2f, timeBetweenShowingAndGuessing = 2f, timeBetweenCardsShowing = 2f, timeBetweenCardsGuessing = 1f;
+    [SerializeField] 
+    float timeBeforeStart = 2;
+    [SerializeField] 
+    int maxGroupSize = 2, maximumRounds = 3;
+    [SerializeField] 
+    float 
+        cardShowingTime = 3, 
+        motionGuessingTime = 2, 
+        timeBeforeMotionTracking = 1f, 
+        timeBetweenRounds = 2f, 
+        timeBetweenShowingAndGuessing = 2f, 
+        timeBetweenCardsShowing = 2f, 
+        timeBetweenCardsGuessing = 1f;
+
     [Space]
     [Header("UIElements")]
-    [SerializeField] TextMeshProUGUI taskText;
-    [SerializeField] TextMeshProUGUI remainingTimeText;
-    [SerializeField] Image progressBar;
-    [SerializeField] Image progressBarMask;
-    [SerializeField] TextMeshProUGUI startScreenCountdown;
-    [SerializeField] TextMeshProUGUI startScreenText;
-    [SerializeField] TextMeshProUGUI comparePercentage;
+
+    [SerializeField]
+    TextMeshProUGUI taskText;
+    [SerializeField]
+    TextMeshProUGUI remainingTimeText;
+
+    [SerializeField] 
+    Image progressBar, progressBarMask;
+
+    [SerializeField] 
+    TextMeshProUGUI startScreenCountdown, startScreenText, comparePercentage;
 
     List<MemoryCard> unsolved, solved, tempStack;
     readonly CoroutineTimer timer = new CoroutineTimer();
@@ -96,9 +107,8 @@ public class MotionMemory : Game
             yield return CardGuessingPhase();
 
             if (remainingRounds == 0)
-            {
                 break;
-            }
+
             yield return timer.SimpleTimer(timeBetweenRounds);
         }
 
@@ -108,15 +118,7 @@ public class MotionMemory : Game
         memoryCanvas.SetActive(false);
         startScreen.SetActive(true);
 
-        //check if the rounds timed out or if the player won
-        if (unsolved.Count > 0)
-        {
-            startScreenText.text = "No rounds remaining";
-        }
-        else
-        {
-            startScreenText.text = "You win!";
-        }
+        startScreenText.text = (unsolved.Count > 0) ? "No rounds remaining" : "You win!"; 
 
         AppState.bodyTrackingRunning = false;
     }
@@ -268,23 +270,12 @@ public class MotionMemory : Game
         card.uiElement.GetComponent<RawImage>().texture = cameraRenderTexture;
     }
 
-    void StopShowPose(MemoryCard card)
-    {
+    void StopShowPose(MemoryCard card) => 
         card.uiElement.GetComponent<RawImage>().texture = backsideTexture;
-    }
 
-    void BeginOutline(MemoryCard card)
-    {
-        card.uiElement.GetComponent<Outline>().enabled = true;
-    }
+    void BeginOutline(MemoryCard card) => card.uiElement.GetComponent<Outline>().enabled = true;
 
-    void StopOutline(MemoryCard card)
-    {
-        card.uiElement.GetComponent<Outline>().enabled = false;
-    }
+    void StopOutline(MemoryCard card) => card.uiElement.GetComponent<Outline>().enabled = false;
 
-    int GetRandom(int length)
-    {
-        return UnityEngine.Random.Range(0, length);
-    }
+    int GetRandom(int length) => Random.Range(0, length);
 }

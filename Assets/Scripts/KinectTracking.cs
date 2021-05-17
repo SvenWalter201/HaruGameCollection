@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Microsoft.Azure.Kinect.Sensor;
 
@@ -23,7 +20,7 @@ public class KinectTracking : MonoBehaviour
 
     public void Close()
     {
-        KinectDeviceManager.Instance.Close();
+        KinectDeviceManager.Instance.Close(null, null);
     }
 
     public void StartTrackingRGBFrame()

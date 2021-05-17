@@ -76,7 +76,7 @@ class LightManager
 
 		client.Initialize(appKey);
 		Console.WriteLine("Connected");
-		RoomConfigurationProgram.inited = true;
+		//RoomConfigurationProgram.inited = true;
 	}
 
 	public int GetLamps()

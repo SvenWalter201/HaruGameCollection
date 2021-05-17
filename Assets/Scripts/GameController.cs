@@ -26,28 +26,10 @@ public class GameController : Singleton<GameController>
         StartCoroutine(LoadLevel(index));
     }
 
-    public void OnCurrentGameFinished(object sender, EventArgs e)
-    {
-
-        mainsceneCanvas.enabled = true;
-        mainSceneAudioListener.enabled = true;
-        mainSceneEventSystem.enabled = true;
-
-        StartCoroutine(UnloadActiveLevel());
-
-        loadedLevelBuildIndex = 0;
-    }
+    public void OnCurrentGameFinished(object sender, EventArgs e) => StartCoroutine(GameFinished());
 
     IEnumerator LoadLevel(int levelBuildIndex)
     {
-        /*
-        enabled = false;
-
-        if(loadedLevelBuildIndex > 0)
-        {
-            yield return UnloadActiveLevel();
-        }
-        */
         yield return SceneManager.LoadSceneAsync(levelBuildIndex, LoadSceneMode.Additive);
         SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(levelBuildIndex));
 
@@ -55,11 +37,16 @@ public class GameController : Singleton<GameController>
 
         currentGame = FindObjectOfType<Game>();
         currentGame.OnGameFinished += OnCurrentGameFinished;
-        //enabled = true;
     }
 
-    IEnumerator UnloadActiveLevel()
+    IEnumerator GameFinished()
     {
         yield return SceneManager.UnloadSceneAsync(loadedLevelBuildIndex);
+
+        mainsceneCanvas.enabled = true;
+        mainSceneAudioListener.enabled = true;
+        mainSceneEventSystem.enabled = true;
+
+        loadedLevelBuildIndex = 0;
     }
 }

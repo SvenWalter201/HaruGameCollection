@@ -32,11 +32,6 @@ public abstract class Game : MonoBehaviour
         yield break;
     }
 
-    public virtual void Terminate()
-    {
-
-    }
-
     public void Finish()
     {
         OnGameFinished?.Invoke(this, null);

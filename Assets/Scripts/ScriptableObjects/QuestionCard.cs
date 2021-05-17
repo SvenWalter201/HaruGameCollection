@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-class QuestionCard : ICloneable
+[Serializable]
+[CreateAssetMenu(fileName = "QuestionCard", menuName = "ScriptableObjects/QuestionCard")]
+public class QuestionCard : ScriptableObject, ICloneable
 {
     public static List<Color> colorList = new List<Color> { Color.red, Color.green, Color.blue, Color.white };
 
-    readonly string question;
-    readonly List<string> answers;
+    [SerializeField]
+    string question;
+
+    [SerializeField]
+    List<string> answers;
+
+    [SerializeField]
     int trueAnswer;
+
     public string Question => question;
     public List<string> Answers => answers;
 
@@ -57,7 +65,7 @@ class QuestionCard : ICloneable
 
     public object Clone()
     {
-        return new QuestionCard(question, answers, trueAnswer);
+        return CreateInstance<QuestionCard>();
     }
 }
 

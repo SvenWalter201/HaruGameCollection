@@ -127,7 +127,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     void OnApplicationQuit()
     {
-        Close();
+        Close(null, null);
     }
 
 
@@ -150,6 +150,11 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     public void Init()
     {
+        //check if the scene is a game scene
+        Game game = FindObjectOfType<Game>();
+        if (game != null)
+            game.OnGameFinished += Close;
+
         skeletonDisplay = SkeletonDisplay.Instance;
 
         int count = Device.GetInstalledCount();
@@ -379,7 +384,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         }
     }
 
-    public void Close()
+    public void Close(object sender, EventArgs e)
     {
         AppState.bodyTrackingRunning = false;
         AppState.applicationRunning = false;

@@ -324,8 +324,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracking: 0
-  display: 0
   replaying: 0
+  display: 0
   body: {fileID: 496412944}
   leftLeg: {fileID: 408445725}
   rightLeg: {fileID: 1359628799}
@@ -1572,7 +1572,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1797,7 +1797,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3350,7 +3350,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6362,7 +6362,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7327,7 +7327,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: dfc31d225cb5b3d4ab8b9a1fa75ba55c, type: 3}
+  - {fileID: 2100000, guid: a6f5a45b04c9bfb49abec4e17e1b7d32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

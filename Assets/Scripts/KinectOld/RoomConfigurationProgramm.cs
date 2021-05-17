@@ -1,12 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
-class RoomConfigurationProgram : Singleton<RoomConfigurationProgram>
+class RoomConfigurationProgram : Game
 {
-    public static bool inited = false;
     //bool useHue = false;
     //CoroutineTimer timer = new CoroutineTimer();
 
-    public void Execute()
+    protected override IEnumerator Init()
+    {
+        //check, if there already exists a room calibration 
+        return base.Init();
+    }
+
+    protected override IEnumerator Execute()
     {
         int cornersToConfigure = 0;
         Vector3[] corners = new Vector3[cornersToConfigure];
@@ -20,7 +26,8 @@ class RoomConfigurationProgram : Singleton<RoomConfigurationProgram>
         }
 
         RoomManager.Instance.CreateRoom(corners);
-    }  
+        yield break;
+    }
 }
 
 
