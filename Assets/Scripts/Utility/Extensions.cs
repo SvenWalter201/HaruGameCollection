@@ -112,33 +112,22 @@ public static class Extensions
             return depthPixels;
         }
 
-        float GetDepthColor(int depth, int rangeLower, int rangeUpper)
+        static float GetDepthColor(int depth, int rangeLower, int rangeUpper)
         {
             int c;
+
             if (depth <= rangeUpper && depth >= rangeLower)
-            {
                 c = 255;
-            }
             else
-            {
-                if (depth < rangeLower)
-                {
-                    c = (500 - Abs(depth - rangeLower)) / 2;
-                }
-                else
-                {
-                    c = (500 - Abs(depth - rangeUpper)) / 2;
-                }
-            }
+                c = (depth < rangeLower) ? 
+                    (500 - Abs(depth - rangeLower)) / 2 : 
+                    (500 - Abs(depth - rangeUpper)) / 2;
 
             if (c < 0)
-            {
                 c = 0;
-            }
+
             return c / 255f;
         }
-
-        //depthPixels = img.CreateColourMap();   
     }
 
     
@@ -180,12 +169,12 @@ public static class Extensions
 
         foreach (var p in v3s)
         {
-            if (p.x < lL.x) { lL.x = p.x; }
-            if (p.y < lL.y) { lL.y = p.y; }
-            if (p.z < lL.z) { lL.z = p.z; }
-            if (p.x > uR.x) { uR.x = p.x; }
-            if (p.y > uR.y) { uR.y = p.y; }
-            if (p.z > uR.z) { uR.z = p.z; }
+            if (p.x < lL.x) lL.x = p.x; 
+            if (p.y < lL.y) lL.y = p.y; 
+            if (p.z < lL.z) lL.z = p.z; 
+            if (p.x > uR.x) uR.x = p.x; 
+            if (p.y > uR.y) uR.y = p.y; 
+            if (p.z > uR.z) uR.z = p.z; 
         }
 
         Vector3 extents = uR - lL / 2f;

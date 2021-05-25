@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using JointConnection = SkeletonDisplay.JointConnection;
 
 [CustomEditor(typeof(SkeletonDisplay))]
 public class SkeletonDisplayEditor : Editor

@@ -15,6 +15,9 @@ public abstract class Game : MonoBehaviour
 
     IEnumerator Play()
     {
+        //wait for kinect to be setup
+        yield return new WaitForSeconds(0.5f);
+
         yield return Init();
 
         yield return Execute();

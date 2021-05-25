@@ -64,7 +64,7 @@ public class MotionMemory : Game
 
         List<Motion> poses = GetRandomSetOfPoses();
         cards = ConstructUI(poses);
-        SkeletonDisplay.Instance.display = DisplayOption.IGNORE;
+        SkeletonDisplay.Instance.display = DisplayOption.NONE;
 
         yield break;
     }
