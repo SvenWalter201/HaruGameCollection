@@ -1336,9 +1336,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1839415771}
-        m_TargetAssemblyTypeName: GenerativeGrammatiken, Assembly-CSharp
-        m_MethodName: GenerateSentence
+      - m_Target: {fileID: 1839415773}
+        m_TargetAssemblyTypeName: PictureGenerationManager, Assembly-CSharp
+        m_MethodName: PaintPicture
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2058,6 +2058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recentlyUsed: []
   sentenceText: {fileID: 757675014}
+  count: 0
 --- !u!4 &1839415772
 Transform:
   m_ObjectHideFlags: 0

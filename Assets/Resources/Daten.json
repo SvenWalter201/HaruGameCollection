@@ -31,14 +31,14 @@
     "eine Prinzessin f"
   ],
   "animal": [
-    "eine Katze f",
-    "ein Hund m",
-    "ein Papagei m",
+    "eine @colour@ Katze f",
+    "ein @colour@ Hund m",
+    "ein @colour@ Papagei m",
     "Haru n",
-    "ein Tyrannosaurusrex m",
-    "ein Stegosaurus m",
-    "ein Hase m",
-    "eine [blaue,rote,lila, ] Kuh f"
+    "ein @colour@ Tyrannosaurusrex m",
+    "ein @colour@ Stegosaurus m",
+    "ein @colour@ Hase m",
+    "eine @colour@ Kuh f"
   ],
   "thing": [
     "Haus n",
@@ -67,8 +67,7 @@
     "musiziert",
     "läuft",
     "singt",
-    "@animal@ streichelt",
-    "Fußball spielt"
+    "@animal@ streichelt"
   ],
   "linkingword":[
     "Weiter",
@@ -89,7 +88,17 @@
   "settingdescription":[
     "[auf einer schönen Wiese, ]",
     "entgegen aller Erwartungen []",
-    "",
+    "[]",
+  ],
+  "colour":[
+    "[blauer,blaue,blaues]",
+    "[roter,rote,rotes]",
+    "[grüner,grüne,grünes]",
+    "[gelber,gelbe,gelbes]",
+    "[,,]",
+    "[,,]",
+    "[,,]",
+
   ]
   
 }

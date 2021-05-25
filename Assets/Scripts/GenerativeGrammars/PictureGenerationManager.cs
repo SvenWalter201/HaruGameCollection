@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using UnityEngine;
 //using C:\Users\Ann - C\OneDrive\Desktop\UnityProject\HaruGameCollection\Assets\Scripts\LayeredDetailAssetGenerator.cs
 
 
-public class PictureGenerationManager : Singleton<PictureGenerationManager>
+public class PictureGenerationManager : Game
 {
     [SerializeField] private Texture2D[] eyes;
     [SerializeField] private Texture2D[] mouth;
@@ -58,14 +59,25 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
 
     public SentenceInformation[] Sentences { get => sentences; set => sentences = value; }
 
-    private void Start()
+    void Start()
+    {
+        PlayGame();
+    }
+    protected override IEnumerator Init()
     {
         presentGameObjects = new List<GameObject>();
         grammars = GenerativeGrammatiken.Instance;
+        yield break;
     }
 
+    protected override IEnumerator Execute()
+    {
+        yield break;
+    }
+
+
     //setting the informatioin sent by the grammar generator
-    public void SendToPGMAnager(SentenceInformation si)
+    /*public void SendToPGMAnager(SentenceInformation si)
 
     {
         GetComponent<LayeredDetailAssetGenerator>();
@@ -98,18 +110,19 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
             count = 0;
         }
         
-    }
+    }*/
 
-    private void PaintPicture(SentenceInformation si)
+    public void PaintPicture()
     {
+        SentenceInformation si = grammars.GenerateSentence();
         // group or single object spawning
-        if(si.Singular == false)
+        if (si.Singular == false)
         {
             int r = UnityEngine.Random.Range(2, 5);
             for (int i = 0; i < r;i++)
             {
                 PlaceObjectAt(si) ;
-                Debug.Log(si.Singular + " mit " + i + " von " + r + "objekten");
+                //Debug.Log(si.Singular + " mit " + i + " von " + r + "objekten");
             }
         }
         else
@@ -231,7 +244,7 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
 
         int max_iter = 100;
         int iter = 0;
-        while (true && iter < max_iter) //while, colliding generate new position and check if its working
+        while ( iter < max_iter) //while, colliding generate new position and check if its working
         {
             Vector2 pv = UnityEngine.Random.insideUnitCircle * radius;
             Vector3 positionObject = new Vector3(pv.x, 0, pv.y) + position;
@@ -247,7 +260,6 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
                 if (ValidateSpawn(c.bounds)) //check if object is intersecting with another object 
                 {
                     Destroy(current);
-                    iter++;
                 }
                 else
                 {
@@ -257,6 +269,12 @@ public class PictureGenerationManager : Singleton<PictureGenerationManager>
                 }
                 
             }
+            else
+            {
+                Debug.LogError("Object has no Collider");
+                break;
+            }
+            iter++;
         }
 
         current.transform.localScale = new Vector3(1, 1, 1);

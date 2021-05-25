@@ -16,6 +16,7 @@ public class Vocabulary
     public string[] linkingword;
     public string[] setting;
     public string[] settingdescription;
+    public string[] colour;
 }
 
 

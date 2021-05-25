@@ -5,31 +5,22 @@ using System.IO;
 using Newtonsoft.Json;
 using System;
 using UnityEngine.UI;
-//using System.Text.Json;
 
 public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 {
     private const string fileName = "/Resources/Daten.json";
-    private PictureGenerationManager pgManager;
     private Vocabulary vocabulary;
     public List<string> recentlyUsed = new List<string>();
-    const int MAX_SENTENCES = 5;
     private bool probability = true; //singular
     private SentenceInformation si;
     public Text sentenceText;
+    public byte count = 0;
 
     private void Start()
     {
-        Debug.Log("pgManager");
-        pgManager = PictureGenerationManager.Instance;
         ClearRecentlyUsed();
-            
-        
-    }
+        GetVocabulary();
 
-    public void ClearRecentlyUsed()
-    {
-        recentlyUsed.Clear();
     }
     private void GetVocabulary()
     {
@@ -39,24 +30,18 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         vocabulary = JsonConvert.DeserializeObject<Vocabulary>(jsonString);
     }
 
-    public void GenerateSentence()
+    public SentenceInformation GenerateSentence()
     {
-        GetVocabulary();
+        Debug.Log("Generating Sentence??");
         GetProbability();
-        if (recentlyUsed.Count <= MAX_SENTENCES*4) {
-            si = new SentenceInformation();
-            si.ClearInformation();
-            string template = GetTemplate();
-            string sentence = FillInTemplate(template);
-            //Print to UI
-            sentenceText.text = sentence;
-            Debug.Log(sentence);
-        }
-        else
-        {
-            ClearRecentlyUsed();
-            Debug.Log("cleared recently used words");
-        }
+        si = new SentenceInformation();
+        si.ClearInformation();
+        string template = GetTemplate();
+        string sentence = FillInTemplate(template);
+        //Print to UI
+        sentenceText.text = sentence;
+        //Debug.Log(sentence);
+        return si;
     }
 
     public string FillInTemplate(string template)
@@ -116,6 +101,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                         replacement = GetSetting();
                         break;
                     }
+                case "colour":
+                    {
+                        replacement = GetColour();
+                        break;
+                    }
 
             }
 
@@ -141,10 +131,10 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         {
             template = ResolveUndefinedArticle(template);
         }
-        
 
-        Debug.Log(si.PrintToString());
-        pgManager.SendToPGMAnager(si);
+
+        //Debug.Log(si.PrintToString());
+
         return template;
         
     }
@@ -261,20 +251,19 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     {
         //"@position@ <ist> <ein> @mood@ @thing@.",
         
-        if(pgManager.count == 0)
+        if(count == 0)
         {
             recentlyUsed.Add(vocabulary.template[0]);
-            Debug.Log(vocabulary.template[0]);
+            //Debug.Log(vocabulary.template[0]);
+            count++;
             return vocabulary.template[0];
-        } 
+        }
         else
         {
-           int r = UnityEngine.Random.Range(1, vocabulary.template.Length);
-            Debug.Log(vocabulary.template[r]);
+            int r = UnityEngine.Random.Range(1, vocabulary.template.Length);
+            //Debug.Log(vocabulary.template[r]);
             return vocabulary.template[r];
         }
-        
-
     }
 
     private string GetPerson()
@@ -298,7 +287,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         recentlyUsed.Add(vocabulary.person[r]);
         si.Gender = vocabulary.person[r][vocabulary.person[r].Length - 1];
         si.Person = vocabulary.person[r].Substring(0, vocabulary.person[r].Length - 2);
-        Debug.Log(si.Gender);
+        //Debug.Log(si.Gender);
         return vocabulary.person[r].Substring(0, vocabulary.person[r].Length - 2);
     }
 
@@ -361,6 +350,51 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         
         
+    }
+
+    
+    private string GetColour()
+    {
+        //avoid duplicates
+        int max_iterations = vocabulary.colour.Length;
+
+        int r = UnityEngine.Random.Range(0, max_iterations);
+
+        for (int i = 0; i < max_iterations; i++)
+        {
+            if (recentlyUsed.Contains(vocabulary.colour[r]))
+            {
+                r = UnityEngine.Random.Range(0, vocabulary.colour.Length);
+                //Debug.Log("Getting Colour");
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        recentlyUsed.Add(vocabulary.colour[r]);
+        si.Colour = FindTextBetween(vocabulary.colour[r], '[', ']').Split(',')[1];
+
+        switch (si.Gender)
+        {
+            case 'm':
+                {
+                    return FindTextBetween(vocabulary.colour[r], '[', ']').Split(',')[0];
+                }
+            case 'f':
+                {
+                    return FindTextBetween(vocabulary.colour[r], '[', ']').Split(',')[1];
+                }
+            case 'n':
+                {
+                    return FindTextBetween(vocabulary.colour[r], '[', ']').Split(',')[2];
+                }
+            default:
+                {
+                    return FindTextBetween(vocabulary.colour[r], '[', ']').Split(',')[2] + "default!!";
+                }
+        }
     }
 
     private string GetAction()
@@ -525,6 +559,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     }*/
 
 
+    public void ClearRecentlyUsed()
+    {
+        recentlyUsed.Clear();
+    }
+
     // Replace comma-separated entries inside square brackets with random entry
     public string resolveOptions(string text)
     {
@@ -604,7 +643,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         else probability = false;
     }
-    //if you have extra options pick a random option form them
+
     public string pickRandomFromList(string[] list)
     {
         int random_index = UnityEngine.Random.Range(0, list.Length);

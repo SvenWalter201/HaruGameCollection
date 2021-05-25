@@ -12,7 +12,7 @@ public class SentenceInformation
         private string person;
         private char gender;
         private bool singular;
-        
+        private string colour;
        
 
         public string Position { get => position; set => position = value; }
@@ -21,8 +21,9 @@ public class SentenceInformation
         public string Person { get => person; set => person = value; }
         public char Gender { get => gender; set => gender = value; }
         public bool Singular { get => singular; set => singular = value; }
+        public string Colour { get => colour; set => colour = value; }
 
-        
+
     public void ClearInformation()
         {
 
@@ -34,6 +35,7 @@ public class SentenceInformation
             this.person = null;
             this.gender = ' ';
             this.singular = true;
+            this.colour = null;
         }
         
         }
