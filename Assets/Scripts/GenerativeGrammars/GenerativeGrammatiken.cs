@@ -14,6 +14,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     private bool probability = true; //singular
     private SentenceInformation si;
     public Text sentenceText;
+    private string sentence;
     public byte count = 0;
 
     private void Start()
@@ -37,9 +38,9 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         si = new SentenceInformation();
         si.ClearInformation();
         string template = GetTemplate();
-        string sentence = FillInTemplate(template);
+        sentence = FillInTemplate(template);
         //Print to UI
-        sentenceText.text = sentence;
+        //sentenceText.text = sentence;
         //Debug.Log(sentence);
         return si;
     }
@@ -558,6 +559,12 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return getTextBetweenTags(data, start_tag, end_tag).split('\n');
     }*/
 
+
+    public string PrintSentence()
+    {
+        Debug.Log(sentence);
+        return sentence;
+    }
 
     public void ClearRecentlyUsed()
     {

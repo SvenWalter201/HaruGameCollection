@@ -6,6 +6,7 @@ using Microsoft.Azure.Kinect.BodyTracking;
 using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 using Vector3 = UnityEngine.Vector3;
 using TMPro;
+using Unity.Mathematics;
 
 public class SkeletonDisplay : Singleton<SkeletonDisplay>
 {
@@ -19,11 +20,11 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     public Skeleton trackedBody;
 
+    [HideInInspector]
     public int frame = 0, comparePercentage = -1;
 
     float currentTimeStep;
     const float FPS_30_DELTA = 0.033f;
-
 
     Slider frameSlider;
     TextMeshProUGUI compareAccuracy;
@@ -38,7 +39,8 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     void Start()
     {
         currentTimeStep = FPS_30_DELTA;
-        bodyParentGO = body.transform.parent.gameObject;
+        if(body != null)
+            bodyParentGO = body.transform.parent.gameObject;
     }
 
     public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy, TMP_InputField smoothingFrames)
@@ -100,11 +102,8 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                     }
                     break;
                 case DisplayOption.NONE:
-                    if (bodyParentGO.activeInHierarchy)
+                    if (bodyParentGO != null && bodyParentGO.activeInHierarchy)
                         OnStopDisplay();
-
-                    break;
-                case DisplayOption.IGNORE:
                     break;
             }
             currentTimeStep = FPS_30_DELTA;
@@ -179,6 +178,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     public Joint[] ResolveSkeleton()
     {
+        //Debug.Log("Resolving Skeleton");
         //get all joint positions
         Joint[] joints = new Joint[27];
 
@@ -242,9 +242,29 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         }
     }
 
+    public Vector3 GetAdjustedBodyPosition() =>
+            GetAdjustedBodyPosition(joints);
+
+    public Vector3 GetAdjustedBodyPosition(Joint[] joints)
+    {
+        Vector3 position = joints[(int)JointId.Pelvis].Position.ToUnityVector3();
+        position /= 200f;
+        position.y = 0;
+        return position;
+    }
+
+    public bool GetBodyBoundingBox(out Bounds b) =>
+        GetBodyBoundingBox(joints, out b);
+
     public bool GetBodyBoundingBox(Joint[] joints, out Bounds b)
     {
         b = new Bounds();
+
+        if(joints == null)
+        {
+            Debug.LogWarning("joint was null. Can't create bounding box");
+            return false;
+        }
 
         if (joints.Length < 22)
         {
@@ -257,10 +277,12 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         {
             Joint j = joints[(int)i];
             if (j.ConfidenceLevel == JointConfidenceLevel.Low || j.ConfidenceLevel == JointConfidenceLevel.None)
-            {
                 continue;
-            }
-            jointPositions.Add(j.Position.ToUnityVector3());
+
+            Vector3 p = j.Position.ToUnityVector3();
+            p.y *= -1;
+            p /= 200f;
+            jointPositions.Add(p);
         }
 
         if(jointPositions.Count == 0)
@@ -329,18 +351,89 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         rightLeg.SetPosition(4, joints[(int)JointId.FootRight]);
     }
 
-    public int ComparePoses(Joint[] originalPose, Joint[] comparePose)
+    public struct PositionCompare
     {
-        if(originalPose == null || comparePose == null)
+        public Vector3 posDiff;
+        public Compare[] comp; 
+    }
+
+    public static readonly PositionCompare handRaisedCompare = new PositionCompare
+    {
+        posDiff = new Vector3(0,-100,0),
+        comp = new Compare[] { Compare.NONE, Compare.POS, Compare.NONE }
+    };
+
+    public enum Compare
+    {
+        POS,
+        NEG,
+        NONE
+    }
+
+    public bool JointCompare(JointId a, JointId b, PositionCompare c) => 
+        JointCompare(joints, a, b, c);
+
+    /// <summary>
+    /// Compares two joints based on a comparision function
+    /// </summary>
+    /// <param name="a">lhs</param>
+    /// <param name="b">rhs</param>
+    /// <param name="c">Comparision Constrains</param>
+    /// <returns></returns>
+    public bool JointCompare(Joint[] joints, JointId a, JointId b, PositionCompare c)
+    {
+        if(joints == null)
+        {
+            Debug.LogError("joints was null");
+            return false;
+        }
+
+        Vector3 posA = joints[(int)a].Position.ToUnityVector3();
+        Vector3 posB = joints[(int)b].Position.ToUnityVector3();
+
+        //invert y components
+        posA.y *= -1;
+        posB.y *= -1;
+        Vector3 posDiff = c.posDiff;
+        bool3 xyz = new bool3(true);
+
+        for (int i = 0; i < c.comp.Length; i++)
+        {
+            switch (c.comp[i])
+            {
+                case Compare.NONE:
+                    break;
+                case Compare.POS:
+                    xyz[i] = posB[i] - posDiff[i] > posA[i];
+                    break;
+                case Compare.NEG:
+                    xyz[i] = posB[i] - posDiff[i] < posA[i];
+                    break;
+            }
+        }
+
+        return xyz.x && xyz.y && xyz.z;
+    }
+
+
+    /// <summary>
+    /// Determine how much alike two poses are to one another. Return the result in percent
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public int ComparePoses(Joint[] lhs, Joint[] rhs)
+    {
+        if(lhs == null || rhs == null)
             return -1;
 
         Vector3 posDifferenceSum = Vector3.zero;
 
-        Vector3 originalPelvisPosition = originalPose[(int)JointId.Pelvis].Position.ToUnityVector3();
-        Vector3 comparePelvisPosition = comparePose[(int)JointId.Pelvis].Position.ToUnityVector3();
+        Vector3 originalPelvisPosition = lhs[(int)JointId.Pelvis].Position.ToUnityVector3();
+        Vector3 comparePelvisPosition = rhs[(int)JointId.Pelvis].Position.ToUnityVector3();
 
         //handle unequal length arrays
-        if (originalPose.Length != comparePose.Length)
+        if (lhs.Length != rhs.Length)
         {
             Debug.Log("poses had different amount of joints");
             return -1;
@@ -348,19 +441,17 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
         int comparedJointsCount = 0;
 
-        for (int i = 1; i < originalPose.Length; i++)
+        for (int i = 1; i < lhs.Length; i++)
         {
-            Joint pI = originalPose[i];
+            Joint pI = lhs[i];
 
             //don't compare obstructed or out of range joints
-            if(pI.ConfidenceLevel == JointConfidenceLevel.Low ||pI.ConfidenceLevel == JointConfidenceLevel.None)
-            {
+            if(pI.ConfidenceLevel == JointConfidenceLevel.Low || pI.ConfidenceLevel == JointConfidenceLevel.None)
                 continue;
-            }
 
             //get the position of the joint in relation to the pelvis
-            Vector3 relativeOriginalPosition = originalPose[i].Position.ToUnityVector3() - originalPelvisPosition;
-            Vector3 relativeComparePosition = comparePose[i].Position.ToUnityVector3() - comparePelvisPosition;
+            Vector3 relativeOriginalPosition = lhs[i].Position.ToUnityVector3() - originalPelvisPosition;
+            Vector3 relativeComparePosition = rhs[i].Position.ToUnityVector3() - comparePelvisPosition;
 
             //take absolute values?
             Vector3 difference = relativeComparePosition - relativeOriginalPosition;
@@ -369,9 +460,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         }
 
         if(comparedJointsCount == 0)
-        {
             Debug.LogWarning("All joints had JointConfidenceLevel.Low or .None");
-        }
 
         //average positional difference in mm
         Vector3 posDifference = posDifferenceSum /= comparedJointsCount;
@@ -390,16 +479,8 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             //1% = 348
             percent = 100 - Mathf.RoundToInt((posDifferenceD-200) / 798);
 
-        //compareAccuracy.text = "Accuracy: " + percent + " %";
         //Debug.Log("Positional difference in mm: " + posDifferenceD);
         return percent;
-    }
-
-
-    public struct JointConnection
-    {
-        public Vector3 posA;
-        public Vector3 posB;
     }
 
 }
@@ -408,8 +489,7 @@ public enum DisplayOption
 {
     TRACKED,
     LOADED,
-    NONE,
-    IGNORE
+    NONE
 }
 
 
@@ -441,7 +521,6 @@ public enum DisplayOption
 //15 handright
 //16 handtipright
 //17 thumbright
-
 
 //18 hipleft
 //19 kneeleft

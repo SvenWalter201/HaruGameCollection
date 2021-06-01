@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 //using C:\Users\Ann - C\OneDrive\Desktop\UnityProject\HaruGameCollection\Assets\Scripts\LayeredDetailAssetGenerator.cs
 
 
 public class PictureGenerationManager : Game
 {
-    [SerializeField] private Texture2D[] eyes;
-    [SerializeField] private Texture2D[] mouth;
-    [SerializeField] private Texture2D[] hair;
     [SerializeField] private Transform right;
     [SerializeField] private Transform left;
     [SerializeField] private Transform backRright;
@@ -23,13 +19,12 @@ public class PictureGenerationManager : Game
     [SerializeField] private Transform up;
 
 
-    //private float SCALE_OBJECT = 0.2f ;
-
-    //[SerializeField] private Material baseMaterial;
-
     //component
     private MeshRenderer _renderHead;
 
+    [SerializeField] private Texture2D[] eyes;
+    [SerializeField] private Texture2D[] mouth;
+    [SerializeField] private Texture2D[] hair;
     public GameObject charcter;
     public GameObject skyscraper;
     public GameObject bush;
@@ -37,27 +32,70 @@ public class PictureGenerationManager : Game
     public GameObject house;
     public GameObject guitar;
     public GameObject car;
-    public GameObject chefhat;
     public GameObject colourpalette;
     public GameObject Laterne;
     public GameObject paintbrush;
     public GameObject Vulcano;
     public GameObject pizza;
     public GameObject microphone;
+    public GameObject constructionworker;
+    public GameObject girl;
+    public GameObject grandma;
+    public GameObject princess;
+    public GameObject teacher;
+    public GameObject chefhat;
 
-     
+
 
     private GenerativeGrammatiken grammars;
-    public SentenceInformation[] sentences = new SentenceInformation[5];
-    public int count = 0;
     const int MAX_SENTENCES = 5;
+    public SentenceInformation[] sentences = new SentenceInformation[MAX_SENTENCES];
+    public int count = 0;
     LayeredDetailAssetGenerator m;
     List<GameObject> presentGameObjects ;
     GameObject current;
     List<Bounds> colliderBounds = new List<Bounds>();
+    readonly CoroutineTimer timer = new CoroutineTimer();
+
+    [Space]
+    [Header("Timing")]
+
+    [SerializeField]
+    float drawingTime = 5;
+    [SerializeField]
+    float showingTime = 20;
+
+    [Space]
+    [Header("UIElements")]
 
 
-    public SentenceInformation[] Sentences { get => sentences; set => sentences = value; }
+    [SerializeField]
+    GameObject Panel;
+    [SerializeField]
+    GameObject ProgressBar;
+
+    [SerializeField]
+    TextMeshProUGUI modeText;
+    [SerializeField]
+    TextMeshProUGUI remainingTimeText;
+
+    [SerializeField]
+    Image progressBar, progressBarMask;
+
+
+    //[Header("Minimum of " + MAX_SENTENCES + " sentences" )]
+    [SerializeField]
+    TextMeshProUGUI sentence1;
+    [SerializeField]
+    TextMeshProUGUI sentence2;
+    [SerializeField]
+    TextMeshProUGUI sentence3;
+    [SerializeField]
+    TextMeshProUGUI sentence4;
+    [SerializeField]
+    TextMeshProUGUI sentence5;
+
+    //public SentenceInformation[] Sentences { get => sentences; set => sentences = value; }
 
     void Start()
     {
@@ -65,13 +103,58 @@ public class PictureGenerationManager : Game
     }
     protected override IEnumerator Init()
     {
+        //initialize UI-components
+        //SprogressBar.enabled = false;
+        modeText.text = "Meisterwerke Level:Senioren";
+        remainingTimeText.text = "";
+        if(Panel != null)
+        {
+            Panel.SetActive(true);
+        }
+        if(ProgressBar != null)
+        {
+            ProgressBar.SetActive(true);
+        }
         presentGameObjects = new List<GameObject>();
         grammars = GenerativeGrammatiken.Instance;
         yield break;
     }
 
     protected override IEnumerator Execute()
-    {
+    { 
+        PaintPicture();
+        sentence1.text = grammars.PrintSentence(); 
+        progressBar.enabled = true;
+        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+        progressBar.enabled = false;
+        //yield return timer.SimpleTimer(drawingTime);
+        PaintPicture();
+        sentence2.text = grammars.PrintSentence();
+        progressBar.enabled = true;
+        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+        progressBar.enabled = false;
+        //yield return timer.SimpleTimer(drawingTime);
+        PaintPicture();
+        sentence3.text = grammars.PrintSentence();
+        progressBar.enabled = true;
+        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+        progressBar.enabled = false;
+        //yield return timer.SimpleTimer(drawingTime);
+        PaintPicture();
+        sentence4.text = grammars.PrintSentence();
+        progressBar.enabled = true;
+        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+        progressBar.enabled = false;
+        //yield return timer.SimpleTimer(drawingTime);
+        PaintPicture();
+        sentence5.text = grammars.PrintSentence();
+        progressBar.enabled = true;
+        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+        progressBar.enabled = false;
+        //yield return timer.SimpleTimer(drawingTime);
+
+        Panel.SetActive(false);
+        yield return timer.SimpleTimer(showingTime);
         yield break;
     }
 
@@ -130,6 +213,7 @@ public class PictureGenerationManager : Game
             PlaceObjectAt(si);
         }
 
+        ChangePersonTo(si);
         ChangeMoodTo(si);
         SetActionTo(si);
         
@@ -168,8 +252,32 @@ public class PictureGenerationManager : Game
                 {
                     return Instantiate(Laterne, p, q);
                 }
+            case "teacher":
+                {
+                    return Instantiate(teacher, p, q);
+                }
+            case "girl":
+                {
+                    return Instantiate(girl, p, q);
+                }
+            case "chefhat":
+                {
+                    return Instantiate(chefhat, p, q);
+                }
+            case "constructionworker":
+                {
+                    return Instantiate(constructionworker, p, q);
+                }
+            case "princess":
+                {
+                    return Instantiate(princess, p, q);
+                }
+            case "grandma":
+                {
+                    return Instantiate(grandma, p, q);
+                }
             default:
-                return Instantiate(bush, p, q);
+                return Instantiate(charcter, p, q);
         }
 
     }
@@ -288,19 +396,51 @@ public class PictureGenerationManager : Game
 
         if (current.TryGetComponent<AssetHolder>(out AssetHolder ah) == true)
         {
-            current.GetComponent<AssetHolder>().GetPosition(0);
+            Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.LEFTHAND);
 
             switch (si.Action)
             {
                 case "musiziert":
-                    SpawnObject("Guitar", current.GetComponent<AssetHolder>().GetPosition(0), Quaternion.identity);
+                    SpawnObject("Guitar", pos, Quaternion.identity);
                     break;
                 case "singt":
-                    SpawnObject("Microphone", current.GetComponent<AssetHolder>().GetPosition(0), Quaternion.identity);
+                    SpawnObject("Microphone", pos, Quaternion.identity);
                     break;
             }
         } 
         
+    }
+
+    public void ChangePersonTo(SentenceInformation si)
+    {
+        if (current.TryGetComponent<AssetHolder>(out AssetHolder ahSS) == true)
+        {
+            Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.HATPOS);
+
+            switch (si.Person)
+            {
+                case "eine Lehrerin":
+
+                    SpawnObject("teacher", pos, Quaternion.identity);
+                    break;
+                case "ein Bäcker":
+                case "eine Bäckerin":
+                    SpawnObject("chefhat", pos, Quaternion.identity);
+                    break;
+                case "ein Mädchen":
+                    SpawnObject("girl", pos, Quaternion.identity);
+                    break;
+                case "eine Großmutter":
+                    SpawnObject("grandma", pos, Quaternion.identity);
+                    break;
+                case "eine Prinzessin":
+                    SpawnObject("princess", pos, Quaternion.identity);
+                    break;
+                case "ein Bauarbeiter":
+                    SpawnObject("constructionworker", pos, Quaternion.identity);
+                    break;
+            }
+        }
     }
     public void ChangeMoodTo(SentenceInformation si)
     {
