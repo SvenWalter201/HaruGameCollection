@@ -42,6 +42,10 @@ public class TriviaQuiz : Game
     static readonly string[] alphabetic = new string[] { "A", "B", "C", "D", "E", "F", "G" };
     static readonly string[] roman = new string[] { "I", "II", "III", "IV", "V", "VI", "VII" };
 
+    static readonly int emissionId = Shader.PropertyToID("_EmissionColor");
+
+    Room room;
+
     private void Awake()
     {
         countDownBar.enabled = false;
@@ -60,10 +64,17 @@ public class TriviaQuiz : Game
 
     protected override IEnumerator Execute()
     {
-        Room room = RoomManager.Instance.LoadRoom();
+        room = RoomManager.Instance.LoadRoom();
+
+        if(room == null)
+        {
+            yield break;
+        }
 
         //get Questionary from json
         List<QuestionCard> questions = QuestionManager.Instance.GetQuestions(questionAmount);
+        QuestionManager.Instance.TrimQuestions(questions, answerAmount, true);
+
         panels = new AnswerPanel[answerAmount];
 
         for (int i = 0; i < panels.Length; i++)
@@ -79,6 +90,7 @@ public class TriviaQuiz : Game
         while (questions.Count > 0)
         {
             QuestionCard q = questions[Random.Range(0, questions.Count)];
+            
             yield return StartCoroutine(AskQuestion(q));
             questions.Remove(q);
         }
@@ -100,6 +112,8 @@ public class TriviaQuiz : Game
     {
         InitQuestionUI(q);
 
+        Vector3 cornerPosition = room.Corners[q.TrueAnswer];
+
         //highlight the answers
         for (int i = 0; i < q.Answers.Count; i++)
         {
@@ -108,14 +122,25 @@ public class TriviaQuiz : Game
             MeshFilter mF = bulb.GetComponent<MeshFilter>();
             MeshRenderer mR = bulb.GetComponent<MeshRenderer>();
             mF.mesh = glowing;
-            mR.material.SetColor("_EmissionColor", colorsBright[i]);
+            mR.material.SetColor(emissionId, colorsBright[i]);
             yield return new WaitForSeconds(glowTime);
-            mR.material.SetColor("_EmissionColor", colorsDimm[i]);
+            mR.material.SetColor(emissionId, colorsDimm[i]);
             mF.mesh = normal;
         }
 
         countDownBar.enabled = true;
         yield return timer.UITimer(answerTime, countDownMask, countDownText);
+        
+        Vector3 playerPosition = SkeletonDisplay.Instance.GetBodyPosition();
+        if(SkeletonDisplay.Instance.GetBodyBoundingBox(out Bounds b))
+        {
+            if(b.IntersectXZCircle(cornerPosition, 1f))
+            {
+                Debug.Log("Correct");
+            }
+        }
+        //TODO: Get the position of the player and compare it to the specified corner. 
+
         countDownBar.enabled = false;
 
         for (int i = 0; i < q.Answers.Count; i++)
@@ -128,7 +153,7 @@ public class TriviaQuiz : Game
             else
             {
                 p.Bulb.GetComponent<MeshFilter>().mesh = glowing;
-                p.Bulb.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", colorsBright[i]);
+                p.Bulb.GetComponent<MeshRenderer>().material.SetColor(emissionId, colorsBright[i]);
             }
         }
 
@@ -160,16 +185,14 @@ public class TriviaQuiz : Game
 
             p.AnswerText.text = q.Answers[i];
             p.Bulb.GetComponent<MeshRenderer>().enabled = true;
-            p.Bulb.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", colorsDimm[i]);
+            p.Bulb.GetComponent<MeshRenderer>().material.SetColor(emissionId, colorsDimm[i]);
         }
     }
 
     void ClearQuestionUI()
     {
         for (int i = 0; i < panels.Length; i++)
-        {
             Destroy(panels[i].gameObject);
-        }
 
         question.text = "";
     }
@@ -177,7 +200,7 @@ public class TriviaQuiz : Game
     Material GetMaterial(Color color)
     {
         Material ins = Instantiate(bulbMaterial);
-        ins.SetColor("_EmissionColor", color);
+        ins.SetColor(emissionId, color);
         return ins;
     }
 }

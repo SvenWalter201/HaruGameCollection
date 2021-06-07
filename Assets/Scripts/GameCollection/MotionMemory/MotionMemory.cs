@@ -64,7 +64,7 @@ public class MotionMemory : Game
 
         List<Motion> poses = GetRandomSetOfPoses();
         cards = ConstructUI(poses);
-        SkeletonDisplay.Instance.display = DisplayOption.NONE;
+        SkeletonDisplay.Instance.display = DisplayOption.IGNORE;
 
         yield break;
     }
@@ -112,6 +112,7 @@ public class MotionMemory : Game
             yield return timer.SimpleTimer(timeBetweenRounds);
         }
 
+        //Debug.Log("???");
         SkeletonDisplay.Instance.OnStopDisplay();
         taskText.text = "";
 
@@ -138,7 +139,7 @@ public class MotionMemory : Game
         {
             string motionName = motionNames[GetRandom(motionNames.Count)];
             motionNames.Remove(motionName);
-            Motion motion = SkeletonTracker.Instance.Load(motionName);
+            Motion motion = MotionManager.Instance.Load(motionName);
             if (motion != null)
             {
                 poses.Add(motion);
@@ -265,8 +266,7 @@ public class MotionMemory : Game
 
     void BeginShowPose(MemoryCard card)
     {
-        Vector3[] vecs = SkeletonDisplay.Instance.GetVectors(card.pose.motion[0]);
-        SkeletonDisplay.Instance.Display(vecs);
+        SkeletonDisplay.Instance.Display(card.pose.motion[0]);
         card.uiElement.GetComponent<RawImage>().texture = cameraRenderTexture;
     }
 

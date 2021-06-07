@@ -23,7 +23,7 @@ class RoomConfiguration : Game
     {
         if(SkeletonDisplay.Instance.GetBodyBoundingBox(out Bounds b))
         {
-            Vector3 bodyCenter = SkeletonDisplay.Instance.GetAdjustedBodyPosition();
+            Vector3 bodyCenter = SkeletonDisplay.Instance.GetBodyPosition();
             playerBounds.position = bodyCenter;
             /*Vector3 center = b.center;
             center.y = 0;
@@ -67,8 +67,9 @@ class RoomConfiguration : Game
                 SkeletonDisplay.Instance.JointCompare(JointId.Head, JointId.HandRight, hRC)
                 )
                 {
-                    Vector3 position = SkeletonDisplay.Instance.GetAdjustedBodyPosition();
+                    Vector3 position = SkeletonDisplay.Instance.GetBodyPosition();
                     Instantiate(cornerMarker, position, Quaternion.Euler(90,0,0));
+                    corners[i] = position;
                     //Debug.Log("DetectedHandRaised! Set Corner at " + position);
                     yield return new WaitForSeconds(3);
                     //set corner at position 
@@ -82,7 +83,7 @@ class RoomConfiguration : Game
             }
         }
 
-        RoomManager.Instance.CreateRoom(corners);
+        RoomManager.Instance.CreateRoom(corners, true);
         yield break;
     }
 }

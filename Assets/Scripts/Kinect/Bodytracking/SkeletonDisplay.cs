@@ -7,6 +7,7 @@ using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 using Vector3 = UnityEngine.Vector3;
 using TMPro;
 using Unity.Mathematics;
+using static Microsoft.Azure.Kinect.BodyTracking.JointId;
 
 public class SkeletonDisplay : Singleton<SkeletonDisplay>
 {
@@ -15,6 +16,12 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     [SerializeField] 
     LineRenderer body = default, leftLeg = default, rightLeg = default, leftArm = default, rightArm = default;
+
+    [SerializeField]
+    bool useHumanoid = true;
+
+    [SerializeField]
+    Transform rootBone;
 
     GameObject bodyParentGO;
 
@@ -34,13 +41,37 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     Motion motion;
     int replayFrame, interpolationFrames = 6; //0.267 sec
 
-    Joint[] joints;
+    UJoint[] joints;
 
-    void Start()
+    void Awake()
     {
         currentTimeStep = FPS_30_DELTA;
-        if(body != null)
+        OnValidate();
+    }
+
+    void OnValidate()
+    {
+        if (display == DisplayOption.IGNORE || display == DisplayOption.NONE)
+            return;
+        
+        if (body != null)
             bodyParentGO = body.transform.parent.gameObject;
+
+        if (useHumanoid)
+        {
+            rootBone.gameObject.SetActive(true);
+
+            if (bodyParentGO.activeInHierarchy)
+                bodyParentGO.SetActive(false);
+
+        }
+        else
+        {
+            bodyParentGO.SetActive(true);
+
+            if (rootBone != null && rootBone.gameObject.activeInHierarchy)
+                rootBone.gameObject.SetActive(false);
+        }
     }
 
     public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy, TMP_InputField smoothingFrames)
@@ -53,7 +84,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         //this.playPauseButton = playPauseButton;
 
     }
-
+    
     public void SwitchDisplayType(int option)
     {
         switch (option)
@@ -87,23 +118,39 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                         {
                             OnBeginDisplay();
                         }
-                        Display(GetVectors(joints));
+                        Display(joints);
                     }
                     break;
                 case DisplayOption.LOADED:
-                    motion = SkeletonTracker.Instance.loadedMotion;
+                    motion = MotionManager.Instance.loadedMotion;
                     if (motion != null && motion.motion != null)
                     {
-                        if (!bodyParentGO.activeInHierarchy)
+                        if (!useHumanoid)
                         {
-                            OnBeginDisplay();
+                            if (!bodyParentGO.activeInHierarchy)
+                            {
+                                OnBeginDisplay();
+                            }
+                            DisplayLoaded();
                         }
-                        DisplayLoaded();
+                        else
+                        {
+                            if (!rootBone.gameObject.activeInHierarchy)
+                            {
+                                rootBone.gameObject.SetActive(true);
+                            }
+                            ResolveRotations(motion.motion[0]);
+                        }
+
+
                     }
                     break;
                 case DisplayOption.NONE:
                     if (bodyParentGO != null && bodyParentGO.activeInHierarchy)
                         OnStopDisplay();
+                    break;
+
+                default:
                     break;
             }
             currentTimeStep = FPS_30_DELTA;
@@ -116,7 +163,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     {
         if (motion.motion.Count == 1)
         {
-            Display(GetVectors(motion.motion[0]));
+            Display(motion.motion[0]);
             return;
         }
 
@@ -129,15 +176,15 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         else if (replayFrame == motion.motion.Count)
                 replayFrame--;
 
-        Display(GetInterpolatedValue(motion.motion, replayFrame)); //motion.motion[replayFrame]);
+        Display(GetInterpolatedValue(motion.motion, replayFrame));
     }
 
-    public Vector3[] GetInterpolatedValue(List<Joint[]> motion, int currentFrame)
+    public Vector3[] GetInterpolatedValue(List<UJoint[]> motion, int currentFrame)
     {
         string x = smoothingFrames.text;
         interpolationFrames = int.TryParse(x, out int f) ? f : 1;
 
-        Joint[] joints = motion[currentFrame];
+        UJoint[] joints = motion[currentFrame];
         Vector3[] interpolatedFrames = new Vector3[joints.Length];
 
         for (int i = 0; i < joints.Length; i++)
@@ -151,42 +198,98 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                     break;
 
                 divisor += p;
-                joint += motion[currentFrame - j][i].Position.ToUnityVector3() * p;
+                joint += motion[currentFrame - j][i].Position * p;
             }
-            joint /= (divisor * -200f);
             interpolatedFrames[i] = joint;
         }
 
         return interpolatedFrames;
     }
 
-    public Vector3[] GetVectors(Joint[] jointPositions)
+    public Quaternion[] GetRotations(Joint[] joints)
     {
-        Vector3[] positionFrame = new Vector3[jointPositions.Length];
+        Quaternion[] rotationFrame = new Quaternion[joints.Length];
 
-        for (int i = 0; i < jointPositions.Length; i++)
-            positionFrame[i] = jointPositions[i].Position.ToUnityVector3() / -200f;
+        for (int i = 0; i < joints.Length; i++)
+            rotationFrame[i] = joints[i].Quaternion.ToUnityQuaternion();
 
-        return positionFrame;
-
+        return rotationFrame;
     }
 
-    public void OnBeginDisplay() => bodyParentGO.SetActive(true);
-
-    public void OnStopDisplay() => bodyParentGO.SetActive(false);
     
+    public Vector3[] GetPositions() => GetPositions(joints);
 
-    public Joint[] ResolveSkeleton()
+    /// <summary>
+    /// Get the adjusted positions vector from a given list of joints
+    /// </summary>
+    /// <param name="joints"></param>
+    /// <returns></returns>
+    public Vector3[] GetPositions(UJoint[] joints)
+    {
+        Vector3[] positions = new Vector3[joints.Length];
+
+        for (int i = 0; i < joints.Length; i++)
+            positions[i] = joints[i].Position;
+
+        return positions;
+    }
+
+    public List<Vector3> GetConfidentPositions(UJoint[] joints)
+    {
+        List<Vector3> positions = new List<Vector3>();
+
+        for (int i = 0; i < joints.Length; i++)
+        {
+            UJoint j = joints[i];
+            if (j.Confidence == JointConfidenceLevel.Low || j.Confidence == JointConfidenceLevel.None)
+                continue;
+
+            positions.Add(j.Position);
+        }
+
+        return positions;
+    }
+
+    public void OnBeginDisplay() {
+        if (useHumanoid)
+        {
+            
+        }
+        else
+           bodyParentGO.SetActive(true);
+    }
+
+
+    
+    public void OnStopDisplay() {
+        if (useHumanoid)
+        {
+
+        }
+        else
+        {
+            bodyParentGO.SetActive(false);
+        }
+    } 
+    
+    /// <summary>
+    /// Get all joints with their original position and rotation
+    /// </summary>
+    /// <returns></returns>
+    public UJoint[] ResolveSkeleton()
     {
         //Debug.Log("Resolving Skeleton");
         //get all joint positions
-        Joint[] joints = new Joint[27];
+        UJoint[] joints = new UJoint[27];
 
-        for (int i = 0; i < 27; i++)
-            joints[i] = trackedBody.GetJoint(i);
+        for (int i = 0; i < 27; i++) {
+            Joint j = trackedBody.GetJoint(i);
+            UJoint unityJoint = new UJoint(j);
+            joints[i] = unityJoint;
+        }
 
         if (AppState.recording)
-            SkeletonTracker.Instance.StoreFrame(joints);
+            MotionManager.Instance.StoreFrame(joints);
 
         return joints;
     }
@@ -208,7 +311,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         {
             if (timer <= 0f)
             {
-                int percent = ComparePoses(joints, SkeletonTracker.Instance.loadedMotion.motion[0]);
+                int percent = ComparePoses(joints, MotionManager.Instance.loadedMotion.motion[0]);
                 compareAccuracy.text = "Accuracy: " + percent + " %";
 
                 timer = FPS_30_DELTA;
@@ -221,7 +324,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         compareAccuracy.text = "";
     }
 
-    public IEnumerator BodyCompareCoroutine(Joint[] pose, float compareTime)
+    public IEnumerator BodyCompareCoroutine(UJoint[] pose, float compareTime)
     {
         float timer = 0f;
         comparePercentage = 0;
@@ -242,21 +345,21 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         }
     }
 
-    public Vector3 GetAdjustedBodyPosition() =>
-            GetAdjustedBodyPosition(joints);
+    public Vector3 GetBodyPosition() =>
+            GetBodyPosition(joints);
 
-    public Vector3 GetAdjustedBodyPosition(Joint[] joints)
-    {
-        Vector3 position = joints[(int)JointId.Pelvis].Position.ToUnityVector3();
-        position /= 200f;
-        position.y = 0;
-        return position;
-    }
+    /// <summary>
+    /// Return the pelvis position in adjusted scale, not accounting for y position. 
+    /// </summary>
+    /// <param name="joints"></param>
+    /// <returns></returns>
+    public Vector3 GetBodyPosition(UJoint[] joints) => 
+        joints[(int)Pelvis].Position;
 
     public bool GetBodyBoundingBox(out Bounds b) =>
         GetBodyBoundingBox(joints, out b);
 
-    public bool GetBodyBoundingBox(Joint[] joints, out Bounds b)
+    public bool GetBodyBoundingBox(UJoint[] joints, out Bounds b)
     {
         b = new Bounds();
 
@@ -271,84 +374,114 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             Debug.LogWarning("Not enough joint information to compose bounding box");
             return false;
         }
-        List<Vector3> jointPositions = new List<Vector3>();
 
-        foreach(var i in bodyJoints)
-        {
-            Joint j = joints[(int)i];
-            if (j.ConfidenceLevel == JointConfidenceLevel.Low || j.ConfidenceLevel == JointConfidenceLevel.None)
-                continue;
+        List<Vector3> confidentPositions = GetConfidentPositions(joints);
 
-            Vector3 p = j.Position.ToUnityVector3();
-            p.y *= -1;
-            p /= 200f;
-            jointPositions.Add(p);
-        }
-
-        if(jointPositions.Count == 0)
+        if(confidentPositions.Count == 0)
         {
             Debug.LogWarning("Not enough joint information to compose bounding box");
             return false;
         }
 
-        b = jointPositions.GetBoundingBox();
+        b = confidentPositions.GetBoundingBox();
         return true;
     }
 
     static JointId[] bodyJoints = new JointId[]
     {
-        JointId.Pelvis,
-        JointId.SpineNavel,
-        JointId.SpineChest,
-        JointId.Neck,
-        JointId.Head,
-        JointId.ClavicleLeft,
-        JointId.ShoulderLeft,
-        JointId.ClavicleRight,
-        JointId.ShoulderRight,
-        JointId.HipLeft,
-        JointId.HipRight,
+        Pelvis,
+        SpineNavel,
+        SpineChest,
+        Neck,
+        Head,
+        ClavicleLeft,
+        ShoulderLeft,
+        ClavicleRight,
+        ShoulderRight,
+        HipLeft,
+        HipRight,
 
     };
 
+
     public void Display(Vector3[] joints)
     {
-        //body
-        body.SetPosition(0, joints[(int)JointId.Pelvis]);
-        body.SetPosition(1, joints[(int)JointId.SpineNavel]);
-        body.SetPosition(2, joints[(int)JointId.SpineChest]);
-        body.SetPosition(3, joints[(int)JointId.Neck]);
-        body.SetPosition(4, joints[(int)JointId.Head]);
+        SetPosition(body, 0, Pelvis);
+        SetPosition(body, 1, SpineNavel);
+        SetPosition(body, 2, SpineChest);
+        SetPosition(body, 3, Neck);
+        SetPosition(body, 4, Head);
 
-        //left arm
-        leftArm.SetPosition(0, joints[(int)JointId.SpineChest]);
-        leftArm.SetPosition(1, joints[(int)JointId.ClavicleLeft]);
-        leftArm.SetPosition(2, joints[(int)JointId.ShoulderLeft]);
-        leftArm.SetPosition(3, joints[(int)JointId.ElbowLeft]);
-        leftArm.SetPosition(4, joints[(int)JointId.WristLeft]);
-        leftArm.SetPosition(5, joints[(int)JointId.HandLeft]);
-        leftArm.SetPosition(6, joints[(int)JointId.HandTipLeft]);
+        SetPosition(leftArm, 0, SpineChest);
+        SetPosition(leftArm, 1, ClavicleLeft);
+        SetPosition(leftArm, 2, ShoulderLeft);
+        SetPosition(leftArm, 3, ElbowLeft);
+        SetPosition(leftArm, 4, WristLeft);
+        SetPosition(leftArm, 5, HandLeft);
+        SetPosition(leftArm, 6, HandTipLeft);
 
-        //left arm
-        rightArm.SetPosition(0, joints[(int)JointId.SpineChest]);
-        rightArm.SetPosition(1, joints[(int)JointId.ClavicleRight]);
-        rightArm.SetPosition(2, joints[(int)JointId.ShoulderRight]);
-        rightArm.SetPosition(3, joints[(int)JointId.ElbowRight]);
-        rightArm.SetPosition(4, joints[(int)JointId.WristRight]);
-        rightArm.SetPosition(5, joints[(int)JointId.HandRight]);
-        rightArm.SetPosition(6, joints[(int)JointId.HandTipRight]);
+        SetPosition(rightArm, 0, SpineChest);
+        SetPosition(rightArm, 1, ClavicleRight);
+        SetPosition(rightArm, 2, ShoulderRight);
+        SetPosition(rightArm, 3, ElbowRight);
+        SetPosition(rightArm, 4, WristRight);
+        SetPosition(rightArm, 5, HandRight);
+        SetPosition(rightArm, 6, HandTipRight);
 
-        leftLeg.SetPosition(0, joints[(int)JointId.Pelvis]);
-        leftLeg.SetPosition(1, joints[(int)JointId.HipLeft]);
-        leftLeg.SetPosition(2, joints[(int)JointId.KneeLeft]);
-        leftLeg.SetPosition(3, joints[(int)JointId.AnkleLeft]);
-        leftLeg.SetPosition(4, joints[(int)JointId.FootLeft]);
+        SetPosition(leftLeg, 0, Pelvis);
+        SetPosition(leftLeg, 1, HipLeft);
+        SetPosition(leftLeg, 2, KneeLeft);
+        SetPosition(leftLeg, 3, AnkleLeft);
+        SetPosition(leftLeg, 4, FootLeft);
 
-        rightLeg.SetPosition(0, joints[(int)JointId.Pelvis]);
-        rightLeg.SetPosition(1, joints[(int)JointId.HipRight]);
-        rightLeg.SetPosition(2, joints[(int)JointId.KneeRight]);
-        rightLeg.SetPosition(3, joints[(int)JointId.AnkleRight]);
-        rightLeg.SetPosition(4, joints[(int)JointId.FootRight]);
+        SetPosition(rightLeg, 0, Pelvis);
+        SetPosition(rightLeg, 1, HipRight);
+        SetPosition(rightLeg, 2, KneeRight);
+        SetPosition(rightLeg, 3, AnkleRight);
+        SetPosition(rightLeg, 4, FootRight);
+
+        void SetPosition(LineRenderer l, int index, JointId id) =>
+            l.SetPosition(index, joints[(int)id]);
+    }
+
+    public void Display(UJoint[] joints)
+    {
+        SetPosition(body, 0, Pelvis);
+        SetPosition(body, 1, SpineNavel);
+        SetPosition(body, 2, SpineChest);
+        SetPosition(body, 3, Neck);
+        SetPosition(body, 4, Head);
+
+        SetPosition(leftArm, 0, SpineChest);
+        SetPosition(leftArm, 1, ClavicleLeft);
+        SetPosition(leftArm, 2, ShoulderLeft);
+        SetPosition(leftArm, 3, ElbowLeft);
+        SetPosition(leftArm, 4, WristLeft);
+        SetPosition(leftArm, 5, HandLeft);
+        SetPosition(leftArm, 6, HandTipLeft);
+
+        SetPosition(rightArm, 0, SpineChest);
+        SetPosition(rightArm, 1, ClavicleRight);
+        SetPosition(rightArm, 2, ShoulderRight);
+        SetPosition(rightArm, 3, ElbowRight);
+        SetPosition(rightArm, 4, WristRight);
+        SetPosition(rightArm, 5, HandRight);
+        SetPosition(rightArm, 6, HandTipRight);
+
+        SetPosition(leftLeg, 0, Pelvis);
+        SetPosition(leftLeg, 1, HipLeft);
+        SetPosition(leftLeg, 2, KneeLeft);
+        SetPosition(leftLeg, 3, AnkleLeft);
+        SetPosition(leftLeg, 4, FootLeft);
+
+        SetPosition(rightLeg, 0, Pelvis);
+        SetPosition(rightLeg, 1, HipRight);
+        SetPosition(rightLeg, 2, KneeRight);
+        SetPosition(rightLeg, 3, AnkleRight);
+        SetPosition(rightLeg, 4, FootRight);
+
+        void SetPosition(LineRenderer l, int index, JointId id) => 
+            l.SetPosition(index, joints[(int)id].Position);
     }
 
     public struct PositionCompare
@@ -380,7 +513,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     /// <param name="b">rhs</param>
     /// <param name="c">Comparision Constrains</param>
     /// <returns></returns>
-    public bool JointCompare(Joint[] joints, JointId a, JointId b, PositionCompare c)
+    public bool JointCompare(UJoint[] joints, JointId a, JointId b, PositionCompare c)
     {
         if(joints == null)
         {
@@ -388,12 +521,9 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             return false;
         }
 
-        Vector3 posA = joints[(int)a].Position.ToUnityVector3();
-        Vector3 posB = joints[(int)b].Position.ToUnityVector3();
+        Vector3 posA = joints[(int)a].Position;
+        Vector3 posB = joints[(int)b].Position;
 
-        //invert y components
-        posA.y *= -1;
-        posB.y *= -1;
         Vector3 posDiff = c.posDiff;
         bool3 xyz = new bool3(true);
 
@@ -422,15 +552,15 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public int ComparePoses(Joint[] lhs, Joint[] rhs)
+    public int ComparePoses(UJoint[] lhs, UJoint[] rhs)
     {
         if(lhs == null || rhs == null)
             return -1;
 
         Vector3 posDifferenceSum = Vector3.zero;
 
-        Vector3 originalPelvisPosition = lhs[(int)JointId.Pelvis].Position.ToUnityVector3();
-        Vector3 comparePelvisPosition = rhs[(int)JointId.Pelvis].Position.ToUnityVector3();
+        Vector3 originalPelvisPosition = lhs[(int)Pelvis].Position;
+        Vector3 comparePelvisPosition = rhs[(int)Pelvis].Position;
 
         //handle unequal length arrays
         if (lhs.Length != rhs.Length)
@@ -443,15 +573,15 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
         for (int i = 1; i < lhs.Length; i++)
         {
-            Joint pI = lhs[i];
+            UJoint pI = lhs[i];
 
             //don't compare obstructed or out of range joints
-            if(pI.ConfidenceLevel == JointConfidenceLevel.Low || pI.ConfidenceLevel == JointConfidenceLevel.None)
+            if(pI.Confidence == JointConfidenceLevel.Low || pI.Confidence == JointConfidenceLevel.None)
                 continue;
 
             //get the position of the joint in relation to the pelvis
-            Vector3 relativeOriginalPosition = lhs[i].Position.ToUnityVector3() - originalPelvisPosition;
-            Vector3 relativeComparePosition = rhs[i].Position.ToUnityVector3() - comparePelvisPosition;
+            Vector3 relativeOriginalPosition = lhs[i].Position - originalPelvisPosition;
+            Vector3 relativeComparePosition = rhs[i].Position - comparePelvisPosition;
 
             //take absolute values?
             Vector3 difference = relativeComparePosition - relativeOriginalPosition;
@@ -483,16 +613,164 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         return percent;
     }
 
+    public void ResolveRotations(UJoint[] jointPositions)
+    {
+        //get all the transforms from the hierarchy
+
+        Transform
+            pelvis = rootBone.GetChild(0),
+            hipLeft = pelvis.GetChild(0),
+            hipRight = pelvis.GetChild(1),
+            spineNaval = pelvis.GetChild(2),
+            legLeft = hipLeft.GetChild(0),
+            kneeLeft = legLeft.GetChild(0),
+            ankleLeft = kneeLeft.GetChild(0),
+            footLeft = ankleLeft.GetChild(0),
+            legRight = hipRight.GetChild(0),
+            kneeRight = legRight.GetChild(0),
+            ankleRight = kneeRight.GetChild(0),
+            footRight = ankleRight.GetChild(0),
+            clavicleLeft = spineNaval.GetChild(0),
+            clavicleRight = spineNaval.GetChild(1),
+            spinechest = spineNaval.GetChild(2),
+            neck = spinechest.GetChild(0),
+            head = neck.GetChild(0),
+            shoulderLeft = clavicleLeft.GetChild(0),
+            shoulderRight = clavicleRight.GetChild(0),
+            armLeft = shoulderLeft.GetChild(0),
+            armRight = shoulderRight.GetChild(0),
+            elbowLeft = armLeft.GetChild(0),
+            elbowRight = armRight.GetChild(0),
+            wristLeft = elbowLeft.GetChild(0),
+            wristRight = elbowRight.GetChild(0);
+
+        pelvis.position = jointPositions[(int)Pelvis].Position;
+        hipLeft.position = jointPositions[(int)HipLeft].Position;
+        hipRight.position = jointPositions[(int)HipRight].Position;
+
+        SetLocal(legLeft, KneeLeft, HipLeft);
+        SetLocal(kneeLeft, AnkleLeft, KneeLeft);
+        SetLocal(ankleLeft, FootLeft, AnkleLeft);
+
+        SetLocal(legRight, KneeRight, HipRight);
+        SetLocal(kneeRight, AnkleRight, KneeRight);
+        SetLocal(ankleRight, FootRight, AnkleRight);
+
+        SetLocal(spineNaval, SpineChest, SpineNavel);
+        SetLocal(spinechest, Neck, SpineChest);
+        SetLocal(neck, Head, Neck);
+
+        SetLocal(clavicleLeft, ShoulderLeft, ClavicleLeft);
+        SetLocal(shoulderLeft, ElbowLeft, ShoulderLeft);
+        SetLocal(elbowLeft, WristLeft, ElbowLeft);
+
+        SetLocal(clavicleRight, ShoulderRight, ClavicleRight);
+        SetLocal(shoulderRight, ElbowRight, ShoulderRight);
+        SetLocal(elbowRight, WristRight, ElbowRight); 
+
+        void SetLocal(Transform t, JointId c, JointId p)
+        {
+            Vector3 cPos = jointPositions[(int)c].Position;
+            Vector3 pPos = jointPositions[(int)p].Position;
+            Vector3 newUp = (cPos - pPos).normalized;
+            Vector3 newForward = newUp.GetPerpendicular();
+            Vector3 originalForward = t.forward;
+
+            t.rotation = Quaternion.LookRotation(newForward, newUp);
+
+            int bestAngle = 0;
+            float bestDot = -1;
+            for (int i = 0; i < 360; i += 15)
+            {
+                t.Rotate(newUp, i);
+                float dot = Vector3.Dot(originalForward, t.forward);
+                if (dot > bestDot)
+                {
+                    bestDot = dot;
+                    bestAngle = i;
+                }
+                t.Rotate(newUp, -i);
+            }
+            t.Rotate(newUp, bestAngle);
+        }
+
+        /*
+        void SetForward(Transform t)
+        {
+            Vector3 pRight = t.parent.right;
+
+            //possible vectors ortogonal to the up vector
+            Vector3[] candidates = new Vector3[]
+            {
+                t.forward,
+                -t.forward,
+                -t.right,
+                (t.forward + t.right).normalized,
+                (t.forward - t.right).normalized,
+                (-t.forward + t.right).normalized,
+                (-t.forward - t.right).normalized
+            };
+            Vector3 bestCandidate = t.right;
+            float bestDot = Vector3.Dot(t.right, pRight);
+
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                float dot = Vector3.Dot(candidates[i], pRight);
+                if(dot > bestDot)
+                {
+                    bestDot = dot;
+                    bestCandidate = candidates[i];
+                }
+            }
+            Debug.Log("Best dot: " + bestDot);
+
+            Vector3 newForward = Vector3.Cross(bestCandidate, t.up);
+            if(Vector3.Dot(newForward, t.parent.forward) < 0)
+            {
+                Debug.Log("?");
+                newForward = Vector3.Cross(bestCandidate, t.up);
+            }
+            float angle = Vector3.Angle(newForward, t.forward);
+            t.Rotate(transform.up, angle, Space.Self);
+            //t.rotation =  Quaternion.LookRotation(newForward);
+        }
+        */
+    }
 }
 
 public enum DisplayOption
 {
     TRACKED,
     LOADED,
-    NONE
+    NONE,
+    IGNORE
 }
 
+/// <summary>
+/// A joint using Unitys data structures and a different scale
+/// </summary>
+[System.Serializable]
+public struct UJoint
+{
+    public Vector3 Position { get; set; }
+    public Quaternion Rotation { get; set; }
+    public JointConfidenceLevel Confidence { get; set; }
 
+    public UJoint(Joint joint)
+    {
+        Vector3 kinectSpacePosition = joint.Position.ToUnityVector3();
+        Position = AdjustScale(kinectSpacePosition);
+        Rotation = joint.Quaternion.ToUnityQuaternion();
+        Confidence = joint.ConfidenceLevel;
+    }
+
+    public static Vector3 AdjustScale(Vector3 v3)
+    {
+        v3.y *= -1;
+        v3 *= 0.001f;
+        return v3;
+    }
+}
 
 //0-1, 1-2, 2-3, 3-26 -> Spine + Head
 
@@ -533,3 +811,10 @@ public enum DisplayOption
 //25 footright
 
 //26 head
+
+
+
+/**
+ * D = XD,YD,ZD
+ * U = 0,1,0
+ */

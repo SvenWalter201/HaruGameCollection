@@ -1,45 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 public class UIController : Singleton<UIController>
 {
     [Header("ImageSection")]
-    [SerializeField] private Button imageTracking;
-    [SerializeField] private Button imageDisplay;
+    [SerializeField] 
+    Button imageTracking, imageDisplay;
     [Space]
     [Header("BTSection")]
-    [SerializeField] private Button bodyTracking;
-    [SerializeField] private Button record;
-    [SerializeField] private Button bodyCompare;
+    [SerializeField] 
+    Button bodyTracking, record, bodyCompare;
     [Space]
     [Header("FileManagementSection")]
-    [SerializeField] private InputField fileNameField;
-    [SerializeField] private Button loadMotion;
-    [SerializeField] private Button saveMotion;
-    [SerializeField] private Button savePose;
+    [SerializeField] 
+    InputField fileNameField;
+    [SerializeField] 
+    Button loadMotion, saveMotion, savePose;
     [Space]
     [Header("ReplaySection")]
-    [SerializeField] public Slider frameSlider;
-    [SerializeField] private Button playPauseButton;
-    [SerializeField] private Dropdown display;
+    [SerializeField] 
+    public Slider frameSlider;
+
+    [SerializeField] 
+    Button playPauseButton;
+    [SerializeField] 
+    Dropdown display;
     [Space]
     [Header("3D Viewport")]
-    [SerializeField] private TextMeshProUGUI compareAccuracy;
-    [SerializeField] private TMP_InputField smoothingFrames;
+    [SerializeField] 
+    TextMeshProUGUI compareAccuracy;
+    [SerializeField] 
+    TMP_InputField smoothingFrames;
     [Header("ImageDisplayPanel")]
-    [SerializeField] private GameObject imageDisplayPanel;
+    [SerializeField] 
+    GameObject imageDisplayPanel;
 
-    private GameObject savePoseGO;
-    private GameObject bodyTrackingGO;
-    private GameObject displayGO;
-    private GameObject recordGO;
-    private GameObject saveMotionGO;
-    private GameObject frameSliderGO;
-    private GameObject playPauseButtonGO;
-    private GameObject imageDisplayGO;
-    private GameObject bodyCompareGO;
+    GameObject savePoseGO, bodyTrackingGO, displayGO, recordGO, saveMotionGO, frameSliderGO, playPauseButtonGO, imageDisplayGO, bodyCompareGO;
 
     public readonly ColorBlock regularButtonColors = new ColorBlock
     {
@@ -58,8 +55,7 @@ public class UIController : Singleton<UIController>
         colorMultiplier = 1
     };
 
-    public readonly ColorBlock onStateColors = new ColorBlock
-    {
+    public readonly ColorBlock onStateColors = new ColorBlock {
         normalColor = Color.white,
         highlightedColor = Color.white,
         pressedColor = Color.white,
@@ -67,10 +63,8 @@ public class UIController : Singleton<UIController>
         colorMultiplier = 1
     };
 
-    private void Start()
+    void Start()
     {
-
-
         bodyTrackingGO = bodyTracking.gameObject;
         displayGO = display.gameObject;
         recordGO = record.gameObject;
@@ -92,7 +86,7 @@ public class UIController : Singleton<UIController>
         record.onClick.AddListener(RecordCapture);
         record.colors = offStateColors;
 
-        display.onValueChanged.AddListener(DisplayCurrentTracking);
+        //display.onValueChanged.AddListener(DisplayCurrentTracking);
         saveMotion.onClick.AddListener(StoreMotionFile);
         loadMotion.onClick.AddListener(LoadMotion);
         savePose.onClick.AddListener(SavePose);
@@ -119,7 +113,6 @@ public class UIController : Singleton<UIController>
         {
             AppState.imageTrackingRunning = false;
             imageTracking.colors = offStateColors;
-
             imageDisplayGO.SetActive(false);
         }
         else
@@ -176,8 +169,6 @@ public class UIController : Singleton<UIController>
             recordGO.SetActive(false);
             AppState.bodyCompareRunning = false;
             bodyCompareGO.SetActive(false);
-            
-
         }
         else
         {
@@ -196,20 +187,15 @@ public class UIController : Singleton<UIController>
         }
     }
 
-    public void DisplayCurrentTracking(int option)
-    {
-        SkeletonDisplay.Instance.SwitchDisplayType(option);
-    }
-
     public void LoadMotion()
     {
         string fileName = fileNameField.text;
 
-        Motion motion = SkeletonTracker.Instance.Load(fileName);
+        Motion motion = MotionManager.Instance.Load(fileName);
         CheckMotionLoaded(motion);
     }
 
-    private void CheckMotionLoaded(Motion motion)
+    void CheckMotionLoaded(Motion motion)
     {
         if (!AppState.motionLoaded)
         {
@@ -242,12 +228,12 @@ public class UIController : Singleton<UIController>
         {
             AppState.recording = false;
             record.colors = offStateColors;
-            CheckMotionLoaded(SkeletonTracker.Instance.StoreMotion());
+            CheckMotionLoaded(MotionManager.Instance.StoreMotion());
         }
         else
         {
             AppState.recording = true;
-            SkeletonTracker.Instance.BeginMotionCapture();
+            MotionManager.Instance.BeginMotionCapture();
             record.colors = onStateColors;
         }
     }
@@ -255,20 +241,20 @@ public class UIController : Singleton<UIController>
     public void StoreMotionFile()
     {
         string fileName = fileNameField.text;
-        SkeletonTracker.Instance.SaveMotion(fileName);
+        MotionManager.Instance.SaveMotion(fileName);
     }
 
     public void SavePose()
     {
         if(AppState.motionLoaded)
         {
-            Motion loaded = SkeletonTracker.Instance.loadedMotion;
+            Motion loaded = MotionManager.Instance.loadedMotion;
             int frame = Mathf.RoundToInt(frameSlider.value * loaded.motion.Count);
             if (frame >= loaded.motion.Count)
             {
                 frame = loaded.motion.Count - 1;
             }
-            SkeletonTracker.Instance.SavePose(fileNameField.text, loaded.motion[frame]);
+            MotionManager.Instance.SavePose(fileNameField.text, loaded.motion[frame]);
         }
         else
         {

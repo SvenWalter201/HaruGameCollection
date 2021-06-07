@@ -155,12 +155,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tracking: 0
   replaying: 0
-  display: 0
+  display: 3
   body: {fileID: 496412944}
   leftLeg: {fileID: 408445725}
   rightLeg: {fileID: 1359628799}
   leftArm: {fileID: 697857854}
   rightArm: {fileID: 1572791608}
+  useHumanoid: 0
+  rootBone: {fileID: 0}
   frame: 0
   comparePercentage: 0
 --- !u!4 &20510692

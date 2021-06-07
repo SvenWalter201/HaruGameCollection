@@ -130,6 +130,56 @@ public static class Extensions
         }
     }
 
+
+    public static Vector3 GetPerpendicular(this Vector3 v3)
+    {
+        int nonNullIndex = -1;
+        for (int i = 0; i < 3; i++)
+        {
+            if(v3[i] != 0)
+            {
+                nonNullIndex = i;
+                break;
+            }
+        }
+        if(nonNullIndex == -1)
+        {
+            Debug.LogError("Passed in Vector3.zero. There exists no perpendicular vector");
+            return Vector3.zero;
+        }
+
+        float cA = 0, cB = 0, cC = v3[nonNullIndex];
+        switch (nonNullIndex)
+        {
+            case 0:
+                cA = v3[1];
+                cB = v3[2];
+                break;
+            case 1:
+                cA = v3[0];
+                cB = v3[2];
+                break;
+            case 2:
+                cA = v3[0];
+                cB = v3[1];
+                break;
+        }
+
+        float newCC = (cA + cB) * -1;
+        newCC /= cC;
+
+        switch (nonNullIndex)
+        {
+            case 0:
+                return new Vector3(newCC, 1, 1);
+            case 1:
+                return new Vector3(1, newCC, 1);
+            case 2:
+                return new Vector3(1, 1, newCC);
+        }
+
+        return Vector3.zero;
+    }
     
     public static Vector3 Absolute(this Vector3 v3) => new Vector3(Abs(v3.x), Abs(v3.y), Abs(v3.z));
 
@@ -147,19 +197,21 @@ public static class Extensions
                                  (y - sphereCenter.y) * (y - sphereCenter.y) +
                                  (z - sphereCenter.z) * (z - sphereCenter.z));
 
+
         return distance < sphereRadius;
     }
 
-    public static bool IntersectXZCircle(this Bounds box, Vector3 sphereCenter, float sphereRadius)
+    public static bool IntersectXZCircle(this Bounds box, Vector3 circleCenter, float circleRadius)
     {
         // get box closest point to sphere center by clamping
-        var x = Max(box.min.x, Min(sphereCenter.x, box.max.x));
-        var z = Max(box.min.z, Min(sphereCenter.z, box.max.z));
+        var x = Max(box.min.x, Min(circleCenter.x, box.max.x));
+        var z = Max(box.min.z, Min(circleCenter.z, box.max.z));
 
         // this is the same as isPointInsideSphere
-        var distance = Sqrt((x - sphereCenter.x) * (x - sphereCenter.x) + (z - sphereCenter.z) * (z - sphereCenter.z));
+        var distance = Sqrt((x - circleCenter.x) * (x - circleCenter.x) + (z - circleCenter.z) * (z - circleCenter.z));
+        Debug.Log("Distance: " + distance);
 
-        return distance < sphereRadius;
+        return distance < circleRadius;
     }
 
     public static Bounds GetBoundingBox(this List<Vector3> v3s)
@@ -177,7 +229,9 @@ public static class Extensions
             if (p.z > uR.z) uR.z = p.z; 
         }
 
-        Vector3 extents = uR - lL / 2f;
+        Vector3 extents = (uR - lL) / 2f;
+
+        //return new Bounds(lL + extents, uR - lL);
 
         return new Bounds
         {
