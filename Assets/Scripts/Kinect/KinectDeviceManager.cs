@@ -11,7 +11,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     [SerializeField] 
     UnityEngine.UI.RawImage colourImage, depthImage, irImage;
 
-    public SkeletonDisplay skeletonDisplay;
+    public BodyDisplay skeletonDisplay;
 
     [Header("Configuration Parameters. Cant be changed at runtime")]
     public ColorResolution colorResolution;
@@ -120,15 +120,12 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         }
     }
 
-    void Start()
-    {
+    void Start() =>
         Init();
-    }
 
-    void OnApplicationQuit()
-    {
+    void OnApplicationQuit() =>
         Close(null, null);
-    }
+    
 
 
     void Update()
@@ -155,7 +152,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         if (game != null)
             game.OnGameFinished += Close;
 
-        skeletonDisplay = SkeletonDisplay.Instance;
+        skeletonDisplay = BodyDisplay.Instance;
 
         int count = Device.GetInstalledCount();
         if (count == 0)

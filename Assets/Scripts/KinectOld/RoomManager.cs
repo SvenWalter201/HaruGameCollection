@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
+
 class RoomManager : Singleton<RoomManager>
 {
     Room room;
     public Room R => room;
     const float cornerRadius = 300f;
 
-    string defaultPath = Application.dataPath + "Room.json";
+    string defaultPath;
+
+    void Awake()
+    {
+        defaultPath = Application.dataPath + "/Resources/Room.json";
+    }
 
     Room defaultRoom = new Room(new Vector3[] { 
         new Vector3(5,0,0), 
@@ -51,9 +57,7 @@ class RoomManager : Singleton<RoomManager>
     {
         room = new Room(corners);
         if (save)
-        {
             SaveRoom();
-        }
 
     }
 

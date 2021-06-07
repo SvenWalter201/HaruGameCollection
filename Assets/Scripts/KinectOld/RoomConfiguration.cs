@@ -21,9 +21,9 @@ class RoomConfiguration : Game
 
     private void Update()
     {
-        if(SkeletonDisplay.Instance.GetBodyBoundingBox(out Bounds b))
+        if(BodyDisplay.Instance.GetBodyBoundingBox(out Bounds b))
         {
-            Vector3 bodyCenter = SkeletonDisplay.Instance.GetBodyPosition();
+            Vector3 bodyCenter = BodyDisplay.Instance.GetBodyPosition();
             playerBounds.position = bodyCenter;
             /*Vector3 center = b.center;
             center.y = 0;
@@ -48,7 +48,7 @@ class RoomConfiguration : Game
 
         int cornersToConfigure = 3;
         Vector3[] corners = new Vector3[cornersToConfigure];
-        SkeletonDisplay.PositionCompare hRC = SkeletonDisplay.handRaisedCompare;
+        BodyDisplay.PositionCompare hRC = BodyDisplay.handRaisedCompare;
 
         for (int i = 0; i < cornersToConfigure; i++)
         {
@@ -63,11 +63,11 @@ class RoomConfiguration : Game
                 remainingTime -= Time.deltaTime;
                 yield return null;
 
-                if (SkeletonDisplay.Instance.JointCompare(JointId.Head, JointId.HandLeft, hRC) ||
-                SkeletonDisplay.Instance.JointCompare(JointId.Head, JointId.HandRight, hRC)
+                if (BodyDisplay.Instance.JointCompare(JointId.Head, JointId.HandLeft, hRC) ||
+                BodyDisplay.Instance.JointCompare(JointId.Head, JointId.HandRight, hRC)
                 )
                 {
-                    Vector3 position = SkeletonDisplay.Instance.GetBodyPosition();
+                    Vector3 position = BodyDisplay.Instance.GetBodyPosition();
                     Instantiate(cornerMarker, position, Quaternion.Euler(90,0,0));
                     corners[i] = position;
                     //Debug.Log("DetectedHandRaised! Set Corner at " + position);

@@ -16,12 +16,13 @@ public class TestingRotations : MonoBehaviour
         clavicleSupportLeft, clavicleLeft, shoulderLeft, elbowLeft, wristLeft,
         clavicleSupportRight, clavicleRight, shoulderRight, elbowRight, wristRight;
 
+    /*
     void Awake()
     {
         ResolveRig();
         LoadSampleMotion();
         RotateArms();
-    }
+    }*/
 
     void ResolveRig()
     {

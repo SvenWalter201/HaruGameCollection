@@ -6,9 +6,11 @@ public class MotionManager : Singleton<MotionManager>
     List<UJoint[]> currentMotion;
     public Motion loadedMotion;
 
-    public void BeginMotionCapture() => currentMotion = new List<UJoint[]>();
+    public void BeginMotionCapture() => 
+        currentMotion = new List<UJoint[]>();
 
-    public void StoreFrame(UJoint[] joints) => currentMotion.Add(joints);
+    public void StoreFrame(UJoint[] joints) => 
+        currentMotion.Add(joints);
 
     public Motion StoreMotion()
     {
@@ -19,8 +21,14 @@ public class MotionManager : Singleton<MotionManager>
                 fps = 30,
                 motion = currentMotion
             };
+            AppState.motionLoaded = true;
+            return loadedMotion;
         }
-        return loadedMotion;
+        else
+        {
+            AppState.motionLoaded = false;
+            return null;
+        }
     }
 
     public void SaveMotion(string fileName)

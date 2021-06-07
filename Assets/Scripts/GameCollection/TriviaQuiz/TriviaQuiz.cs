@@ -131,8 +131,8 @@ public class TriviaQuiz : Game
         countDownBar.enabled = true;
         yield return timer.UITimer(answerTime, countDownMask, countDownText);
         
-        Vector3 playerPosition = SkeletonDisplay.Instance.GetBodyPosition();
-        if(SkeletonDisplay.Instance.GetBodyBoundingBox(out Bounds b))
+        Vector3 playerPosition = BodyDisplay.Instance.GetBodyPosition();
+        if(BodyDisplay.Instance.GetBodyBoundingBox(out Bounds b))
         {
             if(b.IntersectXZCircle(cornerPosition, 1f))
             {

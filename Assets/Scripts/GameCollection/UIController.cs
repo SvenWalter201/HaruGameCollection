@@ -86,7 +86,7 @@ public class UIController : Singleton<UIController>
         record.onClick.AddListener(RecordCapture);
         record.colors = offStateColors;
 
-        //display.onValueChanged.AddListener(DisplayCurrentTracking);
+        display.onValueChanged.AddListener(DisplayCurrentTracking);
         saveMotion.onClick.AddListener(StoreMotionFile);
         loadMotion.onClick.AddListener(LoadMotion);
         savePose.onClick.AddListener(SavePose);
@@ -103,7 +103,7 @@ public class UIController : Singleton<UIController>
         savePoseGO.SetActive(false);
         bodyCompareGO.SetActive(false);
 
-        SkeletonDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy, smoothingFrames);
+        BodyDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy, smoothingFrames);
 
     }
 
@@ -126,6 +126,9 @@ public class UIController : Singleton<UIController>
             }
         }
     }
+
+    public void DisplayCurrentTracking(int index) => 
+        BodyDisplay.Instance.SwitchDisplayType(index);
 
     public void DisplayImageData()
     {
@@ -154,7 +157,7 @@ public class UIController : Singleton<UIController>
             else
             {
                 AppState.bodyCompareRunning = true;
-                StartCoroutine(SkeletonDisplay.Instance.BodyCompareCoroutine());
+                StartCoroutine(BodyDisplay.Instance.BodyCompareCoroutine());
             }
         }
     }
