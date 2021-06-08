@@ -600,15 +600,15 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
         int percent;
         //20000 = 0% |100 = 100%
-        if(posDifferenceD > 80000)
+        if(posDifferenceD > 80)
             percent = 0;
 
-        else if(posDifferenceD < 200)
+        else if(posDifferenceD < 0.2)
             percent = 100;
 
         else
             //1% = 348
-            percent = 100 - Mathf.RoundToInt((posDifferenceD-200) / 798);
+            percent = 100 - Mathf.RoundToInt((posDifferenceD- 0.200f) / 0.798f);
 
         //Debug.Log("Positional difference in mm: " + posDifferenceD);
         return percent;
