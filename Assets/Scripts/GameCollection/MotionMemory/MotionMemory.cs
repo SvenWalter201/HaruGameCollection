@@ -203,7 +203,7 @@ public class MotionMemory : Game
                 {
                     maxAccuracy = currentAccuracy;
                 }
-                if (maxAccuracy > 80)
+                if (maxAccuracy > 95)
                 {
                     solved.Add(card);
                     StopCoroutine(cR);

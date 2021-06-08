@@ -51,11 +51,8 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
     void OnValidate()
     {
-        if (display == DisplayOption.IGNORE || display == DisplayOption.NONE)
-            return;
+
         
-        if (body != null)
-            bodyParentGO = body.transform.parent.gameObject;
 
         if (useHumanoid)
         {
@@ -67,6 +64,15 @@ public class BodyDisplay : Singleton<BodyDisplay>
         }
         else
         {
+            if (body != null)
+                bodyParentGO = body.transform.parent.gameObject;
+            else
+                return;
+
+            /*
+                     if (display == DisplayOption.IGNORE || display == DisplayOption.NONE)
+            return;
+             */
             bodyParentGO.SetActive(true);
 
             if (rootBone != null && rootBone.gameObject.activeInHierarchy)
@@ -131,7 +137,6 @@ public class BodyDisplay : Singleton<BodyDisplay>
                             {
                                 OnBeginDisplay();
                             }
-                            Debug.Log("??");
                             DisplayLoaded();
                         }
                         else
@@ -598,7 +603,20 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
         float posDifferenceD = Mathf.Sqrt(posDifference.x * posDifference.x + posDifference.y * posDifference.y + posDifference.z * posDifference.z);
 
+        if (posDifferenceD == float.NaN)
+            return 0;
+
         int percent;
+        float zero = 0.5f;
+        float hund = 0.01f;
+        if (posDifferenceD > zero)
+            percent = 0;
+        else if (posDifferenceD < hund)
+            percent = 100;
+        else
+            percent = 100 - Mathf.RoundToInt((posDifferenceD-hund) / (zero*0.01f));
+
+        /*
         //20000 = 0% |100 = 100%
         if(posDifferenceD > 80)
             percent = 0;
@@ -609,7 +627,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
         else
             //1% = 348
             percent = 100 - Mathf.RoundToInt((posDifferenceD- 0.200f) / 0.798f);
-
+        */
         //Debug.Log("Positional difference in mm: " + posDifferenceD);
         return percent;
     }
