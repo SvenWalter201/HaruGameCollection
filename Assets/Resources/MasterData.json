@@ -1,0 +1,411 @@
+﻿{
+	"template":[
+    "Das ganze spielt @setting@, wobei {ein} @animal@ @position@ @action@",
+    "@position@ <ist> {ein} @thing@.",
+    "@linkingword@ @position@ @action@ @mood@ {ein} @person@.",
+    "{ein} @animal@ @action@ @position@"
+    ],
+	"position": [
+	"links",
+	"vorne links",
+	"rechts",
+	"vorne rechts",
+	"unten",
+	"im Vordergrung",
+	"im Hintergrund",
+	"hinten links",
+	"hinten rechts"
+	],
+	"linkingword":[
+	"Weiter",
+	"Und",
+	"Nicht zu vergessen,",
+	"Auch",
+	"",
+	"Fast vergessen, ",
+	"Huch, was ist das denn? ",
+	"Währendessen"
+	], 
+	"setting":[
+	"in [der heutigen Zeit, der Zukunft,den 80ern]",
+	"unter Wasser",
+	"in einer [tristen,außerirdischen,mit Regenbögen bedeckten,märchenahnlichen,dschungelartigen] Welt",
+	"auf [einem anderen Planeten,einem hohen Berg]"
+	],
+	"settingdescription":[
+	"[auf einer schönen Wiese, ]",
+	"entgegen aller Erwartungen []",
+	"[]",
+	],
+
+	"subjects":[
+  		{
+		  "type":"thing",
+		  "name":"Baum",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["deformed"]
+		},
+		{
+		  "type":"thing",
+		  "name":"Haus",
+		  "gender":"n",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["deformed"]
+		},
+		{
+		  "type":"thing",
+		  "name":"Wolkenkratzer",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["deformed"]
+		},
+		{
+		  "type":"thing",
+		  "name":"Busch",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["deformed"]
+		},
+		{
+		  "type":"thing",
+		  "name":"Laterne",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["deformed"]
+		},
+		{
+		  "type":"thing",
+		  "name":"Auto",
+		  "gender":"n",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["deformed"]
+		},
+		{
+		  "type":"thing",
+		  "name":"Vulkan",
+		  "gender":"n",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["deformed"]
+		},
+		{
+		  "type":"animal",
+		  "name":"Kuh",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "scalable":"true",
+		  "rotatable":"true",
+		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":[],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"animal",
+		  "name":"Katze",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "scalable":"true",
+		  "rotatable":"true",
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"animal",
+		  "name":"Hund",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "scalable":"true",
+		  "rotatable":"true",
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"animal",
+		  "name":"Haru",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "scalable":"true",
+		  "rotatable":"true",
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Lehrer",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":[],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Großmutter",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":[],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Lehrerin",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Junge",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Mädchen",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Bäcker",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Krankenschwester",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Bauarbeiter",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Superheld",
+		  "gender":"m",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Prinzessin",
+		  "gender":"f",
+		  "model":"prefabpath",
+		  "texture":"texturepath",
+		  "scalable":true,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt"],
+		  "moods":["bored","excited","friendly"]
+		},
+	],
+	"colours": {
+        "red": {
+            "type": "colour",
+            "name": "rot",
+            "translation": [
+                "roter",
+                "rote",
+                "rotes"
+            ]
+        },
+        "blue": {
+            "type": "colour",
+            "name": "blau",
+            "translation": [
+                "blauer",
+                "blaue",
+                "blaues"
+            ]
+        },"green": {
+            "type": "colour",
+            "name": "grün",
+            "translation": [
+                "grüner",
+                "grüne",
+                "grünes"
+            ]
+        }
+	},
+	"actions": {
+        "musiziert": {
+            "type":"verb",
+			"name":"musiziert",
+			"model":"prefab_path",
+			"animation":"pose_path"
+        },
+		"singt": {
+            "type":"verb",
+			"name":"singt",
+			"model":"prefab_path",
+			"animation":"pose_path"
+        },
+		"überlegt": {
+            "type":"verb",
+			"name":"überlegt",
+			"model":"prefab_path",
+			"animation":"pose_path"
+        }
+     },
+
+	 "moods": {
+        "bored": {
+            "type":"verb",
+			"name":"gelangweilt",
+			"translation": [
+				"gelangweilter",
+				"gelangweilte",
+				"gelangweiltes"
+			]
+        },
+		"excited": {
+            "type":"verb",
+			"name":"aufgeregt",
+			"translation": [
+				"aufgeregter",
+				"aufgeregte",
+				"aufgeregtes"
+			]
+        },
+		"friendly": {
+            "type":"verb",
+			"name":"freundlich",
+			"translation": [
+				"freundlicher",
+				"freundliche",
+				"freundliches"
+			]
+        },
+		"deformed": {
+            "type":"verb",
+			"name":"unförmig",
+			"translation": [
+				"unförmiger",
+				"unförmige",
+				"unförmiges"
+			]
+        }
+	 }
+}

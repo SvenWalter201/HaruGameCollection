@@ -52,7 +52,7 @@ public class PictureGenerationManager : Game
     public SentenceInformation[] sentences = new SentenceInformation[MAX_SENTENCES];
     public int count = 0;
     LayeredDetailAssetGenerator m;
-    List<GameObject> presentGameObjects ;
+    List<GameObject> presentGameObjects;
     GameObject current;
     List<Bounds> colliderBounds = new List<Bounds>();
     readonly CoroutineTimer timer = new CoroutineTimer();
@@ -107,11 +107,11 @@ public class PictureGenerationManager : Game
         //SprogressBar.enabled = false;
         modeText.text = "Meisterwerke Level:Senioren";
         remainingTimeText.text = "";
-        if(Panel != null)
+        if (Panel != null)
         {
             Panel.SetActive(true);
         }
-        if(ProgressBar != null)
+        if (ProgressBar != null)
         {
             ProgressBar.SetActive(true);
         }
@@ -121,9 +121,9 @@ public class PictureGenerationManager : Game
     }
 
     protected override IEnumerator Execute()
-    { 
+    {
         PaintPicture();
-        sentence1.text = grammars.PrintSentence(); 
+        sentence1.text = grammars.PrintSentence();
         progressBar.enabled = true;
         yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
         progressBar.enabled = false;
@@ -159,41 +159,7 @@ public class PictureGenerationManager : Game
     }
 
 
-    //setting the informatioin sent by the grammar generator
-    /*public void SendToPGMAnager(SentenceInformation si)
 
-    {
-        GetComponent<LayeredDetailAssetGenerator>();
-
-        if(count < MAX_SENTENCES)
-        {
-            
-            //Debug.Log(count);
-            sentences[count] = si;
-            //generate the new texture here
-            PaintPicture(si);
-           
-            count++;
-        }
-        else
-        {
-            Debug.Log("Picture is full, dont generate more sentences");
-            //clearPicture
-            for (int i = 0; i < presentGameObjects.Count; i++)
-            {
-                Destroy(presentGameObjects[i]);
-            }
-            colliderBounds.Clear();
-            presentGameObjects.Clear();
-            grammars.ClearRecentlyUsed();
-            for(int i= 0; i < MAX_SENTENCES; i ++)
-            {
-                Debug.Log(this.sentences[i].PrintToString());
-            }
-            count = 0;
-        }
-        
-    }*/
 
     public void PaintPicture()
     {
@@ -202,9 +168,9 @@ public class PictureGenerationManager : Game
         if (si.Singular == false)
         {
             int r = UnityEngine.Random.Range(2, 5);
-            for (int i = 0; i < r;i++)
+            for (int i = 0; i < r; i++)
             {
-                PlaceObjectAt(si) ;
+                PlaceObjectAt(si);
                 //Debug.Log(si.Singular + " mit " + i + " von " + r + "objekten");
             }
         }
@@ -215,13 +181,15 @@ public class PictureGenerationManager : Game
 
         ChangePersonTo(si);
         ChangeMoodTo(si);
-        SetActionTo(si);
-        
+        ChangeActionTo(si);
+        //ChangeColorTo(si)
+        //Change
+
     }
 
     private GameObject SpawnObject(string placableObject, Vector3 p, Quaternion q)
     {
-        
+
         switch (placableObject)
         {
             case "Wolkenkratzer":
@@ -305,12 +273,14 @@ public class PictureGenerationManager : Game
 
         switch (si.Position)
         {
-            case "links": case "vorne links":
+            case "links":
+            case "vorne links":
                 {
                     position = left.position;
                     break;
                 }
-            case "rechts": case "vorne rechts":
+            case "rechts":
+            case "vorne rechts":
                 {
                     position = right.position;
                     break;
@@ -352,13 +322,14 @@ public class PictureGenerationManager : Game
 
         int max_iter = 100;
         int iter = 0;
-        while ( iter < max_iter) //while, colliding generate new position and check if its working
+        while (iter < max_iter) //while, colliding generate new position and check if its working
         {
             Vector2 pv = UnityEngine.Random.insideUnitCircle * radius;
             Vector3 positionObject = new Vector3(pv.x, 0, pv.y) + position;
-            GameObject gameObject = SpawnObject(si.Person, positionObject, Quaternion.identity);
+
+            GameObject gameObject = SpawnObject(si.Subject.name, positionObject, Quaternion.identity);
             current = gameObject;
-            current.transform.localScale = new Vector3(0.7f,0.7f,0.7f);
+            current.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             Collider c = current.GetComponent<Collider>();
             //Debug.Log(current.transform.position);
             //Debug.Log("Placing object!!!!");
@@ -375,7 +346,7 @@ public class PictureGenerationManager : Game
                     radius = radius + 0.2f;
                     break;
                 }
-                
+
             }
             else
             {
@@ -389,8 +360,8 @@ public class PictureGenerationManager : Game
 
         presentGameObjects.Add(current);
     }
-    
-    private void SetActionTo(SentenceInformation si)
+
+    private void ChangeActionTo(SentenceInformation si)
     {
         //_renderHead = current.GetComponent<MeshRenderer>();
 
@@ -398,7 +369,7 @@ public class PictureGenerationManager : Game
         {
             Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.LEFTHAND);
 
-            switch (si.Action)
+            switch (si.Action.name)
             {
                 case "musiziert":
                     SpawnObject("Guitar", pos, Quaternion.identity);
@@ -407,8 +378,8 @@ public class PictureGenerationManager : Game
                     SpawnObject("Microphone", pos, Quaternion.identity);
                     break;
             }
-        } 
-        
+        }
+
     }
 
     public void ChangePersonTo(SentenceInformation si)
@@ -417,7 +388,7 @@ public class PictureGenerationManager : Game
         {
             Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.HATPOS);
 
-            switch (si.Person)
+            switch (si.Subject.name)
             {
                 case "eine Lehrerin":
 
@@ -444,76 +415,75 @@ public class PictureGenerationManager : Game
     }
     public void ChangeMoodTo(SentenceInformation si)
     {
-        // _renderHead = head.GetComponent<MeshRenderer>();
 
         GameObject gameObject = current;
         //Debug.Log("Game object " + current);
         _renderHead = gameObject.GetComponent<MeshRenderer>();
-        
 
 
-            //change the gender/ hairstyle
-            if (si.Gender == 'm')
-            {
-                _renderHead.material.SetTexture("_DetailOneAlbedo", hair[0]);
-            }
-            else
-            {
-                //set female hairstyle
-                _renderHead.material.SetTexture("_DetailOneAlbedo", hair[1]);
-            }
 
-            //generate mood
-            _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 0);
-            _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 0);
-            switch (si.Mood)
-            {
+        //change the gender/ hairstyle
+        if (si.Gender == 'm')
+        {
+            _renderHead.material.SetTexture("_DetailOneAlbedo", hair[0]);
+        }
+        else
+        {
+            //set female hairstyle
+            _renderHead.material.SetTexture("_DetailOneAlbedo", hair[1]);
+        }
+
+        //generate mood
+        _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 0);
+        _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 0);
+        switch (si.Mood.name)
+        {
 
 
-                case "erbost":
-                    {
-                        //set eyes to ...
-                        //set mouth to...
-                        _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[1]);
-                        _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[1]);
-                        break;
-                    }
-                case "aufgeret":
-                    {
-                        //set mouth to...
-                        //set eyes to ...
-                        _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[1]);
-                        _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[0]);
-                        break;
-                    }
-                case "erschrocken":
-                    {
-                        //set eyes to ...
-                        //set mouth to...
-                        _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[0]);
-                        _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[1]);
-                        break;
-                    }
-                case "freundlich":
-                    {
-                        //set eyes to ...
-                        //set mouth to...
-                        _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[0]);
-                        _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[0]);
-                        break;
-                    }
-                case "unförmig":
-                    {
-                        _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
-                        break;
-                    }
-                case "bunt":
-                    {
-                        //_renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
-                        break;
-                    }
-            }
-        
+            case "erbost":
+                {
+                    //set eyes to ...
+                    //set mouth to...
+                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[1]);
+                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[1]);
+                    break;
+                }
+            case "aufgeregt":
+                {
+                    //set mouth to...
+                    //set eyes to ...
+                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[1]);
+                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[0]);
+                    break;
+                }
+            case "erschrocken":
+                {
+                    //set eyes to ...
+                    //set mouth to...
+                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[0]);
+                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[1]);
+                    break;
+                }
+            case "freundlich":
+                {
+                    //set eyes to ...
+                    //set mouth to...
+                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[0]);
+                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[0]);
+                    break;
+                }
+            case "unförmig":
+                {
+                    _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
+                    break;
+                }
+            case "bunt":
+                {
+                    //_renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
+                    break;
+                }
+        }
+
     }
 
 }

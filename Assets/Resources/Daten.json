@@ -1,9 +1,9 @@
 ﻿{
   "template": [
-    "Das ganze spielt @setting@, wobei @animal@ @position@ @action@",
+    "Das ganze spielt @setting@, wobei {ein} @animal@ @position@ @action@",
     "@position@ <ist> {ein} @thing@.",
-    "@linkingword@ @position@ @action@ @mood@ @person@.",
-    "@animal@ @action@ @position@"
+    "@linkingword@ @position@ @action@ @mood@ {ein} @person@.",
+    "{ein} @animal@ @action@ @position@"
   ],
   "position": [
     "links",
@@ -36,7 +36,6 @@
     "ein @colour@ Papagei m",
     "Haru n",
     "ein @colour@ Tyrannosaurusrex m",
-    "ein @colour@ Stegosaurus m",
     "ein @colour@ Hase m",
     "eine @colour@ Kuh f"
   ],
@@ -51,7 +50,7 @@
   ],
   "mood":[
     "[gelangweilt, gelangweilter, gelangweilte, gelangweiltes]",
-    "[aufgeret, aufgereter, aufgerete, aufgeretes]",
+    "[aufgeregt, aufgeregter, aufgeregte, aufgeregtes]",
     "[erbost, erboster, erboste, erbostes]",
     "[freundlich, freundlicher, freundliche, freundliches]",
     "[erschrocken, erschrockener, erschrockene, erschrockenes]",
