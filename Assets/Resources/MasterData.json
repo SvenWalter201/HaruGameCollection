@@ -142,7 +142,7 @@
 		  "rotatable":"true",
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":[],
+		  "actions":["isst","ist"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -157,7 +157,7 @@
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["isst","ist"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -172,7 +172,7 @@
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["isst","ist"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{

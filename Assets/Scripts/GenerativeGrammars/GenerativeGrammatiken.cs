@@ -14,24 +14,23 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     public List<string> recentlyUsed = new List<string>();
     private bool probability = true; //singular
     private SentenceInformation si;
-    private subject currentperson;
+    private Subject currentperson;
     public Text sentenceText;
     private string sentence;
     public byte count = 0;
-    List<subject> _subjects = new List<subject>();
-    List<subject> _persons = new List<subject>();
-    List<subject> _things = new List<subject>();
-    List<subject> _animals = new List<subject>();
-    List<colour> _colours = new List<colour>();
-    List<action> _actions = new List<action>();
-    List<mood> _moods = new List<mood>();
+    List<Subject> 
+        _subjects = new List<Subject>(),
+        _persons = new List<Subject>(),
+        _things = new List<Subject>(),
+        _animals = new List<Subject>();
+    List<Colour> _colours = new List<Colour>();
+    List<Action> _actions = new List<Action>();
+    List<Mood> _moods = new List<Mood>();
 
     private void Start()
     {
         //ClearRecentlyUsed();
         GetVocabulary();
-
-
     }
     private void GetVocabulary()
     {
@@ -42,30 +41,23 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
         _subjects = masterData.subjects;
 
-        //create list of persons
-        foreach (subject s in _subjects)
+        
+        foreach (Subject s in _subjects)
         {
-            if (s.type == "person")
+            switch (s.type)
             {
-                _persons.Add(s);
-            }
-        }
-
-        //create list of things
-        foreach (subject s in _subjects)
-        {
-            if (s.type == "thing")
-            {
-                _things.Add(s);
-            }
-        }
-
-        //create list of animals
-        foreach (subject s in _subjects)
-        {
-            if (s.type == "animal")
-            {
-                _animals.Add(s);
+                //create list of persons
+                case "person": 
+                    _persons.Add(s);
+                    break;
+                //create list of things
+                case "thing": 
+                    _things.Add(s);
+                    break;
+                //create list of animals
+                case "animal":
+                    _animals.Add(s);
+                    break;
             }
         }
 
@@ -91,10 +83,8 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return si;
     }
 
-    public string PrintSentence()
-    {
-        return sentence;
-    }
+    public string PrintSentence() => sentence;
+    
 
     public string FillInTemplate(string template)
     {
@@ -120,7 +110,6 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                     {
                         replacement = GetThing();
                         si.Singular = true;
-                        Debug.Log(probability + " true für singular, false für plural");
                         if (!probability)
                         {
                             replacement = pluralize(replacement);
@@ -171,19 +160,19 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             template = resolveOptions(template);
         }
 
-        //Verbform
+        //adapt verbform
         if (template.Contains("<"))
         {
             template = ResolveVerb(template);
         }
 
-        //unbestimmter Artikel
+        //adapt article
         if (template.Contains("{"))
         {
             template = ResolveUndefinedArticle(template);
         }
 
-        //Debug.Log(si.PrintToString());
+        Debug.Log(si.PrintToString());
 
         return template;
     }
@@ -226,6 +215,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         recentlyUsed.Add(_persons[r].name);
         si.Gender = _persons[r].gender;
+        si.Singular = true;
         si.Subject = _persons[r];
         currentperson = _persons[r];
         //Debug.Log(si.Gender);
@@ -684,11 +674,15 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 {
                     article = "eine";
                 }
-                article = "ein";
+                else
+                {
+                    article = "ein";
+                }
+                
             }
             text = ReplaceBetweenTags(text, article, '{', '}');
 
-            return ResolveVerb(text);
+            return ResolveUndefinedArticle(text);
         }
         return text;
     }
