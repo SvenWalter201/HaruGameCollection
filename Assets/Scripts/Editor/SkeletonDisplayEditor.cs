@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(SkeletonDisplay))]
+[CustomEditor(typeof(BodyDisplay))]
 public class SkeletonDisplayEditor : Editor
 {
-    private SkeletonDisplay skeletonDisplay;
+    private BodyDisplay skeletonDisplay;
     /*
 
     private void OnSceneGUI()
@@ -39,6 +39,6 @@ public class SkeletonDisplayEditor : Editor
     private void OnEnable()
     {
         //EditorApplication.update += OnSceneGUI;
-        skeletonDisplay = target as SkeletonDisplay;
+        skeletonDisplay = target as BodyDisplay;
     }
 }

@@ -9,7 +9,10 @@ public static class JsonFileManager
     {
         try
         {
-            string jsonString = JsonConvert.SerializeObject(content);
+            string jsonString = JsonConvert.SerializeObject(content, Formatting.Indented, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
             File.WriteAllText(fileName, jsonString);
             return true;
         }
@@ -37,7 +40,6 @@ public static class JsonFileManager
                 content = default;
                 return false;
             }
-
         }
         Debug.LogWarning("File not found");
         content = default;

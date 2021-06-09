@@ -64,7 +64,7 @@ public class MotionMemory : Game
 
         List<Motion> poses = GetRandomSetOfPoses();
         cards = ConstructUI(poses);
-        SkeletonDisplay.Instance.display = DisplayOption.IGNORE;
+        BodyDisplay.Instance.display = DisplayOption.IGNORE;
 
         yield break;
     }
@@ -86,7 +86,7 @@ public class MotionMemory : Game
         memoryCanvas.SetActive(true);
 
 
-        SkeletonDisplay.Instance.OnBeginDisplay();
+        BodyDisplay.Instance.OnBeginDisplay();
 
         int remainingRounds = maximumRounds;
 
@@ -113,7 +113,7 @@ public class MotionMemory : Game
         }
 
         //Debug.Log("???");
-        SkeletonDisplay.Instance.OnStopDisplay();
+        BodyDisplay.Instance.OnStopDisplay();
         taskText.text = "";
 
         memoryCanvas.SetActive(false);
@@ -190,20 +190,20 @@ public class MotionMemory : Game
             BeginOutline(card);
             float remainingTime = motionGuessingTime- timeBeforeMotionTracking;
             comparePercentage.text = "";
-            SkeletonDisplay.Instance.comparePercentage = 0;
+            BodyDisplay.Instance.comparePercentage = 0;
 
             yield return timer.SimpleTimer(timeBeforeMotionTracking);
-            Coroutine cR = StartCoroutine(SkeletonDisplay.Instance.BodyCompareCoroutine(card.pose.motion[0], remainingTime));
+            Coroutine cR = StartCoroutine(BodyDisplay.Instance.BodyCompareCoroutine(card.pose.motion[0], remainingTime));
             
             progressBar.enabled = true;
             while (remainingTime > 0f)
             {
-                int currentAccuracy = SkeletonDisplay.Instance.comparePercentage;
+                int currentAccuracy = BodyDisplay.Instance.comparePercentage;
                 if(currentAccuracy > maxAccuracy)
                 {
                     maxAccuracy = currentAccuracy;
                 }
-                if (maxAccuracy > 80)
+                if (maxAccuracy > 95)
                 {
                     solved.Add(card);
                     StopCoroutine(cR);
@@ -266,7 +266,7 @@ public class MotionMemory : Game
 
     void BeginShowPose(MemoryCard card)
     {
-        SkeletonDisplay.Instance.Display(card.pose.motion[0]);
+        BodyDisplay.Instance.Display(card.pose.motion[0]);
         card.uiElement.GetComponent<RawImage>().texture = cameraRenderTexture;
     }
 

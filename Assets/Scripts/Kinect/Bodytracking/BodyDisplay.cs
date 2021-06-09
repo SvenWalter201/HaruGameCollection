@@ -9,7 +9,7 @@ using TMPro;
 using Unity.Mathematics;
 using static Microsoft.Azure.Kinect.BodyTracking.JointId;
 
-public class SkeletonDisplay : Singleton<SkeletonDisplay>
+public class BodyDisplay : Singleton<BodyDisplay>
 {
     public bool tracking = false, replaying = false;
     public DisplayOption display = DisplayOption.TRACKED;
@@ -31,17 +31,17 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     public int frame = 0, comparePercentage = -1;
 
     float currentTimeStep;
-    const float FPS_30_DELTA = 0.033f;
+    const float FPS_30_DELTA = 0.033333f;
 
     Slider frameSlider;
     TextMeshProUGUI compareAccuracy;
     TMP_InputField smoothingFrames;
 
     bool playing = true, bodyCompareRunning = false;
-    Motion motion;
+    Motion loadedMotion;
     int replayFrame, interpolationFrames = 6; //0.267 sec
 
-    UJoint[] joints;
+    UJoint[] trackedJoints;
 
     void Awake()
     {
@@ -51,11 +51,8 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     void OnValidate()
     {
-        if (display == DisplayOption.IGNORE || display == DisplayOption.NONE)
-            return;
+
         
-        if (body != null)
-            bodyParentGO = body.transform.parent.gameObject;
 
         if (useHumanoid)
         {
@@ -67,6 +64,15 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         }
         else
         {
+            if (body != null)
+                bodyParentGO = body.transform.parent.gameObject;
+            else
+                return;
+
+            /*
+                     if (display == DisplayOption.IGNORE || display == DisplayOption.NONE)
+            return;
+             */
             bodyParentGO.SetActive(true);
 
             if (rootBone != null && rootBone.gameObject.activeInHierarchy)
@@ -107,7 +113,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         if (currentTimeStep <= 0f)
         {
             if (AppState.bodyTrackingRunning)
-                joints = ResolveSkeleton();
+                trackedJoints = ResolveSkeleton();
 
             switch (display)
             {
@@ -118,12 +124,12 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                         {
                             OnBeginDisplay();
                         }
-                        Display(joints);
+                        Display(trackedJoints);
                     }
                     break;
                 case DisplayOption.LOADED:
-                    motion = MotionManager.Instance.loadedMotion;
-                    if (motion != null && motion.motion != null)
+                    loadedMotion = MotionManager.Instance.loadedMotion;
+                    if (loadedMotion != null && loadedMotion.motion != null)
                     {
                         if (!useHumanoid)
                         {
@@ -139,7 +145,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
                             {
                                 rootBone.gameObject.SetActive(true);
                             }
-                            ResolveRotations(motion.motion[0]);
+                            ResolveRotations(loadedMotion.motion[0]);
                         }
 
 
@@ -161,22 +167,22 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     public void DisplayLoaded()
     {
-        if (motion.motion.Count == 1)
+        if (loadedMotion.motion.Count == 1)
         {
-            Display(motion.motion[0]);
+            Display(loadedMotion.motion[0]);
             return;
         }
 
-        replayFrame = Mathf.RoundToInt(frameSlider.value * (motion.motion.Count));
+        replayFrame = Mathf.RoundToInt(frameSlider.value * (loadedMotion.motion.Count));
         if (playing)
         {
-            replayFrame = (replayFrame + 1) % motion.motion.Count;
-            frameSlider.value = replayFrame / (float)motion.motion.Count;
+            replayFrame = (replayFrame + 1) % loadedMotion.motion.Count;
+            frameSlider.value = replayFrame / (float)loadedMotion.motion.Count;
         }
-        else if (replayFrame == motion.motion.Count)
+        else if (replayFrame == loadedMotion.motion.Count)
                 replayFrame--;
 
-        Display(GetInterpolatedValue(motion.motion, replayFrame));
+        Display(GetInterpolatedValue(loadedMotion.motion, replayFrame));
     }
 
     public Vector3[] GetInterpolatedValue(List<UJoint[]> motion, int currentFrame)
@@ -217,7 +223,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     }
 
     
-    public Vector3[] GetPositions() => GetPositions(joints);
+    public Vector3[] GetPositions() => GetPositions(trackedJoints);
 
     /// <summary>
     /// Get the adjusted positions vector from a given list of joints
@@ -311,7 +317,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         {
             if (timer <= 0f)
             {
-                int percent = ComparePoses(joints, MotionManager.Instance.loadedMotion.motion[0]);
+                int percent = ComparePoses(trackedJoints, MotionManager.Instance.loadedMotion.motion[0]);
                 compareAccuracy.text = "Accuracy: " + percent + " %";
 
                 timer = FPS_30_DELTA;
@@ -333,7 +339,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
             compareTime -= Time.deltaTime;
             if (timer <= 0f)
             {
-                comparePercentage = ComparePoses(joints, pose);
+                comparePercentage = ComparePoses(trackedJoints, pose);
                 timer = FPS_30_DELTA;
             }
             else
@@ -346,7 +352,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     }
 
     public Vector3 GetBodyPosition() =>
-            GetBodyPosition(joints);
+            GetBodyPosition(trackedJoints);
 
     /// <summary>
     /// Return the pelvis position in adjusted scale, not accounting for y position. 
@@ -357,7 +363,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
         joints[(int)Pelvis].Position;
 
     public bool GetBodyBoundingBox(out Bounds b) =>
-        GetBodyBoundingBox(joints, out b);
+        GetBodyBoundingBox(trackedJoints, out b);
 
     public bool GetBodyBoundingBox(UJoint[] joints, out Bounds b)
     {
@@ -492,7 +498,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
     public static readonly PositionCompare handRaisedCompare = new PositionCompare
     {
-        posDiff = new Vector3(0,-100,0),
+        posDiff = new Vector3(0,-0.1f,0),
         comp = new Compare[] { Compare.NONE, Compare.POS, Compare.NONE }
     };
 
@@ -504,7 +510,7 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
     }
 
     public bool JointCompare(JointId a, JointId b, PositionCompare c) => 
-        JointCompare(joints, a, b, c);
+        JointCompare(trackedJoints, a, b, c);
 
     /// <summary>
     /// Compares two joints based on a comparision function
@@ -597,18 +603,31 @@ public class SkeletonDisplay : Singleton<SkeletonDisplay>
 
         float posDifferenceD = Mathf.Sqrt(posDifference.x * posDifference.x + posDifference.y * posDifference.y + posDifference.z * posDifference.z);
 
+        if (posDifferenceD == float.NaN)
+            return 0;
+
         int percent;
+        float zero = 0.5f;
+        float hund = 0.01f;
+        if (posDifferenceD > zero)
+            percent = 0;
+        else if (posDifferenceD < hund)
+            percent = 100;
+        else
+            percent = 100 - Mathf.RoundToInt((posDifferenceD-hund) / (zero*0.01f));
+
+        /*
         //20000 = 0% |100 = 100%
-        if(posDifferenceD > 80000)
+        if(posDifferenceD > 80)
             percent = 0;
 
-        else if(posDifferenceD < 200)
+        else if(posDifferenceD < 0.2)
             percent = 100;
 
         else
             //1% = 348
-            percent = 100 - Mathf.RoundToInt((posDifferenceD-200) / 798);
-
+            percent = 100 - Mathf.RoundToInt((posDifferenceD- 0.200f) / 0.798f);
+        */
         //Debug.Log("Positional difference in mm: " + posDifferenceD);
         return percent;
     }
@@ -766,9 +785,9 @@ public struct UJoint
 
     public static Vector3 AdjustScale(Vector3 v3)
     {
-        v3.y *= -1;
-        v3 *= 0.001f;
-        return v3;
+        Vector3 n_v3 = new Vector3(v3.x, -v3.y, v3.z);
+        n_v3 *= 0.001f;
+        return n_v3;
     }
 }
 
