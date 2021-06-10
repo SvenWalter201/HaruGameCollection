@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Microsoft.Azure.Kinect.BodyTracking;
+using TMPro;
 
 class RoomConfiguration : Game
 {
@@ -9,12 +10,21 @@ class RoomConfiguration : Game
     [SerializeField] 
     Transform playerBounds, cornerMarker;
 
+    [Header("UI Elements")]
+    [SerializeField]
+    TextMeshProUGUI headerText;
+
+    [SerializeField]
+    TextMeshProUGUI taskText;
+
     const float TIMEOUT = 15f;
 
     void Start() => PlayGame();
 
     protected override IEnumerator Init()
     {
+        headerText.text = StringRes.Get("_RoomCalibration");
+
         KinectDeviceManager.Instance.BeginBodyTracking();
         return base.Init();
     }
@@ -52,6 +62,7 @@ class RoomConfiguration : Game
 
         for (int i = 0; i < cornersToConfigure; i++)
         {
+            taskText.text = StringRes.Get("_GoToCorner");
             //glow a lamp
             //show UI Text
             //leave some time for the person to raise their hand

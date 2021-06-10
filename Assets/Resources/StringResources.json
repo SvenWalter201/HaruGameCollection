@@ -1,0 +1,47 @@
+{
+  "_WelcomeText": {
+    "ENG": "Welcome",
+    "DE": "Willkommen"
+  },
+  "_GetReady": {
+    "ENG": "Get Ready",
+    "DE": "Mach dich Bereit"
+  },
+  "_MotionGuess": {
+    "ENG": "Which pose is behind the marked card?",
+    "DE": "Welche Pose steckt hinter der umrahmten Karte?"
+  },
+  "_MotionMemorize": {
+    "ENG": "Memorize which pose was behind which card!",
+    "DE": "Merke dir welche Pose hinter welcher Karte steckt!"
+  },
+  "_RightAnswer": {
+    "ENG": "Right!",
+    "DE": "Richtig!"
+  },
+  "_WrongAnswer": {
+    "ENG": "Wrong!",
+    "DE": "Leider Falsch!"
+  },
+  "_NoRoundsRemaining": {
+    "ENG": "No Rounds Remaining!",
+    "DE": "Keine Runden mehr übrig!"
+  },
+  "_Win": {
+    "ENG": "You Win!",
+    "DE": "Du hast gewonnen!"
+  },
+  "_Lose": {
+    "ENG": "You lost!",
+    "DE": "Du hast verloren!"
+  },
+  "_RoomCalibration": {
+    "ENG": "Room Calibration",
+    "DE": "Raum erstellen"
+  },
+  "_GoToCorner": {
+    "ENG": "Go to corner",
+    "DE": "Gehe zu Ecke"
+  }
+
+}

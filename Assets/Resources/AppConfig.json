@@ -1,0 +1,25 @@
+{
+  "Language": "DE",
+  "LimbConstraints": [
+    "LEFT_LEG_LOWER",
+    "LEFT_ARM_LOWER"
+  ]
+}
+
+/*
+  supported Language Options: 
+    - DE  -> German
+    - ENG -> English
+
+  limb Constraint Options:
+      UPPER_BODY = 0, //+17
+      LOWER_BODY = 18, //+7
+      LEFT_ARM_UPPER = 5, //+5
+      LEFT_ARM_LOWER = 6, //+4
+      RIGHT_ARM_UPPER = 12, //+5
+      RIGHT_ARM_LOWER = 13, //+4
+      LEFT_LEG_UPPER = 18, //+3
+      LEFT_LEG_LOWER = 19, //+2
+      RIGHT_LEG_UPPER = 22, //+3
+      RIGHT_LEG_LOWER = 23 //+2
+*/

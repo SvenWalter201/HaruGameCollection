@@ -133,7 +133,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         if(syncedUpdateTimer <= 0f)
         {
             syncedUpdateTimer = 0.033f;
-            if (AppState.imageDisplayRunning)
+            if (AppManager.imageDisplayRunning)
             {
                 ShowImage();
             }
@@ -191,14 +191,14 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         Debug.Log("Kinect started successfully");
         //Task.Run(() => ImuCapture());
 
-        AppState.applicationRunning = true;
+        AppManager.applicationRunning = true;
     }
 
     public bool BeginImageTracking()
     {
         if (device != null)
         {
-            AppState.imageTrackingRunning = true;
+            AppManager.imageTrackingRunning = true;
             Task.Run(()=> CameraCapture());
             return true;
         }
@@ -217,14 +217,14 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             {
                 Tracker tracker = Tracker.Create(calibration, TrackerConfiguration.Default);
                 Task.Run(() => BodyCapture(tracker));
-                AppState.bodyTrackingRunning = true;
+                AppManager.bodyTrackingRunning = true;
                 Debug.Log("Bodytracking started");
                 return true;
             }
             catch (Exception e)
             {
                 Debug.Log("An error occured: " + e.Message);
-                AppState.bodyTrackingRunning = false;
+                AppManager.bodyTrackingRunning = false;
                 return false;
             }
         }
@@ -240,7 +240,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         Frame bodyFrame = null;
         int btFrame = 0;
         
-        while (AppState.bodyTrackingRunning && AppState.applicationRunning)
+        while (AppManager.bodyTrackingRunning && AppManager.applicationRunning)
         {
             if(syncedUpdateTimer <= 0f)
             {
@@ -272,7 +272,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 }
                 catch (Exception e)
                 {
-                    AppState.bodyTrackingRunning = false;
+                    AppManager.bodyTrackingRunning = false;
                     Debug.Log("An error occured: " + e.Message);
                     if (bodyFrame != null)
                         bodyFrame.Dispose();
@@ -292,7 +292,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     void CameraCapture()
     {
-        while (AppState.imageTrackingRunning && AppState.applicationRunning)
+        while (AppManager.imageTrackingRunning && AppManager.applicationRunning)
         {
             if (syncedUpdateTimer <= 0f)
             {
@@ -308,7 +308,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                 }
                 catch (Exception e)
                 {
-                    AppState.imageTrackingRunning = false;
+                    AppManager.imageTrackingRunning = false;
                     Debug.Log("An error occured: " + e.Message);
                 }
             }
@@ -358,7 +358,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     void ImuCapture()
     {
-        while (AppState.applicationRunning)
+        while (AppManager.applicationRunning)
         {
             try
             {
@@ -375,7 +375,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             }
             catch (Exception e)
             {
-                AppState.applicationRunning = false;
+                AppManager.applicationRunning = false;
                 Debug.Log("An error occured: " + e.Message);
             }
         }
@@ -383,8 +383,8 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     public void Close(object sender, EventArgs e)
     {
-        AppState.bodyTrackingRunning = false;
-        AppState.applicationRunning = false;
+        AppManager.bodyTrackingRunning = false;
+        AppManager.applicationRunning = false;
         Task.WaitAny(Task.Delay(1000));
         if (device == null)
         {
