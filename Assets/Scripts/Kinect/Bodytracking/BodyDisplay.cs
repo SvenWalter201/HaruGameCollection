@@ -31,7 +31,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
     public int frame = 0, comparePercentage = -1;
 
     float currentTimeStep;
-    const float FPS_30_DELTA = 0.033333f;
+    const float FPS_30_DELTA = 0.033333f; // 1/30
 
     Slider frameSlider;
     TextMeshProUGUI compareAccuracy;
@@ -40,6 +40,10 @@ public class BodyDisplay : Singleton<BodyDisplay>
     bool playing = true, bodyCompareRunning = false;
     Motion loadedMotion;
     int replayFrame, interpolationFrames = 6; //0.267 sec
+
+    //distance in metres that represent 0 and 100 percent accuracy when comparing two poses
+    const float ZERO_PERCENT = 0.5f;
+    const float HUNDRED_PERCENT = 0.01f;
 
     UJoint[] trackedJoints;
 
@@ -50,10 +54,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
     }
 
     void OnValidate()
-    {
-
-        
-
+    {  
         if (useHumanoid)
         {
             rootBone.gameObject.SetActive(true);
@@ -112,19 +113,18 @@ public class BodyDisplay : Singleton<BodyDisplay>
     {
         if (currentTimeStep <= 0f)
         {
-            if (AppState.bodyTrackingRunning)
+            if (AppManager.bodyTrackingRunning)
                 trackedJoints = ResolveSkeleton();
 
             switch (display)
             {
                 case DisplayOption.TRACKED:
-                    if (AppState.bodyTrackingRunning)
+                    if (AppManager.bodyTrackingRunning)
                     {
                         if (!bodyParentGO.activeInHierarchy)
-                        {
                             OnBeginDisplay();
-                        }
-                        Display(trackedJoints);
+
+                        DisplayArmature(trackedJoints);
                     }
                     break;
                 case DisplayOption.LOADED:
@@ -134,18 +134,16 @@ public class BodyDisplay : Singleton<BodyDisplay>
                         if (!useHumanoid)
                         {
                             if (!bodyParentGO.activeInHierarchy)
-                            {
                                 OnBeginDisplay();
-                            }
+
                             DisplayLoaded();
                         }
                         else
                         {
                             if (!rootBone.gameObject.activeInHierarchy)
-                            {
                                 rootBone.gameObject.SetActive(true);
-                            }
-                            ResolveRotations(loadedMotion.motion[0]);
+
+                            DisplayHumanoid(loadedMotion.motion[0]);
                         }
 
 
@@ -154,6 +152,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
                 case DisplayOption.NONE:
                     if (bodyParentGO != null && bodyParentGO.activeInHierarchy)
                         OnStopDisplay();
+
                     break;
 
                 default:
@@ -169,7 +168,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
     {
         if (loadedMotion.motion.Count == 1)
         {
-            Display(loadedMotion.motion[0]);
+            DisplayArmature(loadedMotion.motion[0]);
             return;
         }
 
@@ -182,7 +181,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
         else if (replayFrame == loadedMotion.motion.Count)
                 replayFrame--;
 
-        Display(GetInterpolatedValue(loadedMotion.motion, replayFrame));
+        DisplayArmature(GetInterpolatedValue(loadedMotion.motion, replayFrame));
     }
 
     public Vector3[] GetInterpolatedValue(List<UJoint[]> motion, int currentFrame)
@@ -273,9 +272,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
         }
         else
-        {
             bodyParentGO.SetActive(false);
-        }
     } 
     
     /// <summary>
@@ -294,7 +291,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
             joints[i] = unityJoint;
         }
 
-        if (AppState.recording)
+        if (AppManager.recording)
             MotionManager.Instance.StoreFrame(joints);
 
         return joints;
@@ -310,46 +307,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
             StartCoroutine(BodyCompareCoroutine());
     }
 
-    public IEnumerator BodyCompareCoroutine()
-    {
-        float timer = 0f;
-        while (AppState.bodyCompareRunning)
-        {
-            if (timer <= 0f)
-            {
-                int percent = ComparePoses(trackedJoints, MotionManager.Instance.loadedMotion.motion[0]);
-                compareAccuracy.text = "Accuracy: " + percent + " %";
 
-                timer = FPS_30_DELTA;
-            }
-            else
-                timer -= Time.deltaTime;
-
-            yield return null;
-        }
-        compareAccuracy.text = "";
-    }
-
-    public IEnumerator BodyCompareCoroutine(UJoint[] pose, float compareTime)
-    {
-        float timer = 0f;
-        comparePercentage = 0;
-        while (compareTime > 0f)
-        {
-            compareTime -= Time.deltaTime;
-            if (timer <= 0f)
-            {
-                comparePercentage = ComparePoses(trackedJoints, pose);
-                timer = FPS_30_DELTA;
-            }
-            else
-            {
-                timer -= Time.deltaTime;
-            }
-
-            yield return null;
-        }
-    }
 
     public Vector3 GetBodyPosition() =>
             GetBodyPosition(trackedJoints);
@@ -409,8 +367,9 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
     };
 
+    #region DISPLAY
 
-    public void Display(Vector3[] joints)
+    public void DisplayArmature(Vector3[] joints)
     {
         SetPosition(body, 0, Pelvis);
         SetPosition(body, 1, SpineNavel);
@@ -450,7 +409,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
             l.SetPosition(index, joints[(int)id]);
     }
 
-    public void Display(UJoint[] joints)
+    public void DisplayArmature(UJoint[] joints)
     {
         SetPosition(body, 0, Pelvis);
         SetPosition(body, 1, SpineNavel);
@@ -488,6 +447,175 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
         void SetPosition(LineRenderer l, int index, JointId id) => 
             l.SetPosition(index, joints[(int)id].Position);
+    }
+
+    public void DisplayHumanoid(UJoint[] jointPositions)
+    {
+        //get all the transforms from the hierarchy
+
+        Transform
+            pelvis = rootBone.GetChild(0),
+            hipLeft = pelvis.GetChild(0),
+            hipRight = pelvis.GetChild(1),
+            spineNaval = pelvis.GetChild(2),
+            legLeft = hipLeft.GetChild(0),
+            kneeLeft = legLeft.GetChild(0),
+            ankleLeft = kneeLeft.GetChild(0),
+            footLeft = ankleLeft.GetChild(0),
+            legRight = hipRight.GetChild(0),
+            kneeRight = legRight.GetChild(0),
+            ankleRight = kneeRight.GetChild(0),
+            footRight = ankleRight.GetChild(0),
+            clavicleLeft = spineNaval.GetChild(0),
+            clavicleRight = spineNaval.GetChild(1),
+            spinechest = spineNaval.GetChild(2),
+            neck = spinechest.GetChild(0),
+            head = neck.GetChild(0),
+            shoulderLeft = clavicleLeft.GetChild(0),
+            shoulderRight = clavicleRight.GetChild(0),
+            armLeft = shoulderLeft.GetChild(0),
+            armRight = shoulderRight.GetChild(0),
+            elbowLeft = armLeft.GetChild(0),
+            elbowRight = armRight.GetChild(0),
+            wristLeft = elbowLeft.GetChild(0),
+            wristRight = elbowRight.GetChild(0);
+
+        pelvis.position = jointPositions[(int)Pelvis].Position;
+        hipLeft.position = jointPositions[(int)HipLeft].Position;
+        hipRight.position = jointPositions[(int)HipRight].Position;
+
+        SetLocal(legLeft, KneeLeft, HipLeft);
+        SetLocal(kneeLeft, AnkleLeft, KneeLeft);
+        SetLocal(ankleLeft, FootLeft, AnkleLeft);
+
+        SetLocal(legRight, KneeRight, HipRight);
+        SetLocal(kneeRight, AnkleRight, KneeRight);
+        SetLocal(ankleRight, FootRight, AnkleRight);
+
+        SetLocal(spineNaval, SpineChest, SpineNavel);
+        SetLocal(spinechest, Neck, SpineChest);
+        SetLocal(neck, Head, Neck);
+
+        SetLocal(clavicleLeft, ShoulderLeft, ClavicleLeft);
+        SetLocal(shoulderLeft, ElbowLeft, ShoulderLeft);
+        SetLocal(elbowLeft, WristLeft, ElbowLeft);
+
+        SetLocal(clavicleRight, ShoulderRight, ClavicleRight);
+        SetLocal(shoulderRight, ElbowRight, ShoulderRight);
+        SetLocal(elbowRight, WristRight, ElbowRight);
+
+        void SetLocal(Transform t, JointId c, JointId p)
+        {
+            Vector3 cPos = jointPositions[(int)c].Position;
+            Vector3 pPos = jointPositions[(int)p].Position;
+            Vector3 newUp = (cPos - pPos).normalized;
+            Vector3 newForward = newUp.GetPerpendicular();
+            Vector3 originalForward = t.forward;
+
+            t.rotation = Quaternion.LookRotation(newForward, newUp);
+
+            int bestAngle = 0;
+            float bestDot = -1;
+            for (int i = 0; i < 360; i += 15)
+            {
+                t.Rotate(newUp, i);
+                float dot = Vector3.Dot(originalForward, t.forward);
+                if (dot > bestDot)
+                {
+                    bestDot = dot;
+                    bestAngle = i;
+                }
+                t.Rotate(newUp, -i);
+            }
+            t.Rotate(newUp, bestAngle);
+        }
+
+        /*
+        void SetForward(Transform t)
+        {
+            Vector3 pRight = t.parent.right;
+
+            //possible vectors ortogonal to the up vector
+            Vector3[] candidates = new Vector3[]
+            {
+                t.forward,
+                -t.forward,
+                -t.right,
+                (t.forward + t.right).normalized,
+                (t.forward - t.right).normalized,
+                (-t.forward + t.right).normalized,
+                (-t.forward - t.right).normalized
+            };
+            Vector3 bestCandidate = t.right;
+            float bestDot = Vector3.Dot(t.right, pRight);
+
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                float dot = Vector3.Dot(candidates[i], pRight);
+                if(dot > bestDot)
+                {
+                    bestDot = dot;
+                    bestCandidate = candidates[i];
+                }
+            }
+            Debug.Log("Best dot: " + bestDot);
+
+            Vector3 newForward = Vector3.Cross(bestCandidate, t.up);
+            if(Vector3.Dot(newForward, t.parent.forward) < 0)
+            {
+                Debug.Log("?");
+                newForward = Vector3.Cross(bestCandidate, t.up);
+            }
+            float angle = Vector3.Angle(newForward, t.forward);
+            t.Rotate(transform.up, angle, Space.Self);
+            //t.rotation =  Quaternion.LookRotation(newForward);
+        }
+        */
+    }
+
+    #endregion DISPLAY
+
+    #region POSE_COMPARE
+
+    public IEnumerator BodyCompareCoroutine()
+    {
+        float timer = 0f;
+        while (AppManager.bodyCompareRunning)
+        {
+            if (timer <= 0f)
+            {
+                int percent = ComparePoses(trackedJoints, MotionManager.Instance.loadedMotion.motion[0]);
+                compareAccuracy.text = "Accuracy: " + percent + " %";
+
+                timer = FPS_30_DELTA;
+            }
+            else
+                timer -= Time.deltaTime;
+
+            yield return null;
+        }
+        compareAccuracy.text = "";
+    }
+
+    public IEnumerator BodyCompareCoroutine(UJoint[] pose, float compareTime)
+    {
+        float timer = 0f;
+        comparePercentage = 0;
+        while (compareTime > 0f)
+        {
+            compareTime -= Time.deltaTime;
+            if (timer <= 0f)
+            {
+                comparePercentage = ComparePoses(trackedJoints, pose);
+                timer = FPS_30_DELTA;
+            }
+            else
+            {
+                timer -= Time.deltaTime;
+            }
+
+            yield return null;
+        }
     }
 
     public struct PositionCompare
@@ -563,6 +691,8 @@ public class BodyDisplay : Singleton<BodyDisplay>
         if(lhs == null || rhs == null)
             return -1;
 
+        JointId[] jointConstraints = AppManager.jointConstraints;
+
         Vector3 posDifferenceSum = Vector3.zero;
 
         Vector3 originalPelvisPosition = lhs[(int)Pelvis].Position;
@@ -583,6 +713,18 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
             //don't compare obstructed or out of range joints
             if(pI.Confidence == JointConfidenceLevel.Low || pI.Confidence == JointConfidenceLevel.None)
+                continue;
+
+            bool jointConstraint = false;
+            foreach(var j in jointConstraints)
+            {
+                if (i == (int)j)
+                {
+                    jointConstraint = true;
+                    break;
+                }
+            }
+            if (jointConstraint)
                 continue;
 
             //get the position of the joint in relation to the pelvis
@@ -607,154 +749,21 @@ public class BodyDisplay : Singleton<BodyDisplay>
             return 0;
 
         int percent;
-        float zero = 0.5f;
-        float hund = 0.01f;
-        if (posDifferenceD > zero)
+
+        if (posDifferenceD > ZERO_PERCENT)
             percent = 0;
-        else if (posDifferenceD < hund)
+        else if (posDifferenceD < HUNDRED_PERCENT)
             percent = 100;
         else
-            percent = 100 - Mathf.RoundToInt((posDifferenceD-hund) / (zero*0.01f));
+            percent = 100 - Mathf.RoundToInt((posDifferenceD-HUNDRED_PERCENT) / (ZERO_PERCENT*0.01f));
 
-        /*
-        //20000 = 0% |100 = 100%
-        if(posDifferenceD > 80)
-            percent = 0;
-
-        else if(posDifferenceD < 0.2)
-            percent = 100;
-
-        else
-            //1% = 348
-            percent = 100 - Mathf.RoundToInt((posDifferenceD- 0.200f) / 0.798f);
-        */
         //Debug.Log("Positional difference in mm: " + posDifferenceD);
         return percent;
     }
 
-    public void ResolveRotations(UJoint[] jointPositions)
-    {
-        //get all the transforms from the hierarchy
+    #endregion POSE_COMPARE
 
-        Transform
-            pelvis = rootBone.GetChild(0),
-            hipLeft = pelvis.GetChild(0),
-            hipRight = pelvis.GetChild(1),
-            spineNaval = pelvis.GetChild(2),
-            legLeft = hipLeft.GetChild(0),
-            kneeLeft = legLeft.GetChild(0),
-            ankleLeft = kneeLeft.GetChild(0),
-            footLeft = ankleLeft.GetChild(0),
-            legRight = hipRight.GetChild(0),
-            kneeRight = legRight.GetChild(0),
-            ankleRight = kneeRight.GetChild(0),
-            footRight = ankleRight.GetChild(0),
-            clavicleLeft = spineNaval.GetChild(0),
-            clavicleRight = spineNaval.GetChild(1),
-            spinechest = spineNaval.GetChild(2),
-            neck = spinechest.GetChild(0),
-            head = neck.GetChild(0),
-            shoulderLeft = clavicleLeft.GetChild(0),
-            shoulderRight = clavicleRight.GetChild(0),
-            armLeft = shoulderLeft.GetChild(0),
-            armRight = shoulderRight.GetChild(0),
-            elbowLeft = armLeft.GetChild(0),
-            elbowRight = armRight.GetChild(0),
-            wristLeft = elbowLeft.GetChild(0),
-            wristRight = elbowRight.GetChild(0);
 
-        pelvis.position = jointPositions[(int)Pelvis].Position;
-        hipLeft.position = jointPositions[(int)HipLeft].Position;
-        hipRight.position = jointPositions[(int)HipRight].Position;
-
-        SetLocal(legLeft, KneeLeft, HipLeft);
-        SetLocal(kneeLeft, AnkleLeft, KneeLeft);
-        SetLocal(ankleLeft, FootLeft, AnkleLeft);
-
-        SetLocal(legRight, KneeRight, HipRight);
-        SetLocal(kneeRight, AnkleRight, KneeRight);
-        SetLocal(ankleRight, FootRight, AnkleRight);
-
-        SetLocal(spineNaval, SpineChest, SpineNavel);
-        SetLocal(spinechest, Neck, SpineChest);
-        SetLocal(neck, Head, Neck);
-
-        SetLocal(clavicleLeft, ShoulderLeft, ClavicleLeft);
-        SetLocal(shoulderLeft, ElbowLeft, ShoulderLeft);
-        SetLocal(elbowLeft, WristLeft, ElbowLeft);
-
-        SetLocal(clavicleRight, ShoulderRight, ClavicleRight);
-        SetLocal(shoulderRight, ElbowRight, ShoulderRight);
-        SetLocal(elbowRight, WristRight, ElbowRight); 
-
-        void SetLocal(Transform t, JointId c, JointId p)
-        {
-            Vector3 cPos = jointPositions[(int)c].Position;
-            Vector3 pPos = jointPositions[(int)p].Position;
-            Vector3 newUp = (cPos - pPos).normalized;
-            Vector3 newForward = newUp.GetPerpendicular();
-            Vector3 originalForward = t.forward;
-
-            t.rotation = Quaternion.LookRotation(newForward, newUp);
-
-            int bestAngle = 0;
-            float bestDot = -1;
-            for (int i = 0; i < 360; i += 15)
-            {
-                t.Rotate(newUp, i);
-                float dot = Vector3.Dot(originalForward, t.forward);
-                if (dot > bestDot)
-                {
-                    bestDot = dot;
-                    bestAngle = i;
-                }
-                t.Rotate(newUp, -i);
-            }
-            t.Rotate(newUp, bestAngle);
-        }
-
-        /*
-        void SetForward(Transform t)
-        {
-            Vector3 pRight = t.parent.right;
-
-            //possible vectors ortogonal to the up vector
-            Vector3[] candidates = new Vector3[]
-            {
-                t.forward,
-                -t.forward,
-                -t.right,
-                (t.forward + t.right).normalized,
-                (t.forward - t.right).normalized,
-                (-t.forward + t.right).normalized,
-                (-t.forward - t.right).normalized
-            };
-            Vector3 bestCandidate = t.right;
-            float bestDot = Vector3.Dot(t.right, pRight);
-
-            for (int i = 0; i < candidates.Length; i++)
-            {
-                float dot = Vector3.Dot(candidates[i], pRight);
-                if(dot > bestDot)
-                {
-                    bestDot = dot;
-                    bestCandidate = candidates[i];
-                }
-            }
-            Debug.Log("Best dot: " + bestDot);
-
-            Vector3 newForward = Vector3.Cross(bestCandidate, t.up);
-            if(Vector3.Dot(newForward, t.parent.forward) < 0)
-            {
-                Debug.Log("?");
-                newForward = Vector3.Cross(bestCandidate, t.up);
-            }
-            float angle = Vector3.Angle(newForward, t.forward);
-            t.Rotate(transform.up, angle, Space.Self);
-            //t.rotation =  Quaternion.LookRotation(newForward);
-        }
-        */
-    }
 }
 
 public enum DisplayOption

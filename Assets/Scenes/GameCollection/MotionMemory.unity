@@ -972,7 +972,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: 1000
   m_MinHeight: 100
-  m_PreferredWidth: 1000
+  m_PreferredWidth: 1500
   m_PreferredHeight: 100
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1

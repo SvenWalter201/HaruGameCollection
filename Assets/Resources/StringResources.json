@@ -8,8 +8,8 @@
     "DE": "Mach dich Bereit"
   },
   "_MotionGuess": {
-    "ENG": "Guess which motion is behind which card!",
-    "DE": "Rate hinter welcher Karte sich welche Pose verbirgt!"
+    "ENG": "Which pose is behind the marked card?",
+    "DE": "Welche Pose steckt hinter der umrahmten Karte?"
   },
   "_MotionMemorize": {
     "ENG": "Memorize which pose was behind which card!",
@@ -34,5 +34,14 @@
   "_Lose": {
     "ENG": "You lost!",
     "DE": "Du hast verloren!"
+  },
+  "_RoomCalibration": {
+    "ENG": "Room Calibration",
+    "DE": "Raum erstellen"
+  },
+  "_GoToCorner": {
+    "ENG": "Go to corner",
+    "DE": "Gehe zu Ecke"
   }
+
 }

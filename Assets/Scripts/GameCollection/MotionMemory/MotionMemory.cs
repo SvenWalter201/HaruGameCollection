@@ -127,7 +127,7 @@ public class MotionMemory : Game
 
         startScreenText.text = (unsolved.Count > 0) ? StringRes.Get("_NoRoundsRemaining") : StringRes.Get("_Win");
 
-        AppState.bodyTrackingRunning = false;
+        AppManager.bodyTrackingRunning = false;
     }
 
     public List<Motion> GetRandomSetOfPoses()
@@ -285,7 +285,7 @@ public class MotionMemory : Game
 
     void BeginShowPose(MemoryCard card)
     {
-        BodyDisplay.Instance.Display(card.pose.motion[0]);
+        BodyDisplay.Instance.DisplayArmature(card.pose.motion[0]);
         card.uiElement.GetComponent<RawImage>().texture = cameraRenderTexture;
     }
 

@@ -1,30 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public static class StringRes
 {
-    //"MotionMemory_GuessingPhase_Text1"
     static Dictionary<string, Dictionary<Lang, string>> stringResources;
-    static readonly string filePath = "";
+    static string filePath = "/Resources/StringResources.json";
 
-    public static void LoadStringResources()
+    public static bool LoadStringResources()
     {
-        string filePath = Application.dataPath + "/Resources/StringResources.json";
+        filePath = Application.dataPath + filePath;
 
         if (JsonFileManager.Load(filePath, out Dictionary<string, Dictionary<Lang, string>> data))
         {
             stringResources = data;
+            return true;
         }
-        else
+        else 
+        {
             Debug.LogWarning("Couldn't load string resources");
+            return false;
+        }
     }
 
     public static string Get(string key) {
         if (stringResources.TryGetValue(key, out Dictionary<Lang, string> d))
-        {
-            return d[AppState.language];
-        }
+            return d[AppManager.language];
+        
         else
         {
             Debug.LogWarning("StringKey was not found!");
@@ -32,6 +33,7 @@ public static class StringRes
         }
     }
 
+    /*
     public static void SaveSample()
     {
         Dictionary<Lang, string> d = new Dictionary<Lang, string>();
@@ -44,5 +46,6 @@ public static class StringRes
         string filePath = Application.dataPath + "/Resources/StringResources.json";
         JsonFileManager.Save(filePath, sampleResources);
     }
+    */
 }
 
