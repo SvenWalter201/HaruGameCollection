@@ -45,7 +45,7 @@ public static class AppManager
 
     public static void ResolveLimbConstraints(Limbs[] limbConstraints)
     {
-        jointConstraints = new JointId[];
+        jointConstraints = new JointId[0];
 
         foreach (var constraint in limbConstraints)
         {
