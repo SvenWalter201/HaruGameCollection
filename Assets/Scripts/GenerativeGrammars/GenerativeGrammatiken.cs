@@ -72,7 +72,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     public SentenceInformation GenerateSentence()
     {
         Debug.Log("Generating Sentence??");
-        // GetProbability();
+        GetProbability();
         si = new SentenceInformation();
         //si.ClearInformation();
         string template = GetTemplate();
@@ -153,6 +153,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             return FillInTemplate(template);
         }
 
+    #region GRAMMAR_PROOF
         //------------------------Grammatikalische Korrekturen---------------------
 
         if (template.Contains("["))
@@ -172,12 +173,16 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             template = ResolveUndefinedArticle(template);
         }
 
+        //large and lower case
+        template = FixLowerCase(template);
+
         Debug.Log(si.PrintToString());
 
         return template;
     }
+    #endregion
 
-
+    #region GENERATORS
     //------------------GENERATORS-------------------------
 
     private string GetCorrectKonjugationAdjective(string adjective, char gender)
@@ -218,7 +223,6 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         si.Singular = true;
         si.Subject = _persons[r];
         currentperson = _persons[r];
-        //Debug.Log(si.Gender);
         return _persons[r].name;
     }
 
@@ -243,7 +247,6 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         recentlyUsed.Add(_animals[r].name);
         si.Gender = _animals[r].gender;
-        //Debug.Log(si.Gender);
         si.Subject = _animals[r];
         si.Singular = true;
         currentperson = _animals[r];
@@ -382,7 +385,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 case 'n':
                     return masterData.moods[currentperson.moods[r]].translation[2];
 
-                default: return masterData.moods[currentperson.moods[r]].name;
+                default: return "default";
             }
         }
         else
@@ -517,10 +520,10 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
 
     }
+    #endregion
 
-
-
-    // ------------------------------------ UTILITY ------------------------------------
+    #region UTILITY
+    //-------------------------------------UTILITY------------------------------------------
     // replacing at <<replacement>> in the template
     public string ReplaceBetweenTags(string template, string replacement, char tag)
     {
@@ -687,6 +690,15 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return text;
     }
 
+    string FixLowerCase(string text)
+    {
+        if (Char.IsLower(text, 0))
+        {
+            return Char.ToUpper((char)text[0]) + text.Substring(1);
+        }
+        else return text;
+    }
+
     public string pluralize(string word)
     {
         si.Singular = false;
@@ -706,7 +718,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 return "[eine Gruppe von " + word + "n,einige " + word + "n, ein paar " + word + "n ]";
         }
     }
-
+    #endregion
 
 }
 

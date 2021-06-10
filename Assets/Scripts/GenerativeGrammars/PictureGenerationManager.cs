@@ -95,6 +95,8 @@ public class PictureGenerationManager : Game
     [SerializeField]
     TextMeshProUGUI sentence5;
 
+    TextMeshProUGUI[] sentenceArray = new TextMeshProUGUI[MAX_SENTENCES];
+
     //public SentenceInformation[] Sentences { get => sentences; set => sentences = value; }
 
     void Start()
@@ -117,41 +119,25 @@ public class PictureGenerationManager : Game
         }
         presentGameObjects = new List<GameObject>();
         grammars = GenerativeGrammatiken.Instance;
+        sentenceArray[0] = sentence1;
+        sentenceArray[1] = sentence2;
+        sentenceArray[2] = sentence3;
+        sentenceArray[3] = sentence4;
+        sentenceArray[4] = sentence5;
         yield break;
     }
 
     protected override IEnumerator Execute()
     {
-        PaintPicture();
-        sentence1.text = grammars.PrintSentence();
-        progressBar.enabled = true;
-        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
-        progressBar.enabled = false;
-        //yield return timer.SimpleTimer(drawingTime);
-        PaintPicture();
-        sentence2.text = grammars.PrintSentence();
-        progressBar.enabled = true;
-        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
-        progressBar.enabled = false;
-        //yield return timer.SimpleTimer(drawingTime);
-        PaintPicture();
-        sentence3.text = grammars.PrintSentence();
-        progressBar.enabled = true;
-        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
-        progressBar.enabled = false;
-        //yield return timer.SimpleTimer(drawingTime);
-        PaintPicture();
-        sentence4.text = grammars.PrintSentence();
-        progressBar.enabled = true;
-        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
-        progressBar.enabled = false;
-        //yield return timer.SimpleTimer(drawingTime);
-        PaintPicture();
-        sentence5.text = grammars.PrintSentence();
-        progressBar.enabled = true;
-        yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
-        progressBar.enabled = false;
-        //yield return timer.SimpleTimer(drawingTime);
+        for(int i = 0; i <= MAX_SENTENCES; i++)
+        {
+            PaintPicture();
+            sentenceArray[i].text = grammars.PrintSentence();
+            progressBar.enabled = true;
+            yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+            progressBar.enabled = false;
+            //yield return timer.SimpleTimer(drawingTime);
+        }
 
         Panel.SetActive(false);
         yield return timer.SimpleTimer(showingTime);

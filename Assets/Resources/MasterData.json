@@ -1,8 +1,8 @@
 ﻿{
 	"template":[
-    "Das ganze spielt @setting@, wobei {ein} @animal@ @position@ @action@",
+    "Das ganze spielt @setting@, wobei @position@ {ein} @animal@ @action@",
     "@position@ <ist> {ein} @thing@.",
-    "@linkingword@ @position@ @action@ @mood@ {ein} @person@.",
+    "@linkingword@ @position@ @action@ {ein} @mood@ @person@.",
     "{ein} @animal@ @action@ @position@"
     ],
 	"position": [
@@ -50,7 +50,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed"]
+		  "moods":["deformed","colorful"]
 		},
 		{
 		  "type":"thing",
@@ -163,7 +163,7 @@
 		{
 		  "type":"animal",
 		  "name":"Hund",
-		  "gender":"f",
+		  "gender":"m",
 		  "model":"prefabpath",
 		  "texture":"texturepath",
 		  "scalable":true,
@@ -178,7 +178,7 @@
 		{
 		  "type":"animal",
 		  "name":"Haru",
-		  "gender":"f",
+		  "gender":"n",
 		  "model":"prefabpath",
 		  "texture":"texturepath",
 		  "scalable":true,
@@ -245,7 +245,7 @@
 		{
 		  "type":"person",
 		  "name":"Mädchen",
-		  "gender":"f",
+		  "gender":"n",
 		  "model":"prefabpath",
 		  "texture":"texturepath",
 		  "scalable":true,
