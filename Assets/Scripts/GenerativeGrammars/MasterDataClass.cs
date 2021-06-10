@@ -14,15 +14,15 @@ class MasterDataClass
     public string[] linkingword;
     public string[] setting;
     public string[] settingdescription;
-    public List<subject> subjects;
-    public Dictionary<string, colour> colours; //dictionary enum auf colour
-    public Dictionary<string, action> actions;
-    public Dictionary<string, mood> moods;
+    public List<Subject> subjects;
+    public Dictionary<string, Colour> colours; //dictionary enum auf colour
+    public Dictionary<string, Action> actions;
+    public Dictionary<string, Mood> moods;
 
 
 }
 
-public struct subject
+public struct Subject
 {
     public string type { get; set; } //person, animal or thing
     public string name { get; set; }
@@ -39,14 +39,14 @@ public struct subject
 }
 
 
-public struct colour
+public struct Colour
 {
     public string type { get; set; }
     public string name { get; set; }
     public string[] translation { get; set; }
 }
 
-public struct action
+public struct Action
 {
     public string type { get; set; }
     public string name { get; set; }
@@ -54,7 +54,7 @@ public struct action
     public string animation { get; set; } //path for the animation pose?
 }
 
-public struct mood
+public struct Mood
 {
     public string type { get; set; }
     public string name { get; set; }

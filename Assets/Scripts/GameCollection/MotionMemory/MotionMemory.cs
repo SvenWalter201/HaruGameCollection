@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.VFX;
+
 public class MotionMemory : Game
 {
     [SerializeField] int width = 2, height = 2;
@@ -45,6 +47,9 @@ public class MotionMemory : Game
     [SerializeField] 
     TextMeshProUGUI startScreenCountdown, startScreenText, comparePercentage;
 
+    [SerializeField]
+    VisualEffect e;
+
     List<MemoryCard> unsolved, solved, tempStack;
     readonly CoroutineTimer timer = new CoroutineTimer();
     readonly string[] motions = new string[]{ "w", "m", "c", "a"};
@@ -52,6 +57,7 @@ public class MotionMemory : Game
 
     void Start()
     {
+        StringRes.LoadStringResources();
         PlayGame();
     }
 
@@ -75,7 +81,7 @@ public class MotionMemory : Game
 
         memoryCanvas.SetActive(false);
         startScreen.SetActive(true);
-        startScreenText.text = "Get Ready!";
+        startScreenText.text = StringRes.Get("_GetReady");
 
         progressBar.enabled = true;
         yield return timer.UITimer(timeBeforeStart, progressBarMask, startScreenCountdown);
@@ -100,7 +106,7 @@ public class MotionMemory : Game
 
             yield return CardShowingStage();
 
-            taskText.text = "Guess which motion was behind which card";
+            taskText.text = StringRes.Get("_MotionGuess");
 
             yield return timer.SimpleTimer(timeBetweenShowingAndGuessing);
 
@@ -119,9 +125,9 @@ public class MotionMemory : Game
         memoryCanvas.SetActive(false);
         startScreen.SetActive(true);
 
-        startScreenText.text = (unsolved.Count > 0) ? "No rounds remaining" : "You win!"; 
+        startScreenText.text = (unsolved.Count > 0) ? StringRes.Get("_NoRoundsRemaining") : StringRes.Get("_Win");
 
-        AppState.bodyTrackingRunning = false;
+        AppManager.bodyTrackingRunning = false;
     }
 
     public List<Motion> GetRandomSetOfPoses()
@@ -155,7 +161,7 @@ public class MotionMemory : Game
 
     IEnumerator CardShowingStage()
     {
-        taskText.text = "Memorize the shown poses";
+        taskText.text = StringRes.Get("_MotionMemorize");
 
         yield return timer.SimpleTimer(timeBetweenCardsShowing);
 
@@ -182,9 +188,12 @@ public class MotionMemory : Game
     IEnumerator CardGuessingPhase()
     {
         yield return timer.SimpleTimer(2f);
+
         int tempStackSize = tempStack.Count;
         for (int i = 0; i < tempStackSize; i++)
         {
+            taskText.text = StringRes.Get("_MotionGuess");
+
             MemoryCard card = tempStack[GetRandom(tempStack.Count)];
             int maxAccuracy = 0;
             BeginOutline(card);
@@ -199,10 +208,10 @@ public class MotionMemory : Game
             while (remainingTime > 0f)
             {
                 int currentAccuracy = BodyDisplay.Instance.comparePercentage;
+
                 if(currentAccuracy > maxAccuracy)
-                {
                     maxAccuracy = currentAccuracy;
-                }
+
                 if (maxAccuracy > 95)
                 {
                     solved.Add(card);
@@ -216,6 +225,16 @@ public class MotionMemory : Game
                 remainingTimeText.text = Mathf.RoundToInt(remainingTime).ToString();
                 yield return null;
             }
+
+            if (maxAccuracy > 95)
+            {
+                ConfettiBurst();
+                taskText.text = StringRes.Get("_RightAnswer");
+            }
+            else
+                taskText.text = StringRes.Get("_WrongAnswer");
+            
+
             comparePercentage.text = "";
             remainingTimeText.text = "";
             progressBarMask.fillAmount = 0f;
@@ -266,16 +285,22 @@ public class MotionMemory : Game
 
     void BeginShowPose(MemoryCard card)
     {
-        BodyDisplay.Instance.Display(card.pose.motion[0]);
+        BodyDisplay.Instance.DisplayArmature(card.pose.motion[0]);
         card.uiElement.GetComponent<RawImage>().texture = cameraRenderTexture;
     }
 
     void StopShowPose(MemoryCard card) => 
         card.uiElement.GetComponent<RawImage>().texture = backsideTexture;
 
-    void BeginOutline(MemoryCard card) => card.uiElement.GetComponent<Outline>().enabled = true;
+    void BeginOutline(MemoryCard card) => 
+        card.uiElement.GetComponent<Outline>().enabled = true;
 
-    void StopOutline(MemoryCard card) => card.uiElement.GetComponent<Outline>().enabled = false;
+    void StopOutline(MemoryCard card) => 
+        card.uiElement.GetComponent<Outline>().enabled = false;
 
-    int GetRandom(int length) => Random.Range(0, length);
+    int GetRandom(int length) => 
+        Random.Range(0, length);
+
+    void ConfettiBurst() =>
+        e.SendEvent("TriggerBurst");
 }

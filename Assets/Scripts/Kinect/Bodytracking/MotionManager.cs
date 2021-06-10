@@ -21,12 +21,12 @@ public class MotionManager : Singleton<MotionManager>
                 fps = 30,
                 motion = currentMotion
             };
-            AppState.motionLoaded = true;
+            AppManager.motionLoaded = true;
             return loadedMotion;
         }
         else
         {
-            AppState.motionLoaded = false;
+            AppManager.motionLoaded = false;
             return null;
         }
     }
@@ -51,10 +51,10 @@ public class MotionManager : Singleton<MotionManager>
         if (JsonFileManager.Load(path, out Motion motion))
         {
             loadedMotion = motion;
-            AppState.motionLoaded = true;
+            AppManager.motionLoaded = true;
             return motion;
         }
-        AppState.motionLoaded = false;
+        AppManager.motionLoaded = false;
         return null;
     }
 

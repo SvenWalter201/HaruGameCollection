@@ -109,9 +109,9 @@ public class UIController : Singleton<UIController>
 
     public void TrackImageData()
     {
-        if (AppState.imageTrackingRunning)
+        if (AppManager.imageTrackingRunning)
         {
-            AppState.imageTrackingRunning = false;
+            AppManager.imageTrackingRunning = false;
             imageTracking.colors = offStateColors;
             imageDisplayGO.SetActive(false);
         }
@@ -132,31 +132,31 @@ public class UIController : Singleton<UIController>
 
     public void DisplayImageData()
     {
-        if (AppState.imageDisplayRunning)
+        if (AppManager.imageDisplayRunning)
         {
-            AppState.imageDisplayRunning = false;
+            AppManager.imageDisplayRunning = false;
             imageDisplay.colors = offStateColors;
             imageDisplayPanel.SetActive(false);
         }
         else
         {
             imageDisplayPanel.SetActive(true);
-            AppState.imageDisplayRunning = true;
+            AppManager.imageDisplayRunning = true;
             imageDisplay.colors = onStateColors;
         }
     }
 
     public void RunBodyCompare()
     {
-        if (AppState.bodyTrackingRunning)
+        if (AppManager.bodyTrackingRunning)
         {
-            if (AppState.bodyCompareRunning)
+            if (AppManager.bodyCompareRunning)
             {
-                AppState.bodyCompareRunning = false;
+                AppManager.bodyCompareRunning = false;
             }
             else
             {
-                AppState.bodyCompareRunning = true;
+                AppManager.bodyCompareRunning = true;
                 StartCoroutine(BodyDisplay.Instance.BodyCompareCoroutine());
             }
         }
@@ -164,13 +164,13 @@ public class UIController : Singleton<UIController>
 
     public void TrackBodyData()
     {
-        if (AppState.bodyTrackingRunning)
+        if (AppManager.bodyTrackingRunning)
         {
-            AppState.bodyTrackingRunning = false;
+            AppManager.bodyTrackingRunning = false;
             bodyTracking.colors = offStateColors;
 
             recordGO.SetActive(false);
-            AppState.bodyCompareRunning = false;
+            AppManager.bodyCompareRunning = false;
             bodyCompareGO.SetActive(false);
         }
         else
@@ -181,7 +181,7 @@ public class UIController : Singleton<UIController>
 
                 //enable UI elements
                 recordGO.SetActive(true);
-                if (AppState.motionLoaded)
+                if (AppManager.motionLoaded)
                 {
                     bodyCompareGO.SetActive(true);
                     //compare enable
@@ -200,7 +200,7 @@ public class UIController : Singleton<UIController>
 
     void CheckMotionLoaded(Motion motion)
     {
-        if (!AppState.motionLoaded)
+        if (!AppManager.motionLoaded)
         {
             bodyCompareGO.SetActive(false);
             Debug.Log("couldn't load motion. File either doesn't exist or is broken");
@@ -219,7 +219,7 @@ public class UIController : Singleton<UIController>
             savePoseGO.SetActive(false);
         }
         saveMotionGO.SetActive(true);
-        if (AppState.bodyTrackingRunning)
+        if (AppManager.bodyTrackingRunning)
         {
             bodyCompareGO.SetActive(true);
         }
@@ -227,15 +227,15 @@ public class UIController : Singleton<UIController>
 
     public void RecordCapture()
     {
-        if (AppState.recording)
+        if (AppManager.recording)
         {
-            AppState.recording = false;
+            AppManager.recording = false;
             record.colors = offStateColors;
             CheckMotionLoaded(MotionManager.Instance.StoreMotion());
         }
         else
         {
-            AppState.recording = true;
+            AppManager.recording = true;
             MotionManager.Instance.BeginMotionCapture();
             record.colors = onStateColors;
         }
@@ -249,7 +249,7 @@ public class UIController : Singleton<UIController>
 
     public void SavePose()
     {
-        if(AppState.motionLoaded)
+        if(AppManager.motionLoaded)
         {
             Motion loaded = MotionManager.Instance.loadedMotion;
             int frame = Mathf.RoundToInt(frameSlider.value * loaded.motion.Count);

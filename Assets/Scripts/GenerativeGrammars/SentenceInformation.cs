@@ -2,21 +2,21 @@
 public class SentenceInformation
 {
     private string position;
-    private action action;
-    private mood mood;
-    private subject subject;
+    private Action action;
+    private Mood mood;
+    private Subject subject;
     private char gender;
     private bool singular;
-    private colour colour;
+    private Colour colour;
 
 
     public string Position { get => position; set => position = value; }
-    public action Action { get => action; set => action = value; }
-    public mood Mood { get => mood; set => mood = value; }
-    public subject Subject { get => subject; set => subject = value; }
+    public Action Action { get => action; set => action = value; }
+    public Mood Mood { get => mood; set => mood = value; }
+    public Subject Subject { get => subject; set => subject = value; }
     public char Gender { get => gender; set => gender = value; }
     public bool Singular { get => singular; set => singular = value; }
-    public colour Colour { get => colour; set => colour = value; }
+    public Colour Colour { get => colour; set => colour = value; }
 
     /*
     public void ClearInformation()
