@@ -1,6 +1,6 @@
 ﻿{
 	"template":[
-    "Das ganze spielt @setting@, wobei @position@ {ein} @animal@ @action@",
+    "Das ganze spielt @setting@, wobei {ein} @animal@ @position@ @action@",
     "@position@ <ist> {ein} @thing@.",
     "@linkingword@ @position@ @action@ {ein} @mood@ @person@.",
     "{ein} @animal@ @action@ @position@"
@@ -37,7 +37,6 @@
 	"entgegen aller Erwartungen []",
 	"[]",
 	],
-
 	"subjects":[
   		{
 		  "type":"thing",
@@ -50,7 +49,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed","colorful"]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -63,7 +62,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed"]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -76,7 +75,7 @@
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed"]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -89,7 +88,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed"]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -102,7 +101,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed"]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -115,7 +114,7 @@
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed"]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -128,7 +127,7 @@
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":["deformed"]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"animal",
@@ -140,9 +139,9 @@
 		  "rotatable":true,
 		  "scalable":"true",
 		  "rotatable":"true",
-		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
-		  "colours":["rot","blau","grün"],
-		  "actions":["isst","ist"],
+		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts","im Vordergund"],
+		  "colours":["rot","blau","grün","lila"],
+		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -157,7 +156,7 @@
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["isst","ist"],
+		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -172,7 +171,7 @@
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["isst","ist"],
+		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -187,7 +186,7 @@
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -200,7 +199,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -213,7 +212,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -226,7 +225,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -239,7 +238,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -252,7 +251,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -265,7 +264,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -278,7 +277,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -291,7 +290,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -304,7 +303,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -317,7 +316,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 	],

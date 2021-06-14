@@ -38,6 +38,6 @@ public class SentenceInformation
 
     public string PrintToString()
     {
-        return position + " | " + action + " | " + mood + " | " + subject + " | " + gender + " | " + singular;
+        return position + " | " + action.name + " | " + mood.name + " | " + subject.name + " | " + gender + " | " + singular;
     }
 }

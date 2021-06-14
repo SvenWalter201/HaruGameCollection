@@ -25,25 +25,26 @@ public class PictureGenerationManager : Game
     [SerializeField] private Texture2D[] eyes;
     [SerializeField] private Texture2D[] mouth;
     [SerializeField] private Texture2D[] hair;
-    public GameObject charcter;
-    public GameObject skyscraper;
-    public GameObject bush;
-    public GameObject tree;
-    public GameObject house;
-    public GameObject guitar;
-    public GameObject car;
-    public GameObject colourpalette;
-    public GameObject Laterne;
-    public GameObject paintbrush;
-    public GameObject Vulcano;
-    public GameObject pizza;
-    public GameObject microphone;
-    public GameObject constructionworker;
-    public GameObject girl;
-    public GameObject grandma;
-    public GameObject princess;
-    public GameObject teacher;
-    public GameObject chefhat;
+    public GameObject 
+        charcter,
+        skyscraper,
+        bush,
+        tree,
+        house,
+        guitar,
+        car,
+        colourpalette,
+        Laterne,
+        brush,
+        Vulcano,
+        pizza,
+        microphone,
+        constructionworker,
+        girl,
+        grandma,
+        princess,
+        teacher,
+        chefhat;
 
 
 
@@ -51,7 +52,7 @@ public class PictureGenerationManager : Game
     const int MAX_SENTENCES = 5;
     public SentenceInformation[] sentences = new SentenceInformation[MAX_SENTENCES];
     public int count = 0;
-    LayeredDetailAssetGenerator m;
+    LayeredDetailAssetGenerator assetGenerator;
     List<GameObject> presentGameObjects;
     GameObject current;
     List<Bounds> colliderBounds = new List<Bounds>();
@@ -157,7 +158,6 @@ public class PictureGenerationManager : Game
             for (int i = 0; i < r; i++)
             {
                 PlaceObjectAt(si);
-                //Debug.Log(si.Singular + " mit " + i + " von " + r + "objekten");
             }
         }
         else
@@ -168,8 +168,7 @@ public class PictureGenerationManager : Game
         ChangePersonTo(si);
         ChangeMoodTo(si);
         ChangeActionTo(si);
-        //ChangeColorTo(si)
-        //Change
+        //ChangeColorTo(si);
 
     }
 
@@ -178,6 +177,7 @@ public class PictureGenerationManager : Game
 
         switch (placableObject)
         {
+            //---------------things-------------------
             case "Wolkenkratzer":
                 {
                     return Instantiate(skyscraper, p, q);
@@ -194,6 +194,11 @@ public class PictureGenerationManager : Game
                 {
                     return Instantiate(bush, p, q);
                 }
+            case "Laterne":
+                {
+                    return Instantiate(Laterne, p, q);
+                }
+            //---------------actions assets-------------------
             case "Guitar":
                 {
                     return Instantiate(guitar, p, q);
@@ -202,10 +207,19 @@ public class PictureGenerationManager : Game
                 {
                     return Instantiate(microphone, p, q);
                 }
-            case "Laterne":
+            case "Pizza":
                 {
-                    return Instantiate(Laterne, p, q);
+                    return Instantiate(pizza, p, q);
                 }
+            case "Brush":
+                {
+                    return Instantiate(brush, p, q);
+                }
+            case "Colourpalette":
+                {
+                    return Instantiate(colourpalette, p, q);
+                }
+            //---------------persons-------------------
             case "teacher":
                 {
                     return Instantiate(teacher, p, q);
@@ -250,6 +264,7 @@ public class PictureGenerationManager : Game
     }
 
 
+    //seting location, scale and rotaion
     private void PlaceObjectAt(SentenceInformation si)
     {
         float radius = 3f;
@@ -294,7 +309,6 @@ public class PictureGenerationManager : Game
             case "unten":
                 {
                     position = down.position;
-                    //gameObject.transform.localScale = new Vector3(SCALE_OBJECT, SCALE_OBJECT, SCALE_OBJECT);
                     break;
                 }
             default:
@@ -317,8 +331,6 @@ public class PictureGenerationManager : Game
             current = gameObject;
             current.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             Collider c = current.GetComponent<Collider>();
-            //Debug.Log(current.transform.position);
-            //Debug.Log("Placing object!!!!");
 
             if (c != null) //check if object has collider
             {
@@ -342,7 +354,26 @@ public class PictureGenerationManager : Game
             iter++;
         }
 
-        current.transform.localScale = new Vector3(1, 1, 1);
+        //scaling
+        if(si.Subject.scalable == true)
+        {
+            float randomX, randomY, randomZ;
+            randomX = UnityEngine.Random.Range(0.7f , 1.2f );
+            randomY = UnityEngine.Random.Range(0.7f, 1.2f);
+            randomZ = UnityEngine.Random.Range(0.7f, 1.2f);
+
+            current.transform.localScale = new Vector3(randomX, randomY, randomZ);
+
+        }
+        else
+            current.transform.localScale = new Vector3(1, 1, 1);
+        //roatating
+        if (si.Subject.rotatable == true)
+        {
+            float randomY = UnityEngine.Random.Range(-60, 60);
+
+            current.transform.rotation = Quaternion.Euler(0,randomY,0);
+        }
 
         presentGameObjects.Add(current);
     }
@@ -353,15 +384,27 @@ public class PictureGenerationManager : Game
 
         if (current.TryGetComponent<AssetHolder>(out AssetHolder ah) == true)
         {
-            Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.LEFTHAND);
+            Vector3 posLeftHand = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.LEFTHAND);
+            Vector3 posRightHand = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.RIGHTHAND);
 
             switch (si.Action.name)
             {
                 case "musiziert":
-                    SpawnObject("Guitar", pos, Quaternion.identity);
+                    //setAnimationPose
+                    SpawnObject("Guitar", posLeftHand, Quaternion.identity);
                     break;
                 case "singt":
-                    SpawnObject("Microphone", pos, Quaternion.identity);
+                    //setAnimationPose
+                    SpawnObject("Microphone", posLeftHand, Quaternion.identity);
+                    break;
+                case "isst":
+                    //setAnimationPose
+                    SpawnObject("Pizza", posRightHand, Quaternion.identity);
+                    break;
+                case "malt":
+                    //setAnimationPose
+                    SpawnObject("Brush", posRightHand, Quaternion.identity);
+                    SpawnObject("Colourpalette", posLeftHand, Quaternion.identity);
                     break;
             }
         }
@@ -399,6 +442,8 @@ public class PictureGenerationManager : Game
             }
         }
     }
+
+
     public void ChangeMoodTo(SentenceInformation si)
     {
 
@@ -472,4 +517,28 @@ public class PictureGenerationManager : Game
 
     }
 
+}
+
+public enum OBJECT
+{
+    CHARACTER,
+    Wolkenkratzer,
+    BUSCH,
+    BAUM,
+    HAUS,
+    GITARRE,
+    AUTO,
+    colourpalette,
+    Laterne,
+    brush,
+    paintpalette,
+    Vulcano,
+    pizza,
+    microphone,
+    constructionworker,
+    girl,
+    grandma,
+    princess,
+    teacher,
+    chefhat
 }

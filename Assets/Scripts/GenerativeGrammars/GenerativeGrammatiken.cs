@@ -15,6 +15,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     private bool probability = true; //singular
     private SentenceInformation si;
     private Subject currentperson;
+    private string[] priorityKeywords;
     public Text sentenceText;
     private string sentence;
     public byte count = 0;
@@ -34,6 +35,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     }
     private void GetVocabulary()
     {
+        priorityKeywords = new string[] { "thing", "animal", "person"};
         string appDataPath = Application.dataPath;
         string filePath = appDataPath + fileName;
         string jsonString = File.ReadAllText(filePath);
@@ -71,9 +73,9 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     public SentenceInformation GenerateSentence()
     {
-        Debug.Log("Generating Sentence??");
-        GetProbability();
+        //GetProbability();
         si = new SentenceInformation();
+        si.Singular = true;
         //si.ClearInformation();
         string template = GetTemplate();
         sentence = FillInTemplate(template);
@@ -90,9 +92,8 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     {
         if (template.Contains("@"))
         {
-            string generator = FindTextBetween(template, '@');
+            string generator = Helper.LookForPriority(template,priorityKeywords);
             string replacement = "NO REPLACEMENT FOUND";
-            List<string> parameters = new List<string>();
 
             switch (generator)
             {
@@ -149,7 +150,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
             }
 
-            template = ReplaceBetweenTags(template, replacement, '@');
+            template = Helper.ReplaceBetweenTags(template, replacement, '@');
             return FillInTemplate(template);
         }
 
@@ -325,16 +326,17 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         if (count == 0)
         {
             recentlyUsed.Add(masterData.template[0]);
-            //Debug.Log(vocabulary.template[0]);
             count++;
             return masterData.template[0];
         }
         else
         {
             int r = UnityEngine.Random.Range(1, masterData.template.Length);
-            //Debug.Log(vocabulary.template[r]);
+            Debug.Log(masterData.template[r]);
             return masterData.template[r];
         }
+
+
     }
 
     private string GetMood()
@@ -351,7 +353,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 r = UnityEngine.Random.Range(0, max_iterations);
 
             }
-            else //falls das word nicht recently used, benutz es.
+            else //if word is not recently used, use it.
             {
                 break;
             }
@@ -373,16 +375,23 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
         if (si.Singular == true)
         {
+            Debug.Log("IN THE IF STATEMENT");
 
             switch (currentperson.gender)
             {
                 case 'm':
+                    Debug.Log("peron mood (m) : " + currentperson.moods[r]);
+                    Debug.Log("printed word M " + masterData.moods[currentperson.moods[r]].translation[0]);
                     return masterData.moods[currentperson.moods[r]].translation[0];
 
                 case 'f':
+                    Debug.Log("peron mood (f): " + currentperson.moods[r]);
+                    Debug.Log("printed word F " + masterData.moods[currentperson.moods[r]].translation[1]);
                     return masterData.moods[currentperson.moods[r]].translation[1];
 
                 case 'n':
+                    Debug.Log("peron mood (n): " + currentperson.moods[r]);
+                    Debug.Log("printed word N " + masterData.moods[currentperson.moods[r]].translation[2]);
                     return masterData.moods[currentperson.moods[r]].translation[2];
 
                 default: return "default";
@@ -390,7 +399,8 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         else
         {
-            return masterData.moods[currentperson.moods[r]].translation[1];
+
+            return "default:" + masterData.moods[currentperson.moods[r]].name;
         }
 
 
@@ -416,7 +426,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                     break;
                 }
             }
-            Debug.Log(currentperson.name);
+            //Debug.Log(currentperson.name);
             recentlyUsed.Add(currentperson.actions[r]);
             if (masterData.actions.ContainsKey(currentperson.actions[r]))
             {
@@ -525,28 +535,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     #region UTILITY
     //-------------------------------------UTILITY------------------------------------------
     // replacing at <<replacement>> in the template
-    public string ReplaceBetweenTags(string template, string replacement, char tag)
-    {
-        return ReplaceBetweenTags(template, replacement, tag, tag);
-    }
-
-    public string ReplaceBetweenTags(string template, string replacement, char leftTag, char rightTag)
-    {
-        int leftIndex = template.IndexOf(leftTag);
-        if (leftIndex == -1)
-        {
-            throw new System.Exception("no '" + leftTag + "'-tags found in the string " + template);
-        }
-        int rightIndex = template.IndexOf(rightTag, leftIndex + 1);
-        if (rightIndex == -1)
-        {
-            throw new System.Exception("uneven numbers of '" + leftTag + "'-characters found in the sentence " + template);
-        }
-        int lengthFromRightIndex = template.Length - 1 - rightIndex;
-
-        return template.Substring(0, leftIndex) + replacement + template.Substring(rightIndex + 1, lengthFromRightIndex);
-    }
-
+    
     private void GetProbability()
     {
         //50/50 chance for plural or singular
@@ -559,52 +548,6 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     }
 
 
-    //-------------------------------------------------------------------
-
-    //finding a string between certain tags
-    public string FindTextBetween(string text, char tag)
-    {
-        return FindTextBetween(text, tag, tag);
-    }
-
-    public string FindTextBetween(string text, char left, char right)
-    {
-        int beginIndex = text.IndexOf(left);
-        if (beginIndex == -1)
-        {
-            throw new System.Exception("no tags found in the string");
-        }
-
-        beginIndex++;
-
-        int endIndex = text.IndexOf(right, beginIndex);
-        if (endIndex == -1)
-        {
-            throw new System.Exception("uneven numbers of '" + left + "'-characters found in the sentence " + text);
-        }
-
-        return text.Substring(beginIndex, endIndex - beginIndex).Trim();
-    }
-
-    public string FindTextBetweenTags(string text, char left, char right)
-    {
-        int beginIndex = text.IndexOf(left);
-        if (beginIndex == -1)
-        {
-            throw new System.Exception("no tags found in the string");
-        }
-
-        beginIndex++;
-
-        int endIndex = text.IndexOf(right, beginIndex);
-        if (endIndex == -1)
-        {
-            throw new System.Exception("uneven numbers of '" + left + "'-characters found in the sentence " + text);
-        }
-
-        return text.Substring(beginIndex, endIndex - beginIndex).Trim();
-    }
-
     public void ClearRecentlyUsed()
     {
         recentlyUsed.Clear();
@@ -614,9 +557,9 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     {
         if (text.Contains("["))
         {
-            string options = FindTextBetweenTags(text, '[', ']');
+            string options = Helper.FindTextBetweenTags(text, '[', ']');
             string option = pickRandomFromList(options.Split(','));
-            text = ReplaceBetweenTags(text, option, '[', ']');
+            text = Helper.ReplaceBetweenTags(text, option, '[', ']');
             // recursively fill in all options
             return resolveOptions(text);
         }
@@ -649,7 +592,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             {
                 verbform = "ist";
             }
-            text = ReplaceBetweenTags(text, verbform, '<', '>');
+            text = Helper.ReplaceBetweenTags(text, verbform, '<', '>');
 
             return ResolveVerb(text);
         }
@@ -672,7 +615,6 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             }
             else if (si.Singular == true)
             {
-                Debug.Log("Defining the article");
                 if (currentperson.gender == 'f')
                 {
                     article = "eine";
@@ -683,7 +625,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 }
                 
             }
-            text = ReplaceBetweenTags(text, article, '{', '}');
+            text = Helper.ReplaceBetweenTags(text, article, '{', '}');
 
             return ResolveUndefinedArticle(text);
         }
@@ -719,12 +661,4 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
     }
     #endregion
-
 }
-
-
-
-
-
-
-
