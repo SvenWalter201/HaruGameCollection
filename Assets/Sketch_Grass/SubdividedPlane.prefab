@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5510943422898368962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5129913838121102200}
+  - component: {fileID: 4664502201835790664}
+  m_Layer: 0
+  m_Name: SubdividedPlane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5129913838121102200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5510943422898368962}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4664502201835790664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5510943422898368962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe78f9a30a6559044a80ec9c6467d76b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceMesh: {fileID: 3583840324529578583, guid: 0fe5835a260dcc24fa236af4c3179498, type: 3}
+  grassComputeShader: {fileID: 7200000, guid: ab27309e786860c439b472eca97b8477, type: 3}
+  material: {fileID: 2100000, guid: 8c7e5dd0bca660940bcdeac42f6dabc8, type: 2}
+  grassSettings:
+    maxSegments: 7
+    maxBendAngle: 0.3
+    bladeCurvature: 1
+    bladeHeight: 1.12
+    bladeHeightVariance: 0.19
+    bladeWidth: 0.13
+    bladeWidthVariance: 0.1
+    windNoiseTexture: {fileID: 2800000, guid: b477bef3de60d174aadc476cd44679ff, type: 3}
+    windTextureScale: 1
+    windPeriod: 0.1
+    windScale: 0.1
+    windAmplitude: 0.1
+    cameraLODMin: 3
+    cameraLODMax: 30
+    cameraLODFactor: 1

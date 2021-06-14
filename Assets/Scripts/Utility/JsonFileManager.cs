@@ -45,4 +45,31 @@ public static class JsonFileManager
         content = default;
         return false;
     }
+
+    public static bool LoadPNG(string filePath, out Texture2D tex)
+    {
+        tex = null;
+        byte[] fileData;
+
+        if (File.Exists(filePath))
+        {
+            fileData = File.ReadAllBytes(filePath);
+            tex = new Texture2D(2, 2);
+            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+            return true;
+        }
+        Debug.LogWarning("File doesn't exist");
+        return false;
+    }
+
+    public static bool LoadObject(string filePrefix, string fileName, out UnityEngine.Object o)
+    {
+        o = Resources.Load(filePrefix + "/" + fileName);
+        if (!o)
+        {
+            Debug.LogError("Missing asset: " + filePrefix + "/" + fileName + " could not be found.");
+            return false;
+        }
+        return true;
+    }
 }

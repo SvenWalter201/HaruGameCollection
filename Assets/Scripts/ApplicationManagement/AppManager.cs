@@ -17,11 +17,11 @@ public static class AppManager
         vfxGraphSupported = false;
 
     public static Lang language = Lang.DE;
-
     public static JointId[] jointConstraints;
 
     static AppConfig appConfig;
     static string appConfigPath = "/Resources/AppConfig.json";
+
     /// <summary>
     /// TODO: 
     /// </summary>
@@ -92,9 +92,7 @@ public static class AppManager
                     lower = (int)Limbs.RIGHT_LEG_LOWER;
                     upper = lower + 2;
                     break;
-            }
-        
-            
+            }  
         }
     }
 
@@ -113,8 +111,6 @@ public static class AppManager
         applicationInitialized = true;
         return true;
     }
-
-
 }
 
 /// <summary>
