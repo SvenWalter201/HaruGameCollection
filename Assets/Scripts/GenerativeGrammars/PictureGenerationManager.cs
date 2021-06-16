@@ -365,7 +365,6 @@ public class PictureGenerationManager : Game
             SpawnObject(si.Subject.asset, pos, Quaternion.identity);
             Debug.Log("setting texture");
             current.GetComponent<CharacterController>().CreateMaterial(si.Subject.texture);
-            
         }
     }
 

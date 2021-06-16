@@ -187,17 +187,6 @@ public class EditmodeTests
         Assert.AreNotEqual(Helper.LookForPriority("Das ganze spielt @setting@, wobei {ein} @description@ Haus @position@ @action@", priorityKeywords), "person");
     }
 
-
-    /*
-     * S[Test]
-    public void TestReplaceWordBetweenTags_001()
-    {
-        string template = "Das ganze spielt @setting@, wobei {ein} @description@ Haru @position@ @action@";
-        string word = "setting";
-        string replacement = "vorne";
-
-    }
-    */
     #endregion
 
 }
