@@ -165,8 +165,8 @@ public class PictureGenerationManager : Game
         }
 
         ChangeActionTo(si);
-        ChangePersonTo(si);
         ChangeMoodTo(si);
+        ChangePersonTo(si);
         //ChangeColorTo(si);
 
     }
@@ -363,6 +363,7 @@ public class PictureGenerationManager : Game
             Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.HATPOS);
 
             SpawnObject(si.Subject.asset, pos, Quaternion.identity);
+            Debug.Log("setting texture");
             current.GetComponent<CharacterController>().CreateMaterial(si.Subject.texture);
             
         }
@@ -382,28 +383,4 @@ public class PictureGenerationManager : Game
         
     }
 
-}
-
-public enum OBJECT
-{
-    CHARACTER,
-    Wolkenkratzer,
-    BUSCH,
-    BAUM,
-    HAUS,
-    GITARRE,
-    AUTO,
-    colourpalette,
-    Laterne,
-    brush,
-    paintpalette,
-    Vulcano,
-    pizza,
-    microphone,
-    constructionworker,
-    girl,
-    grandma,
-    princess,
-    teacher,
-    chefhat
 }

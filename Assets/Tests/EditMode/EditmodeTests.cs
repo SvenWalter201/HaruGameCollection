@@ -188,7 +188,8 @@ public class EditmodeTests
     }
 
 
-    //[Test]
+    /*
+     * S[Test]
     public void TestReplaceWordBetweenTags_001()
     {
         string template = "Das ganze spielt @setting@, wobei {ein} @description@ Haru @position@ @action@";
@@ -196,6 +197,7 @@ public class EditmodeTests
         string replacement = "vorne";
 
     }
+    */
     #endregion
 
 }
