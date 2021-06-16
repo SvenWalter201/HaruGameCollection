@@ -327,20 +327,20 @@ public class PictureGenerationManager : Game
             {
                 case "musiziert":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("Guitar", posLeftHand, Quaternion.identity);
+                    SpawnObject("guitar", posLeftHand, Quaternion.identity);
                     break;
                 case "singt":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("Microphone", posRightHand, Quaternion.identity);
+                    SpawnObject("microphone", posRightHand, Quaternion.identity);
                     break;
                 case "isst":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("Pizza", posRightHand, Quaternion.identity);
+                    SpawnObject("pizza", posRightHand, Quaternion.identity);
                     break;
                 case "malt":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("Brush", posRightHand, Quaternion.identity);
-                    SpawnObject("Colourpalette", posLeftHand, Quaternion.identity);
+                    SpawnObject("paintbrush", posRightHand, Quaternion.identity);
+                    SpawnObject("colourpalette", posLeftHand, Quaternion.identity);
                     break;
                 case "läuft":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);

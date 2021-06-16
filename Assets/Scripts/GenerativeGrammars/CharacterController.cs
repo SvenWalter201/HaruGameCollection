@@ -44,8 +44,11 @@ public class CharacterController : MonoBehaviour
 
     void DisposeGraph()
     {
-        g.Stop();
-        g.Destroy();
+        if (g.IsValid())
+        {
+            g.Stop();
+            g.Destroy();
+        }
     }
 
     #endregion ANIM
