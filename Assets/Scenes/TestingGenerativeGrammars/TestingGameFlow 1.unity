@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1224,27 +1224,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1719185502148559196, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_AABB.m_Center.x
-      value: 0.18740895
+      value: 0.12493929
       objectReference: {fileID: 0}
     - target: {fileID: 1719185502148559196, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_AABB.m_Center.y
-      value: 9.909302
+      value: 6.6062016
       objectReference: {fileID: 0}
     - target: {fileID: 1719185502148559196, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_AABB.m_Center.z
-      value: -0.5818715
+      value: -0.38791466
       objectReference: {fileID: 0}
     - target: {fileID: 1719185502148559196, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_AABB.m_Extent.x
-      value: 0.1874097
+      value: 0.124939784
       objectReference: {fileID: 0}
     - target: {fileID: 1719185502148559196, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_AABB.m_Extent.y
-      value: 9.882189
+      value: 6.5881257
       objectReference: {fileID: 0}
     - target: {fileID: 1719185502148559196, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_AABB.m_Extent.z
-      value: 16.35651
+      value: 10.904339
       objectReference: {fileID: 0}
     - target: {fileID: 1719185502148559196, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1260,15 +1260,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6511235990069509797, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6511235990069509797, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6511235990069509797, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6511235990069509797, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1352,11 +1352,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4664502201835790664, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: grassSettings.bladeWidth
-      value: 0.4
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4664502201835790664, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: grassSettings.bladeHeight
-      value: 0.53
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4664502201835790664, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: grassSettings.windAmplitude
@@ -1372,15 +1372,27 @@ PrefabInstance:
       objectReference: {fileID: 2800000, guid: 266cdccca7812b045a3065b0a778e224, type: 3}
     - target: {fileID: 4664502201835790664, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: grassSettings.bladeWidthVariance
-      value: 1.11
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4664502201835790664, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: grassSettings.bladeHeightVariance
-      value: 0.26
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5129913838121102200, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129913838121102200, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129913838121102200, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129913838121102200, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5129913838121102200, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1536,7 +1548,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.519
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2

@@ -372,7 +372,7 @@ public class PictureGenerationManager : Game
 
     public void ChangeMoodTo(SentenceInformation si)
     {
-        if(si.Subject.name == "person")
+        if(si.Subject.type == "person")
         {
             GameObject gameObject = current;
             _renderHead = gameObject.GetComponentInChildren<Renderer>();

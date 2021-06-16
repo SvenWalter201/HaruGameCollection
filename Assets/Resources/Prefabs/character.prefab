@@ -67,8 +67,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a44fe33a9b023540ae179903358bf08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMaterial: {fileID: 2100000, guid: afe0ab996250a684fa04bb35fb79c160, type: 2}
-  faceMaterial: {fileID: 2100000, guid: 3afe41c0b77fb7346850ec7611074daf, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 3afe41c0b77fb7346850ec7611074daf, type: 2}
+  faceMaterial: {fileID: 2100000, guid: afe0ab996250a684fa04bb35fb79c160, type: 2}
 --- !u!114 &919968747751880843
 MonoBehaviour:
   m_ObjectHideFlags: 0
