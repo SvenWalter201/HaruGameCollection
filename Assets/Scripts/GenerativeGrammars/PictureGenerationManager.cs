@@ -20,7 +20,7 @@ public class PictureGenerationManager : Game
 
 
     //component
-    private MeshRenderer _renderHead;
+    private Renderer _renderHead;
 
     [SerializeField] private Texture2D[] eyes;
     [SerializeField] private Texture2D[] mouth;
@@ -130,7 +130,7 @@ public class PictureGenerationManager : Game
 
     protected override IEnumerator Execute()
     {
-        for(int i = 0; i <= MAX_SENTENCES; i++)
+        for(int i = 0; i < MAX_SENTENCES; i++)
         {
             PaintPicture();
             sentenceArray[i].text = grammars.PrintSentence();
@@ -174,78 +174,14 @@ public class PictureGenerationManager : Game
 
     private GameObject SpawnObject(string placableObject, Vector3 p, Quaternion q)
     {
-
-        switch (placableObject)
+        if(JsonFileManager.LoadObject("Prefabs",placableObject,out UnityEngine.Object o))
         {
-            //---------------things-------------------
-            case "Wolkenkratzer":
-                {
-                    return Instantiate(skyscraper, p, q);
-                }
-            case "Haus":
-                {
-                    return Instantiate(house, p, q);
-                }
-            case "Baum":
-                {
-                    return Instantiate(tree, p, q);
-                }
-            case "Busch":
-                {
-                    return Instantiate(bush, p, q);
-                }
-            case "Laterne":
-                {
-                    return Instantiate(Laterne, p, q);
-                }
-            //---------------actions assets-------------------
-            case "Guitar":
-                {
-                    return Instantiate(guitar, p, q);
-                }
-            case "Microphone":
-                {
-                    return Instantiate(microphone, p, q);
-                }
-            case "Pizza":
-                {
-                    return Instantiate(pizza, p, q);
-                }
-            case "Brush":
-                {
-                    return Instantiate(brush, p, q);
-                }
-            case "Colourpalette":
-                {
-                    return Instantiate(colourpalette, p, q);
-                }
-            //---------------persons-------------------
-            case "teacher":
-                {
-                    return Instantiate(teacher, p, q);
-                }
-            case "girl":
-                {
-                    return Instantiate(girl, p, q);
-                }
-            case "chefhat":
-                {
-                    return Instantiate(chefhat, p, q);
-                }
-            case "constructionworker":
-                {
-                    return Instantiate(constructionworker, p, q);
-                }
-            case "princess":
-                {
-                    return Instantiate(princess, p, q);
-                }
-            case "grandma":
-                {
-                    return Instantiate(grandma, p, q);
-                }
-            default:
-                return Instantiate(charcter, p, q);
+            return Instantiate((GameObject)o, p, q);
+        }
+        else
+        {
+            Debug.LogWarning("No Object found");
+            return null;
         }
 
     }
@@ -327,7 +263,7 @@ public class PictureGenerationManager : Game
             Vector2 pv = UnityEngine.Random.insideUnitCircle * radius;
             Vector3 positionObject = new Vector3(pv.x, 0, pv.y) + position;
 
-            GameObject gameObject = SpawnObject(si.Subject.name, positionObject, Quaternion.identity);
+            GameObject gameObject = SpawnObject(si.Subject.model, positionObject, Quaternion.identity);
             current = gameObject;
             current.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             Collider c = current.GetComponent<Collider>();
@@ -390,22 +326,32 @@ public class PictureGenerationManager : Game
             switch (si.Action.name)
             {
                 case "musiziert":
-                    //setAnimationPose
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
                     SpawnObject("Guitar", posLeftHand, Quaternion.identity);
                     break;
                 case "singt":
-                    //setAnimationPose
-                    SpawnObject("Microphone", posLeftHand, Quaternion.identity);
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
+                    SpawnObject("Microphone", posRightHand, Quaternion.identity);
                     break;
                 case "isst":
-                    //setAnimationPose
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
                     SpawnObject("Pizza", posRightHand, Quaternion.identity);
                     break;
                 case "malt":
-                    //setAnimationPose
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
                     SpawnObject("Brush", posRightHand, Quaternion.identity);
                     SpawnObject("Colourpalette", posLeftHand, Quaternion.identity);
                     break;
+                case "läuft":
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
+                    break;
+                case "wartet":
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
+                    break;
+                case "überlegt":
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
+                    break;
+
             }
         }
 
@@ -413,33 +359,11 @@ public class PictureGenerationManager : Game
 
     public void ChangePersonTo(SentenceInformation si)
     {
-        if (current.TryGetComponent<AssetHolder>(out AssetHolder ahSS) == true)
+        if (current.TryGetComponent<AssetHolder>(out AssetHolder ah) == true)
         {
             Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.HATPOS);
 
-            switch (si.Subject.name)
-            {
-                case "eine Lehrerin":
-
-                    SpawnObject("teacher", pos, Quaternion.identity);
-                    break;
-                case "ein Bäcker":
-                case "eine Bäckerin":
-                    SpawnObject("chefhat", pos, Quaternion.identity);
-                    break;
-                case "ein Mädchen":
-                    SpawnObject("girl", pos, Quaternion.identity);
-                    break;
-                case "eine Großmutter":
-                    SpawnObject("grandma", pos, Quaternion.identity);
-                    break;
-                case "eine Prinzessin":
-                    SpawnObject("princess", pos, Quaternion.identity);
-                    break;
-                case "ein Bauarbeiter":
-                    SpawnObject("constructionworker", pos, Quaternion.identity);
-                    break;
-            }
+            SpawnObject(si.Subject.asset, pos, Quaternion.identity);
         }
     }
 
@@ -449,7 +373,7 @@ public class PictureGenerationManager : Game
 
         GameObject gameObject = current;
         //Debug.Log("Game object " + current);
-        _renderHead = gameObject.GetComponent<MeshRenderer>();
+        _renderHead = gameObject.GetComponentInChildren<Renderer>();
 
 
 

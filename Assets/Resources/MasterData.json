@@ -42,7 +42,8 @@
 		  "type":"thing",
 		  "name":"Baum",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"tree",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -55,7 +56,8 @@
 		  "type":"thing",
 		  "name":"Haus",
 		  "gender":"n",
-		  "model":"prefabpath",
+		  "model":"house",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -68,7 +70,8 @@
 		  "type":"thing",
 		  "name":"Wolkenkratzer",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"skyscraper",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -81,7 +84,7 @@
 		  "type":"thing",
 		  "name":"Busch",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"bush",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -94,7 +97,8 @@
 		  "type":"thing",
 		  "name":"Laterne",
 		  "gender":"f",
-		  "model":"prefabpath",
+		  "model":"lantern",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -107,7 +111,8 @@
 		  "type":"thing",
 		  "name":"Auto",
 		  "gender":"n",
-		  "model":"prefabpath",
+		  "model":"car",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -120,7 +125,8 @@
 		  "type":"thing",
 		  "name":"Vulkan",
 		  "gender":"n",
-		  "model":"prefabpath",
+		  "model":"vulcano",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -133,7 +139,8 @@
 		  "type":"animal",
 		  "name":"Kuh",
 		  "gender":"f",
-		  "model":"prefabpath",
+		  "model":"cow",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -148,7 +155,8 @@
 		  "type":"animal",
 		  "name":"Katze",
 		  "gender":"f",
-		  "model":"prefabpath",
+		  "model":"cat",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -163,7 +171,8 @@
 		  "type":"animal",
 		  "name":"Hund",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"dog",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -178,7 +187,8 @@
 		  "type":"animal",
 		  "name":"Haru",
 		  "gender":"n",
-		  "model":"prefabpath",
+		  "model":"haru",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -193,7 +203,8 @@
 		  "type":"person",
 		  "name":"Lehrer",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"teacher",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -206,7 +217,8 @@
 		  "type":"person",
 		  "name":"Großmutter",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"grandma",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -219,7 +231,8 @@
 		  "type":"person",
 		  "name":"Lehrerin",
 		  "gender":"f",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"teacher",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -232,7 +245,8 @@
 		  "type":"person",
 		  "name":"Junge",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -245,7 +259,8 @@
 		  "type":"person",
 		  "name":"Mädchen",
 		  "gender":"n",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"girl",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -258,7 +273,8 @@
 		  "type":"person",
 		  "name":"Bäcker",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"chef",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -271,7 +287,8 @@
 		  "type":"person",
 		  "name":"Krankenschwester",
 		  "gender":"f",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -284,7 +301,8 @@
 		  "type":"person",
 		  "name":"Bauarbeiter",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"constructionworker",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -297,7 +315,8 @@
 		  "type":"person",
 		  "name":"Superheld",
 		  "gender":"m",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -310,7 +329,8 @@
 		  "type":"person",
 		  "name":"Prinzessin",
 		  "gender":"f",
-		  "model":"prefabpath",
+		  "model":"character",
+		  "asset":"",
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
@@ -348,24 +368,49 @@
             ]
         }
 	},
+	
 	"actions": {
         "musiziert": {
             "type":"verb",
 			"name":"musiziert",
 			"model":"prefab_path",
-			"animation":"pose_path"
+			"animation":"Guitar"
         },
 		"singt": {
             "type":"verb",
 			"name":"singt",
 			"model":"prefab_path",
-			"animation":"pose_path"
+			"animation":"Singing"
         },
 		"überlegt": {
             "type":"verb",
 			"name":"überlegt",
 			"model":"prefab_path",
-			"animation":"pose_path"
+			"animation":"Think"
+        },
+		"isst": {
+            "type":"verb",
+			"name":"isst",
+			"model":"prefab_path",
+			"animation":"Eat"
+        },
+		"läuft": {
+            "type":"verb",
+			"name":"läuft",
+			"model":"prefab_path",
+			"animation":"Walk"
+        },
+		"malt": {
+            "type":"verb",
+			"name":"malt",
+			"model":"prefab_path",
+			"animation":"Paint"
+        },
+		"wartet": {
+            "type":"verb",
+			"name":"wartet",
+			"model":"prefab_path",
+			"animation":"Wait"
         }
      },
 
@@ -377,6 +422,11 @@
 				"gelangweilter",
 				"gelangweilte",
 				"gelangweiltes"
+			],
+			"textures": [
+				"tex1_path_mouth",
+				"tex2_path_eyes",
+				"tex3_path_eyebrows"
 			]
         },
 		"excited": {
@@ -386,6 +436,11 @@
 				"aufgeregter",
 				"aufgeregte",
 				"aufgeregtes"
+			],
+			"textures": [
+				"tex1_path_mouth",
+				"tex2_path_eyes",
+				"tex3_path_eyebrows"
 			]
         },
 		"friendly": {
@@ -395,6 +450,11 @@
 				"freundlicher",
 				"freundliche",
 				"freundliches"
+			],
+			"textures": [
+				"tex1_path_mouth",
+				"tex2_path_eyes",
+				"tex3_path_eyebrows"
 			]
         },
 		"deformed": {
@@ -404,6 +464,26 @@
 				"unförmiger",
 				"unförmige",
 				"unförmiges"
+			],
+			"textures": [
+				"tex1_path_mouth",
+				"tex2_path_eyes",
+				"tex3_path_eyebrows"
+			]
+        }
+		,
+		"angry": {
+            "type":"verb",
+			"name":"böse",
+			"translation": [
+				"böser",
+				"böse",
+				"böses"
+			],
+			"textures": [
+				"tex1_path_mouth",
+				"tex2_path_eyes",
+				"tex3_path_eyebrows"
 			]
         }
 	 }

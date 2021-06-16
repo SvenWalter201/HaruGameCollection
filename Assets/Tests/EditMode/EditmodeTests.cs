@@ -173,6 +173,28 @@ public class EditmodeTests
         Assert.AreEqual(Helper.LookForPriority("Das ganze spielt @setting@, wobei {ein} @description@ @position@ @action@", priorityKeywords), "setting");
         Assert.AreEqual(Helper.LookForPriority("Das ganze spielt @action@, wobei {ein} @description@ @position@ @action@", priorityKeywords), "action");
         Assert.AreEqual(Helper.LookForPriority("Das ganze spielt @word@, wobei {ein} @description@ @position@ @action@", priorityKeywords), "word");
+        Assert.AreEqual(Helper.LookForPriority("Das ganze spielt @description@, wobei {ein} @description@ @position@ @action@", priorityKeywords), "description");
+        Assert.AreEqual(Helper.LookForPriority("Das ganze spielt @linkingword@, wobei {ein} @description@ @position@ @action@", priorityKeywords), "linkingword");
+    }
+
+    [Test]
+    public void TestLookForPriority_004()//
+    {
+        string[] priorityKeywords = new string[] { "thing", "animal", "person" };
+
+        Assert.AreNotEqual(Helper.LookForPriority("Das ganze spielt @setting@, wobei {ein} @description@ Haru @position@ @action@", priorityKeywords), "animal");
+        Assert.AreNotEqual(Helper.LookForPriority("Das ganze spielt @setting@, wobei {ein} @description@ Lehrer @position@ @action@", priorityKeywords), "thing");
+        Assert.AreNotEqual(Helper.LookForPriority("Das ganze spielt @setting@, wobei {ein} @description@ Haus @position@ @action@", priorityKeywords), "person");
+    }
+
+
+    //[Test]
+    public void TestReplaceWordBetweenTags_001()
+    {
+        string template = "Das ganze spielt @setting@, wobei {ein} @description@ Haru @position@ @action@";
+        string word = "setting";
+        string replacement = "vorne";
+
     }
     #endregion
 

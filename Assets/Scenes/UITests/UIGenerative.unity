@@ -2499,8 +2499,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1563544531}
+  - component: {fileID: 1563544532}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: InitMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2521,6 +2522,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1563544532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1563544530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c3bc2ab3f8f544fa71db3e43540d05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forwardToMainScene: 0
+  mainSceneBuildIndex: 0
 --- !u!1 &1596478512
 GameObject:
   m_ObjectHideFlags: 0
@@ -2924,7 +2939,7 @@ MonoBehaviour:
   car: {fileID: 6256623106672060998, guid: 8a87b10d7bcdcfd4085cab59627042c0, type: 3}
   colourpalette: {fileID: 0}
   Laterne: {fileID: 2892650669639581366, guid: d539b7d9aaaabfe45b57e9105cd808b8, type: 3}
-  paintbrush: {fileID: 782490709813979144, guid: 0a8999e3c90b6f24b870d8eb33dbb16a, type: 3}
+  brush: {fileID: 0}
   Vulcano: {fileID: 2323726609102634275, guid: 68e12a37df8e3014cad99d85425112ce, type: 3}
   pizza: {fileID: 0}
   microphone: {fileID: 919132149155446097, guid: f57e581cc50fbf24cb85157f84d7db6d, type: 3}

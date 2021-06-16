@@ -1,4 +1,6 @@
-﻿public static class Helper
+﻿using System;
+
+public static class Helper
 {
     public static string ReplaceBetweenTags(string template, string replacement, char tag)
     {
@@ -20,6 +22,14 @@
         int lengthFromRightIndex = template.Length - 1 - rightIndex;
 
         return template.Substring(0, leftIndex) + replacement + template.Substring(rightIndex + 1, lengthFromRightIndex);
+    }
+
+
+    public static string ReplaceWordBetweenTags(string template, string word, string replacement)
+    {
+        int wordIndex = template.IndexOf(word);
+        //Console.WriteLine(template.Substring(0, wordIndex - 1) + replacement + template.Substring(wordIndex + word.Length +1));
+        return template.Substring(0, wordIndex - 1) + replacement + template.Substring(wordIndex + word.Length +1);
     }
 
 

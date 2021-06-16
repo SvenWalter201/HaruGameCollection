@@ -2810,7 +2810,7 @@ MonoBehaviour:
   hair:
   - {fileID: 2800000, guid: 374f307e7cbea574cbd4f1a4e3dd4a3d, type: 3}
   - {fileID: 2800000, guid: 74f2feb9f055bc74e9acea47a0c328cd, type: 3}
-  charcter: {fileID: 3717585803930323872, guid: d204df2fb0fc7be45a3a79b8cf1ad99b, type: 3}
+  charcter: {fileID: 1419890803739387, guid: d204df2fb0fc7be45a3a79b8cf1ad99b, type: 3}
   skyscraper: {fileID: 8037629483205843010, guid: af21aece59fda074e86ac23066af3c3b, type: 3}
   bush: {fileID: 3436849344513689265, guid: 0f94e12667a66b5468a290cca019e1ff, type: 3}
   tree: {fileID: 2363408966981167480, guid: a9e25afd689598d40a37ca3e25e1be33, type: 3}

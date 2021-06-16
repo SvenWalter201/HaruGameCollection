@@ -28,6 +28,7 @@ public struct Subject
     public string name { get; set; }
     public char gender { get; set; }
     public string model { get; set; }
+    public string asset { get; set; }
     public string texture { get; set; }
     public bool scalable { get; set; }
     public bool rotatable { get; set; }
@@ -59,6 +60,7 @@ public struct Mood
     public string type { get; set; }
     public string name { get; set; }
     public string[] translation { get; set; }
+    public string[] textures { get; set; }
 
 }
 

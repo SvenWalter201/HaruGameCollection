@@ -18,5 +18,5 @@ enum PositionAtCharakter
 {
     LEFTHAND = 0,
     RIGHTHAND = 1,
-    HATPOS = 2 
+    HATPOS = 2
 }

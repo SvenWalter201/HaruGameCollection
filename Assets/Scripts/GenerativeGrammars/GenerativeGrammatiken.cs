@@ -38,8 +38,13 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         priorityKeywords = new string[] { "thing", "animal", "person"};
         string appDataPath = Application.dataPath;
         string filePath = appDataPath + fileName;
-        string jsonString = File.ReadAllText(filePath);
-        masterData = JsonConvert.DeserializeObject<MasterDataClass>(jsonString);
+        //string jsonString = File.ReadAllText(filePath);
+        //masterData = JsonConvert.DeserializeObject<MasterDataClass>(jsonString);
+        if (JsonFileManager.Load(filePath, out MasterDataClass data))
+        {
+            masterData = data;
+            Debug.Log("loading json");
+        }
 
         _subjects = masterData.subjects;
 
@@ -63,10 +68,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             }
         }
 
-        if (JsonFileManager.Load(filePath, out MasterDataClass data))
-        {
-            Debug.Log("loading json");
-        }
+        
 
     }
 
@@ -150,7 +152,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
             }
 
-            template = Helper.ReplaceBetweenTags(template, replacement, '@');
+            template = Helper.ReplaceWordBetweenTags(template, generator, replacement);
             return FillInTemplate(template);
         }
 
