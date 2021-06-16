@@ -52,7 +52,6 @@ public class PictureGenerationManager : Game
     const int MAX_SENTENCES = 5;
     public SentenceInformation[] sentences = new SentenceInformation[MAX_SENTENCES];
     public int count = 0;
-    LayeredDetailAssetGenerator assetGenerator;
     List<GameObject> presentGameObjects;
     GameObject current;
     List<Bounds> colliderBounds = new List<Bounds>();
@@ -165,9 +164,9 @@ public class PictureGenerationManager : Game
             PlaceObjectAt(si);
         }
 
+        ChangeActionTo(si);
         ChangePersonTo(si);
         ChangeMoodTo(si);
-        ChangeActionTo(si);
         //ChangeColorTo(si);
 
     }
@@ -364,81 +363,23 @@ public class PictureGenerationManager : Game
             Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.HATPOS);
 
             SpawnObject(si.Subject.asset, pos, Quaternion.identity);
+            current.GetComponent<CharacterController>().CreateMaterial(si.Subject.texture);
+            
         }
     }
 
 
     public void ChangeMoodTo(SentenceInformation si)
     {
-
-        GameObject gameObject = current;
-        //Debug.Log("Game object " + current);
-        _renderHead = gameObject.GetComponentInChildren<Renderer>();
-
-
-
-        //change the gender/ hairstyle
-        if (si.Gender == 'm')
+        if(si.Subject.name == "person")
         {
-            _renderHead.material.SetTexture("_DetailOneAlbedo", hair[0]);
+            GameObject gameObject = current;
+            _renderHead = gameObject.GetComponentInChildren<Renderer>();
+
+            //generate mood
+            current.GetComponent<CharacterController>().CreateFaceMaterial(si.Mood.textures);
         }
-        else
-        {
-            //set female hairstyle
-            _renderHead.material.SetTexture("_DetailOneAlbedo", hair[1]);
-        }
-
-        //generate mood
-        _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 0);
-        _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 0);
-        switch (si.Mood.name)
-        {
-
-
-            case "erbost":
-                {
-                    //set eyes to ...
-                    //set mouth to...
-                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[1]);
-                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[1]);
-                    break;
-                }
-            case "aufgeregt":
-                {
-                    //set mouth to...
-                    //set eyes to ...
-                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[1]);
-                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[0]);
-                    break;
-                }
-            case "erschrocken":
-                {
-                    //set eyes to ...
-                    //set mouth to...
-                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[0]);
-                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[1]);
-                    break;
-                }
-            case "freundlich":
-                {
-                    //set eyes to ...
-                    //set mouth to...
-                    _renderHead.material.SetTexture("_DetailTwoAlbedo", eyes[0]);
-                    _renderHead.material.SetTexture("_DetailThreeAlbedo", mouth[0]);
-                    break;
-                }
-            case "unförmig":
-                {
-                    _renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
-                    break;
-                }
-            case "bunt":
-                {
-                    //_renderHead.material.SetFloat("Vector1_e51c87a81dbc4eb997d73131d765a0b9", 1);
-                    break;
-                }
-        }
-
+        
     }
 
 }
