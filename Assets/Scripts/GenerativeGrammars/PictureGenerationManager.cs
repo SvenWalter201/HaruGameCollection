@@ -17,14 +17,10 @@ public class PictureGenerationManager : Game
     [SerializeField] private Transform foreground;
     [SerializeField] private Transform down;
     [SerializeField] private Transform up;
+    [SerializeField] private CurtainOpen curtain;
 
 
     //component
-    private Renderer _renderHead;
-
-    [SerializeField] private Texture2D[] eyes;
-    [SerializeField] private Texture2D[] mouth;
-    [SerializeField] private Texture2D[] hair;
     public GameObject 
         charcter,
         skyscraper,
@@ -129,6 +125,7 @@ public class PictureGenerationManager : Game
 
     protected override IEnumerator Execute()
     {
+
         for(int i = 0; i < MAX_SENTENCES; i++)
         {
             PaintPicture();
@@ -140,6 +137,7 @@ public class PictureGenerationManager : Game
         }
 
         Panel.SetActive(false);
+        curtain.MoveCurtain();
         yield return timer.SimpleTimer(showingTime);
         yield break;
     }
@@ -292,21 +290,20 @@ public class PictureGenerationManager : Game
         //scaling
         if(si.Subject.scalable == true)
         {
-            float randomX, randomY, randomZ;
-            randomX = UnityEngine.Random.Range(0.7f , 1.2f );
-            randomY = UnityEngine.Random.Range(0.7f, 1.2f);
-            randomZ = UnityEngine.Random.Range(0.7f, 1.2f);
-
-            current.transform.localScale = new Vector3(randomX, randomY, randomZ);
+            float randomX;
+            randomX = current.transform.localScale.x * UnityEngine.Random.Range(0.8f , 1.15f );
+            current.transform.localScale = Vector3.one * randomX;
 
         }
-        else
-            current.transform.localScale = new Vector3(1, 1, 1);
+        //else
+            //current.transform.localScale = new Vector3(1, 1, 1);
+
         //roatating
         if (si.Subject.rotatable == true)
         {
-            float randomY = UnityEngine.Random.Range(-60, 60);
 
+            float randomY = current.transform.rotation.eulerAngles.y + UnityEngine.Random.Range(-50, 50);
+            Debug.Log(current.transform.rotation.eulerAngles.y + " + " + UnityEngine.Random.Range(-60, 60));
             current.transform.rotation = Quaternion.Euler(0,randomY,0);
         }
 
@@ -362,7 +359,8 @@ public class PictureGenerationManager : Game
         {
             Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.HATPOS);
 
-            SpawnObject(si.Subject.asset, pos, Quaternion.identity);
+            GameObject asset = SpawnObject(si.Subject.asset, pos, Quaternion.identity);
+            asset.transform.parent = current.transform;
             Debug.Log("setting texture");
             current.GetComponent<CharacterController>().CreateMaterial(si.Subject.texture);
         }
@@ -374,10 +372,15 @@ public class PictureGenerationManager : Game
         if(si.Subject.type == "person")
         {
             GameObject gameObject = current;
-            _renderHead = gameObject.GetComponentInChildren<Renderer>();
+            //_renderHead = gameObject.GetComponentInChildren<Renderer>();
 
             //generate mood
-            current.GetComponent<CharacterController>().CreateFaceMaterial(si.Mood.textures);
+            if(si.Mood.textures != null)
+            {
+                Debug.Log("looking for textures");
+                current.GetComponent<CharacterController>().CreateFaceMaterial(si.Mood.textures);
+            }
+            
         }
         
     }

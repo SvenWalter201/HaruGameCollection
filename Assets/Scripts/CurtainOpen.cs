@@ -6,7 +6,7 @@ using UnityEngine;
 public class CurtainOpen : MonoBehaviour
 {
     Animator anim;
-    bool transition = true;
+    bool transition = false;
     float closedTimer;
     [SerializeField] float transitionTime = 5f;
     
@@ -16,14 +16,12 @@ public class CurtainOpen : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         anim.SetBool("open", transition);
-        
-
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+       /*
             closedTimer -= Time.deltaTime;
             if(closedTimer<= 0)
             {
@@ -31,8 +29,14 @@ public class CurtainOpen : MonoBehaviour
                 closedTimer = transitionTime;
                 transition = !transition;
             }
-        
-        
-
+        */
     }
+
+    public void MoveCurtain()
+    {
+        transition = !transition;
+        anim.SetBool("open", transition);
+        
+    }
+
 }

@@ -43,7 +43,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         if (JsonFileManager.Load(filePath, out MasterDataClass data))
         {
             masterData = data;
-            Debug.Log("loading json");
+            //Debug.Log("loading json");
         }
 
         _subjects = masterData.subjects;
@@ -81,9 +81,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         //si.ClearInformation();
         string template = GetTemplate();
         sentence = FillInTemplate(template);
-        //Print to UI
-        //sentenceText.text = sentence;
-        Debug.Log(sentence);
+        //Debug.Log(sentence);
         return si;
     }
 
