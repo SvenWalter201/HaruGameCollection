@@ -125,6 +125,10 @@ public class MotionMemory : Game
         memoryCanvas.SetActive(false);
         startScreen.SetActive(true);
 
+        if(unsolved.Count <= 0)
+        {
+            ConfettiBurst();
+        }
         startScreenText.text = (unsolved.Count > 0) ? StringRes.Get("_NoRoundsRemaining") : StringRes.Get("_Win");
 
         AppManager.bodyTrackingRunning = false;
@@ -241,17 +245,25 @@ public class MotionMemory : Game
             progressBar.enabled = false;
 
             StopOutline(card);
-            //Debug.Log("Acc: "+ maxAccuracy);
-            if (maxAccuracy <= 80)
-            {
-                unsolved.Add(card);
-            }
-
-            tempStack.Remove(card);
 
             BeginShowPose(card);
             yield return timer.SimpleTimer(cardShowingTime);
             StopShowPose(card);
+
+            //Debug.Log("Acc: "+ maxAccuracy);
+            if (maxAccuracy <= 95)
+            {
+                unsolved.Add(card);
+            }
+            else
+            {
+                //if the card was solved, hide it
+                card.uiElement.GetComponent<RawImage>().enabled = false;
+            }
+
+            tempStack.Remove(card);
+
+
 
 
             if (i < tempStackSize)

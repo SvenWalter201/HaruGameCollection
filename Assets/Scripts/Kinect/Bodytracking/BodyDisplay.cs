@@ -42,7 +42,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
     int replayFrame, interpolationFrames = 6; //0.267 sec
 
     //distance in metres that represent 0 and 100 percent accuracy when comparing two poses
-    const float ZERO_PERCENT = 0.5f;
+    const float ZERO_PERCENT = 0.3f;
     const float HUNDRED_PERCENT = 0.01f;
 
     UJoint[] trackedJoints;
@@ -714,7 +714,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
             //don't compare obstructed or out of range joints
             if(pI.Confidence == JointConfidenceLevel.Low || pI.Confidence == JointConfidenceLevel.None)
                 continue;
-
+            /*
             bool jointConstraint = false;
             foreach(var j in jointConstraints)
             {
@@ -726,7 +726,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
             }
             if (jointConstraint)
                 continue;
-
+            */
             //get the position of the joint in relation to the pelvis
             Vector3 relativeOriginalPosition = lhs[i].Position - originalPelvisPosition;
             Vector3 relativeComparePosition = rhs[i].Position - comparePelvisPosition;

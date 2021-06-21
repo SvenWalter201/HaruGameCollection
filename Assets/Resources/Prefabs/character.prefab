@@ -81,10 +81,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d668f883f524ea0498b4e1cfb9f5381b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetPositions:
-  - {fileID: 919968748006568289}
-  - {fileID: 1950643203014492970}
-  - {fileID: 6217071744176767136}
+  assetTransforms:
+  - {fileID: 919968748006568290}
+  - {fileID: 1032554499816673775}
+  - {fileID: 7350703997146531256}
 --- !u!136 &1051533831717881761
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -789,7 +789,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6217071744176767136}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.261, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8393309061446387244}

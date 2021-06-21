@@ -375,23 +375,23 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
         if (si.Singular == true)
         {
-            Debug.Log("IN THE IF STATEMENT");
+            //Debug.Log("IN THE IF STATEMENT");
 
             switch (currentperson.gender)
             {
                 case 'm':
-                    Debug.Log("peron mood (m) : " + currentperson.moods[r]);
-                    Debug.Log("printed word M " + masterData.moods[currentperson.moods[r]].translation[0]);
+                    //Debug.Log("peron mood (m) : " + currentperson.moods[r]);
+                    //Debug.Log("printed word M " + masterData.moods[currentperson.moods[r]].translation[0]);
                     return masterData.moods[currentperson.moods[r]].translation[0];
 
                 case 'f':
-                    Debug.Log("peron mood (f): " + currentperson.moods[r]);
-                    Debug.Log("printed word F " + masterData.moods[currentperson.moods[r]].translation[1]);
+                    //Debug.Log("peron mood (f): " + currentperson.moods[r]);
+                    //Debug.Log("printed word F " + masterData.moods[currentperson.moods[r]].translation[1]);
                     return masterData.moods[currentperson.moods[r]].translation[1];
 
                 case 'n':
-                    Debug.Log("peron mood (n): " + currentperson.moods[r]);
-                    Debug.Log("printed word N " + masterData.moods[currentperson.moods[r]].translation[2]);
+                    //Debug.Log("peron mood (n): " + currentperson.moods[r]);
+                    //Debug.Log("printed word N " + masterData.moods[currentperson.moods[r]].translation[2]);
                     return masterData.moods[currentperson.moods[r]].translation[2];
 
                 default: return "default";

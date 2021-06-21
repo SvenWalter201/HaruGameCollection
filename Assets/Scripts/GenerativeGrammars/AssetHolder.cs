@@ -1,20 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AssetHolder : MonoBehaviour
 {
-    [SerializeField] private GameObject[] AssetPositions;
+    [SerializeField] 
+    Transform[] assetTransforms;
 
     //0 = lefthand, 1= righthand, 2= hatpos
-    public Vector3 GetPosition(int pos)
-    {
-        return AssetPositions[pos].transform.position;
-    }
+    public Transform GetTransform(PositionAtCharacter pos) =>
+        assetTransforms[(int)pos];
+    
 
 }
 
-enum PositionAtCharakter
+public enum PositionAtCharacter
 {
     LEFTHAND = 0,
     RIGHTHAND = 1,

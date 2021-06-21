@@ -21,26 +21,8 @@ public class PictureGenerationManager : Game
 
 
     //component
-    public GameObject 
-        charcter,
-        skyscraper,
-        bush,
-        tree,
-        house,
-        guitar,
-        car,
-        colourpalette,
-        Laterne,
-        brush,
-        Vulcano,
-        pizza,
-        microphone,
-        constructionworker,
-        girl,
-        grandma,
-        princess,
-        teacher,
-        chefhat;
+    public GameObject
+        character;
 
 
 
@@ -288,7 +270,7 @@ public class PictureGenerationManager : Game
         }
 
         //scaling
-        if(si.Subject.scalable == true)
+        if(si.Subject.scalable)
         {
             float randomX;
             randomX = current.transform.localScale.x * UnityEngine.Random.Range(0.8f , 1.15f );
@@ -299,11 +281,11 @@ public class PictureGenerationManager : Game
             //current.transform.localScale = new Vector3(1, 1, 1);
 
         //roatating
-        if (si.Subject.rotatable == true)
+        if (si.Subject.rotatable)
         {
 
             float randomY = current.transform.rotation.eulerAngles.y + UnityEngine.Random.Range(-50, 50);
-            Debug.Log(current.transform.rotation.eulerAngles.y + " + " + UnityEngine.Random.Range(-60, 60));
+            //Debug.Log(current.transform.rotation.eulerAngles.y + " + " + UnityEngine.Random.Range(-60, 60));
             current.transform.rotation = Quaternion.Euler(0,randomY,0);
         }
 
@@ -314,29 +296,26 @@ public class PictureGenerationManager : Game
     {
         //_renderHead = current.GetComponent<MeshRenderer>();
 
-        if (current.TryGetComponent<AssetHolder>(out AssetHolder ah) == true)
+        if (current.TryGetComponent(out AssetHolder ah))
         {
-            Vector3 posLeftHand = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.LEFTHAND);
-            Vector3 posRightHand = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.RIGHTHAND);
-
             switch (si.Action.name)
             {
                 case "musiziert":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("guitar", posLeftHand, Quaternion.identity);
+                    StartCoroutine(SpawnAtEndOfFrame("guitar", current, PositionAtCharacter.LEFTHAND));
                     break;
                 case "singt":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("microphone", posRightHand, Quaternion.identity);
+                    StartCoroutine(SpawnAtEndOfFrame("microphone", current, PositionAtCharacter.RIGHTHAND));
                     break;
                 case "isst":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("pizza", posRightHand, Quaternion.identity);
+                    StartCoroutine(SpawnAtEndOfFrame("pizza", current, PositionAtCharacter.RIGHTHAND));
                     break;
                 case "malt":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    SpawnObject("paintbrush", posRightHand, Quaternion.identity);
-                    SpawnObject("colourpalette", posLeftHand, Quaternion.identity);
+                    StartCoroutine(SpawnAtEndOfFrame("paintbrush", current, PositionAtCharacter.RIGHTHAND));
+                    StartCoroutine(SpawnAtEndOfFrame("colourpalette", current, PositionAtCharacter.LEFTHAND));
                     break;
                 case "läuft":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
@@ -357,13 +336,20 @@ public class PictureGenerationManager : Game
     {
         if (current.TryGetComponent<AssetHolder>(out AssetHolder ah) == true)
         {
-            Vector3 pos = current.GetComponent<AssetHolder>().GetPosition((int)PositionAtCharakter.HATPOS);
-
-            GameObject asset = SpawnObject(si.Subject.asset, pos, Quaternion.identity);
-            asset.transform.parent = current.transform;
-            Debug.Log("setting texture");
+            StartCoroutine(SpawnAtEndOfFrame(si.Subject.asset, current, PositionAtCharacter.HATPOS));
+            //Debug.Log("setting texture");
             current.GetComponent<CharacterController>().CreateMaterial(si.Subject.texture);
         }
+    }
+
+    IEnumerator SpawnAtEndOfFrame(string asset, GameObject current, PositionAtCharacter p)
+    {
+        yield return new WaitForEndOfFrame();
+        Transform t = current.GetComponent<AssetHolder>().GetTransform(p);
+        GameObject ins = SpawnObject(asset, t.position, t.rotation);
+        ins.transform.parent = t;
+
+
     }
 
 
@@ -377,7 +363,7 @@ public class PictureGenerationManager : Game
             //generate mood
             if(si.Mood.textures != null)
             {
-                Debug.Log("looking for textures");
+                //Debug.Log("looking for textures");
                 current.GetComponent<CharacterController>().CreateFaceMaterial(si.Mood.textures);
             }
             

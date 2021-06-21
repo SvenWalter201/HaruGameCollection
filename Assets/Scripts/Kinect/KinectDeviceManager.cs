@@ -390,7 +390,6 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         {
             return;
         }
-
         device.StopCameras();
         device.StopImu();
         device.Dispose();
