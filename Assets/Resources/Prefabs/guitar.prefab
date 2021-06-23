@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4553578927265958276
+--- !u!1 &2232486856711829615
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,45 +8,45 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3781439582975038270}
-  - component: {fileID: 276272986625612955}
-  - component: {fileID: 2607992758694832209}
+  - component: {fileID: 1562945176064303829}
+  - component: {fileID: 2458800255332134256}
+  - component: {fileID: 431112496207026618}
   m_Layer: 0
-  m_Name: Guitar
+  m_Name: guitar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3781439582975038270
+--- !u!4 &1562945176064303829
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4553578927265958276}
-  m_LocalRotation: {x: 0.000000021855694, y: 0.0000000754979, z: -1.5888266e-15, w: 1}
-  m_LocalPosition: {x: -2.1935668, y: 1.8914917, z: -2.56}
+  m_GameObject: {fileID: 2232486856711829615}
+  m_LocalRotation: {x: -0.48814803, y: -0.18744211, z: -0.10821976, w: 0.8454972}
+  m_LocalPosition: {x: -7.834154, y: 1.4209676, z: 0.8931017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &276272986625612955
+  m_LocalEulerAnglesHint: {x: -60, y: -25, z: 0}
+--- !u!33 &2458800255332134256
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4553578927265958276}
-  m_Mesh: {fileID: 3449436011636475419, guid: 18f20662791037043ae73d9bc876956f, type: 3}
---- !u!23 &2607992758694832209
+  m_GameObject: {fileID: 2232486856711829615}
+  m_Mesh: {fileID: 3449436011636475419, guid: 816a4b18077f6d74e862c02edbcc5036, type: 3}
+--- !u!23 &431112496207026618
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4553578927265958276}
+  m_GameObject: {fileID: 2232486856711829615}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1

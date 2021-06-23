@@ -1,9 +1,9 @@
 ﻿{
 	"template":[
-    "Das ganze spielt @setting@, wobei {ein} @animal@ @position@ @action@",
+    "Das ganze spielt @setting@, wobei {ein} @colour@ @animal@ @position@ @action@",
     "@position@ <ist> {ein} @thing@.",
     "@linkingword@ @position@ @action@ {ein} @mood@ @person@.",
-    "{ein} @animal@ @action@ @position@",
+    "{ein} @colour@ @animal@ @action@ @position@",
 	"{ein} @mood@ @person@ @action@ @position@"
     ],
 	"position": [
@@ -148,7 +148,7 @@
 		  "scalable":"true",
 		  "rotatable":"true",
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts","im Vordergund"],
-		  "colours":["rot","blau","grün","lila"],
+		  "colours":["red","blue","purple"],
 		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
@@ -164,7 +164,7 @@
 		  "scalable":"true",
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
-		  "colours":["rot","blau","grün"],
+		  "colours":["red","blue","purple"],
 		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
@@ -180,7 +180,7 @@
 		  "scalable":"true",
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
-		  "colours":["rot","blau","grün"],
+		  "colours":["red","blue","purple"],
 		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
@@ -300,7 +300,7 @@
 	"colours": {
         "red": {
             "type": "colour",
-            "name": "rot",
+            "name": "red",
             "translation": [
                 "roter",
                 "rote",
@@ -309,7 +309,7 @@
         },
         "blue": {
             "type": "colour",
-            "name": "blau",
+            "name": "blue",
             "translation": [
                 "blauer",
                 "blaue",
@@ -317,11 +317,19 @@
             ]
         },"green": {
             "type": "colour",
-            "name": "grün",
+            "name": "green",
             "translation": [
                 "grüner",
                 "grüne",
                 "grünes"
+            ]
+        },"purple": {
+            "type": "colour",
+            "name": "purple",
+            "translation": [
+                "lila",
+                "lila",
+                "lila"
             ]
         }
 	},

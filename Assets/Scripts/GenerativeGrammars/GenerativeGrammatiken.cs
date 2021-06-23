@@ -38,8 +38,6 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         priorityKeywords = new string[] { "thing", "animal", "person"};
         string appDataPath = Application.dataPath;
         string filePath = appDataPath + fileName;
-        //string jsonString = File.ReadAllText(filePath);
-        //masterData = JsonConvert.DeserializeObject<MasterDataClass>(jsonString);
         if (JsonFileManager.Load(filePath, out MasterDataClass data))
         {
             masterData = data;
@@ -75,7 +73,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     public SentenceInformation GenerateSentence()
     {
-        //GetProbability();
+        GetProbability();
         si = new SentenceInformation();
         si.Singular = true;
         //si.ClearInformation();
@@ -177,7 +175,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         //large and lower case
         template = FixLowerCase(template);
 
-        Debug.Log(si.PrintToString());
+        //Debug.Log(si.PrintToString());
 
         return template;
     }
@@ -332,7 +330,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         else
         {
             int r = UnityEngine.Random.Range(1, masterData.template.Length);
-            Debug.Log(masterData.template[r]);
+            //Debug.Log(masterData.template[r]);
             return masterData.template[r];
         }
 
@@ -534,13 +532,12 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     #region UTILITY
     //-------------------------------------UTILITY------------------------------------------
-    // replacing at <<replacement>> in the template
     
     private void GetProbability()
     {
         //50/50 chance for plural or singular
         int r = UnityEngine.Random.Range(0, 10);
-        if (r < 5)
+        if (r < 5) //change here to change probability distribution
         {
             probability = true;
         }

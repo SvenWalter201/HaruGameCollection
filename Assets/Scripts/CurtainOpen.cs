@@ -7,8 +7,6 @@ public class CurtainOpen : MonoBehaviour
 {
     Animator anim;
     bool transition = false;
-    float closedTimer;
-    [SerializeField] float transitionTime = 5f;
     
      
     // Start is called before the first frame update
@@ -19,18 +17,6 @@ public class CurtainOpen : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-       /*
-            closedTimer -= Time.deltaTime;
-            if(closedTimer<= 0)
-            {
-                anim.SetBool("open", transition);
-                closedTimer = transitionTime;
-                transition = !transition;
-            }
-        */
-    }
 
     public void MoveCurtain()
     {

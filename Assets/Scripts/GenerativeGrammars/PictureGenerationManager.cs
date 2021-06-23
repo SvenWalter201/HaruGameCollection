@@ -34,6 +34,7 @@ public class PictureGenerationManager : Game
     GameObject current;
     List<Bounds> colliderBounds = new List<Bounds>();
     readonly CoroutineTimer timer = new CoroutineTimer();
+    [SerializeField] float radius = 2f;
 
     [Space]
     [Header("Timing")]
@@ -147,7 +148,7 @@ public class PictureGenerationManager : Game
         ChangeActionTo(si);
         ChangeMoodTo(si);
         ChangePersonTo(si);
-        //ChangeColorTo(si);
+        ChangeColorTo(si);
 
     }
 
@@ -182,7 +183,6 @@ public class PictureGenerationManager : Game
     //seting location, scale and rotaion
     private void PlaceObjectAt(SentenceInformation si)
     {
-        float radius = 3f;
 
 
         Vector3 position;
@@ -277,8 +277,6 @@ public class PictureGenerationManager : Game
             current.transform.localScale = Vector3.one * randomX;
 
         }
-        //else
-            //current.transform.localScale = new Vector3(1, 1, 1);
 
         //roatating
         if (si.Subject.rotatable)
@@ -334,7 +332,7 @@ public class PictureGenerationManager : Game
 
     public void ChangePersonTo(SentenceInformation si)
     {
-        if (current.TryGetComponent<AssetHolder>(out AssetHolder ah) == true)
+        if (current.TryGetComponent<AssetHolder>(out AssetHolder ah))
         {
             StartCoroutine(SpawnAtEndOfFrame(si.Subject.asset, current, PositionAtCharacter.HATPOS));
             //Debug.Log("setting texture");
@@ -350,6 +348,15 @@ public class PictureGenerationManager : Game
         ins.transform.parent = t;
 
 
+    }
+
+    public void ChangeColorTo(SentenceInformation si)
+    {
+        if (current.TryGetComponent<AnimalController>(out AnimalController ac))
+        {
+            Debug.Log("setting the colour");
+            current.GetComponent<AnimalController>().CreateColor(si.Colour.name);
+        }
     }
 
 
