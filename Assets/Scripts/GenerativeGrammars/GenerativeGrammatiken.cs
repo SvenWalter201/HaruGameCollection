@@ -373,7 +373,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
         if (si.Singular == true)
         {
-            //Debug.Log("IN THE IF STATEMENT");
+            Debug.Log("IN THE IF STATEMENT");
 
             switch (currentperson.gender)
             {

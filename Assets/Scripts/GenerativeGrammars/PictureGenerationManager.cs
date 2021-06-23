@@ -283,8 +283,7 @@ public class PictureGenerationManager : Game
         {
 
             float randomY = current.transform.rotation.eulerAngles.y + UnityEngine.Random.Range(-50, 50);
-            //Debug.Log(current.transform.rotation.eulerAngles.y + " + " + UnityEngine.Random.Range(-60, 60));
-            current.transform.rotation = Quaternion.Euler(0,randomY,0);
+            current.transform.rotation = Quaternion.Euler(current.transform.rotation.x,randomY, current.transform.rotation.z);
         }
 
         presentGameObjects.Add(current);
@@ -344,6 +343,7 @@ public class PictureGenerationManager : Game
     {
         yield return new WaitForEndOfFrame();
         Transform t = current.GetComponent<AssetHolder>().GetTransform(p);
+        Debug.Log(t.rotation.ToString());
         GameObject ins = SpawnObject(asset, t.position, t.rotation);
         ins.transform.parent = t;
 
