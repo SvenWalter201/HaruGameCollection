@@ -397,7 +397,8 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         else
         {
-
+            Debug.Log(si.Singular);
+            Debug.Log(masterData.moods[currentperson.moods[r]].name);
             return "default:" + masterData.moods[currentperson.moods[r]].name;
         }
 

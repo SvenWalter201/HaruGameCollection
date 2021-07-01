@@ -34,7 +34,7 @@ public class PictureGenerationManager : Game
     GameObject current;
     List<Bounds> colliderBounds = new List<Bounds>();
     readonly CoroutineTimer timer = new CoroutineTimer();
-    [SerializeField] float radius = 2f;
+    [SerializeField] float radius = 1.5f;
 
     [Space]
     [Header("Timing")]
@@ -86,7 +86,7 @@ public class PictureGenerationManager : Game
     {
         //initialize UI-components
         //SprogressBar.enabled = false;
-        modeText.text = "Meisterwerke Level:Senioren";
+        modeText.text = StringRes.Get("_DuplikLevelSeniors");
         remainingTimeText.text = "";
         if (Panel != null)
         {
@@ -109,14 +109,13 @@ public class PictureGenerationManager : Game
     protected override IEnumerator Execute()
     {
 
-        for(int i = 0; i < MAX_SENTENCES; i++)
+        for (int i = 0; i < MAX_SENTENCES; i++)
         {
             PaintPicture();
             sentenceArray[i].text = grammars.PrintSentence();
             progressBar.enabled = true;
             yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
             progressBar.enabled = false;
-            //yield return timer.SimpleTimer(drawingTime);
         }
 
         Panel.SetActive(false);
@@ -235,7 +234,7 @@ public class PictureGenerationManager : Game
         }
 
 
-        int max_iter = 100;
+        int max_iter = 200;
         int iter = 0;
         while (iter < max_iter) //while, colliding generate new position and check if its working
         {
@@ -321,6 +320,9 @@ public class PictureGenerationManager : Game
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
                     break;
                 case "überlegt":
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
+                    break;
+                case "ist":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
                     break;
 

@@ -2,6 +2,7 @@
 	"template":[
     "Das ganze spielt @setting@, wobei {ein} @colour@ @animal@ @position@ @action@",
     "@position@ <ist> {ein} @thing@.",
+	"@linkingword@ {ein} @thing@ <ist> @position@.",
     "@linkingword@ @position@ @action@ {ein} @mood@ @person@.",
     "{ein} @colour@ @animal@ @action@ @position@",
 	"{ein} @mood@ @person@ @action@ @position@"
@@ -376,6 +377,12 @@
 			"name":"wartet",
 			"model":"prefab_path",
 			"animation":"Wait"
+        },
+		"ist": {
+            "type":"verb",
+			"name":"wartet",
+			"model":"prefab_path",
+			"animation":"Walk"
         }
      },
 
