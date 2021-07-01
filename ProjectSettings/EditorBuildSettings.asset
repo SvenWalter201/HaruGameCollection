@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameCollection/MainScene.unity
     guid: a207e687a450d3f4890059ff166884c5
   - enabled: 1
+    path: Assets/Scenes/GameCollection/VirtualWorld.unity
+    guid: 40b9c4b45ca033e4299a924fe40ba8f4
+  - enabled: 1
     path: Assets/Scenes/GameCollection/TriviaQuiz.unity
     guid: 182c6be487ea1aa4babe749d89c380d9
   - enabled: 1
@@ -23,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/KinectMoCapStudio.unity
     guid: f36e3123688db1c44bf631a5e149d813
+  - enabled: 1
+    path: Assets/Scenes/GameCollection/MotionMemoryHouse.unity
+    guid: 456302ff75d519f41a1fe785e3a51a73
   m_configObjects: {}

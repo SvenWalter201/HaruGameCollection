@@ -12,6 +12,10 @@ public class GameController : Singleton<GameController>
     AudioListener mainSceneAudioListener;
     [SerializeField]
     EventSystem mainSceneEventSystem;
+    [SerializeField]
+    Light mainSceneLight;
+    [SerializeField]
+    Camera mainSceneCamera;
 
     Game currentGame;
 
@@ -19,18 +23,23 @@ public class GameController : Singleton<GameController>
 
     public void StartGame(int index)
     {
-        mainsceneCanvas.enabled = false;
-        mainSceneAudioListener.enabled = false;
-        mainSceneEventSystem.enabled = false;
+
 
         StartCoroutine(LoadLevel(index));
     }
 
-    public void OnCurrentGameFinished(object sender, EventArgs e) => StartCoroutine(GameFinished());
 
     IEnumerator LoadLevel(int levelBuildIndex)
     {
+
+
         yield return SceneManager.LoadSceneAsync(levelBuildIndex, LoadSceneMode.Additive);
+
+        FlipMainScene();
+
+        if (AppManager.useVirtualWorld)
+            VirtualWorldController.Instance.FlipMainSceneControl();
+
         SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(levelBuildIndex));
 
         loadedLevelBuildIndex = levelBuildIndex;
@@ -39,14 +48,26 @@ public class GameController : Singleton<GameController>
         currentGame.OnGameFinished += OnCurrentGameFinished;
     }
 
+    public void OnCurrentGameFinished(object sender, EventArgs e) => StartCoroutine(GameFinished());
+
     IEnumerator GameFinished()
     {
         yield return SceneManager.UnloadSceneAsync(loadedLevelBuildIndex);
 
-        mainsceneCanvas.enabled = true;
-        mainSceneAudioListener.enabled = true;
-        mainSceneEventSystem.enabled = true;
+        FlipMainScene();
+
+        if (AppManager.useVirtualWorld)
+            VirtualWorldController.Instance.FlipMainSceneControl();
 
         loadedLevelBuildIndex = 0;
+    }
+
+    void FlipMainScene()
+    {
+        mainsceneCanvas.enabled = !mainsceneCanvas.enabled;
+        mainSceneAudioListener.enabled = !mainSceneAudioListener.enabled;
+        mainSceneEventSystem.enabled = !mainSceneEventSystem.enabled;
+        //mainSceneLight.enabled = !mainSceneLight.enabled;
+        mainSceneCamera.enabled = !mainSceneCamera.enabled;
     }
 }
