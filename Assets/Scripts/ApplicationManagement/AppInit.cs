@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class AppInit : MonoBehaviour
 {
     [SerializeField]
     bool forwardToMainScene;
 
-    [SerializeField]
-    int mainSceneBuildIndex;
+    const int mainMenuBuildIndex = 0, virtualWorldBuildIndex = 1;
 
     void Awake() 
     {
@@ -23,6 +23,12 @@ public class AppInit : MonoBehaviour
 #endif
         }
         if (forwardToMainScene)
-            SceneManager.LoadScene(mainSceneBuildIndex, LoadSceneMode.Single);
+        {
+            bool useVirtualWorld = AppManager.useVirtualWorld;
+            if(useVirtualWorld)
+                SceneManager.LoadScene(virtualWorldBuildIndex, LoadSceneMode.Single);
+            else
+                SceneManager.LoadScene(mainMenuBuildIndex, LoadSceneMode.Single);
+        }
     }
 }

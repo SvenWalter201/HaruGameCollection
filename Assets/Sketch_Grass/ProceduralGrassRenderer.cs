@@ -244,7 +244,7 @@ public class ProceduralGrassRenderer : MonoBehaviour
     }
 
     // LateUpdate is called after all Update calls
-    private void LateUpdate()
+    void LateUpdate()
     {
         // If in edit mode, we need to update the shaders each Update to make sure settings changes are applied
         // Don't worry, in edit mode, Update isn't called each frame
@@ -253,6 +253,8 @@ public class ProceduralGrassRenderer : MonoBehaviour
             OnDisable();
             OnEnable();
         }
+        if (Camera.main == null)
+            return;
 
         // Clear the draw and indirect args buffers of last frame's data
         drawBuffer.SetCounterValue(0);

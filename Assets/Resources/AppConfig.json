@@ -1,5 +1,6 @@
 {
   "Language": "DE",
+  "UseVirtualWorld": true,
   "LimbConstraints": [
     "LEFT_LEG_LOWER",
     "LEFT_ARM_LOWER"

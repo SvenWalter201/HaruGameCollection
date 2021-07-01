@@ -14,7 +14,8 @@ public static class AppManager
         motionLoaded = false,
         bodyCompareRunning = false,
         recording = false,
-        vfxGraphSupported = false;
+        vfxGraphSupported = false,
+        useVirtualWorld = false;
 
     public static Lang language = Lang.DE;
     public static JointId[] jointConstraints;
@@ -39,6 +40,7 @@ public static class AppManager
         }
 
         language = appConfig.Language;
+        useVirtualWorld = appConfig.UseVirtualWorld;
 
         return true;
     }

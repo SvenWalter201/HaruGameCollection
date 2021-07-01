@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Joint = Microsoft.Azure.Kinect.BodyTracking.Joint;
 
 public struct MemoryCard 
 {
@@ -9,4 +6,11 @@ public struct MemoryCard
     public int y;
     public Motion pose;
     public GameObject uiElement; 
+}
+
+public struct MemoryCardHouse
+{
+    public int index;
+    public Motion pose;
+    public Material window;
 }
