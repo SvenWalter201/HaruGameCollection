@@ -80,10 +80,16 @@ public class PictureGenerationManager : Game
 
     void Start()
     {
+        
         PlayGame();
     }
     protected override IEnumerator Init()
     {
+
+        if (AppManager.useVirtualWorld)
+        {
+
+        }
         //initialize UI-components
         //SprogressBar.enabled = false;
         modeText.text = StringRes.Get("_DuplikLevelSeniors");
