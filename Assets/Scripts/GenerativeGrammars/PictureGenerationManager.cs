@@ -18,6 +18,7 @@ public class PictureGenerationManager : Game
     [SerializeField] private Transform down;
     [SerializeField] private Transform up;
     [SerializeField] private CurtainOpen curtain;
+    [SerializeField] private GameObject gras;
 
 
     //component
@@ -61,6 +62,9 @@ public class PictureGenerationManager : Game
     [SerializeField]
     Image progressBar, progressBarMask;
 
+    [SerializeField] 
+    PositionController positionController;
+
 
     //[Header("Minimum of " + MAX_SENTENCES + " sentences" )]
     [SerializeField]
@@ -85,13 +89,13 @@ public class PictureGenerationManager : Game
     }
     protected override IEnumerator Init()
     {
-
-        if (AppManager.useVirtualWorld)
+        //get the required resources from the virtual world
+        if (!AppManager.useVirtualWorld)
         {
-
+            gras.SetActive(false);
+            positionController = VirtualWorldController.Instance.positionController;
         }
-        //initialize UI-components
-        //SprogressBar.enabled = false;
+
         modeText.text = StringRes.Get("_DuplikLevelSeniors");
         remainingTimeText.text = "";
         if (Panel != null)
@@ -197,43 +201,43 @@ public class PictureGenerationManager : Game
             case "links":
             case "vorne links":
                 {
-                    position = left.position;
+                    position = positionController.GetLeft.position;
                     break;
                 }
             case "rechts":
             case "vorne rechts":
                 {
-                    position = right.position;
+                    position = positionController.GetRight.position;
                     break;
                 }
             case "im Vordergrung":
                 {
-                    position = foreground.position;
+                    position = positionController.GetForeground.position;
                     break;
                 }
             case "im Hintergrund":
                 {
-                    position = background.position;
+                    position = positionController.GetBackground.position;
                     break;
                 }
             case "hinten links":
                 {
-                    position = backLeft.position;
+                    position = positionController.GetBackLeft.position;
                     break;
                 }
             case "hinten rechts":
                 {
-                    position = backRright.position;
+                    position = positionController.GetBackRight.position;
                     break;
                 }
             case "unten":
                 {
-                    position = down.position;
+                    position = positionController.GetDown.position;
                     break;
                 }
             default:
                 {
-                    position = foreground.position;
+                    position = positionController.GetForeground.position;
                     break;
                 }
 

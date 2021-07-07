@@ -34,6 +34,6 @@ public class Tween : MonoBehaviour
 
         static float AdjustedSin(float x) => 
             0.5f * (Mathf.Sin(x * Mathf.PI - 0.5f * Mathf.PI) + 1f);
-
+    
     }
 }
