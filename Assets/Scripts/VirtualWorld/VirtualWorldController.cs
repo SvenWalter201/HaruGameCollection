@@ -10,6 +10,7 @@ public class VirtualWorldController : Singleton<VirtualWorldController>
 
     public WindowController windowController;
     public PositionController positionController;
+    public bool InputState => inputState;
 
     public void AddInputSource(InputSource source) => mainSceneInputs.Add(source);
 

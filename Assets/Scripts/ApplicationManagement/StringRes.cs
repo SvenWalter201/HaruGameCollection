@@ -4,13 +4,11 @@ using UnityEngine;
 public static class StringRes
 {
     static Dictionary<string, Dictionary<Lang, string>> stringResources;
-    static string filePath = "/Resources/StringResources.json";
+    static string fileName = "StringResources";
 
     public static bool LoadStringResources()
     {
-        filePath = Application.dataPath + filePath;
-
-        if (JsonFileManager.Load(filePath, out Dictionary<string, Dictionary<Lang, string>> data))
+        if (FileManager.LoadJSONFromResources(fileName, out Dictionary<string, Dictionary<Lang, string>> data))
         {
             stringResources = data;
             return true;

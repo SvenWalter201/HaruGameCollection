@@ -29,7 +29,7 @@ public class CharacterController : MonoBehaviour
 
     public void LoadAndPlay(string fileName)
     {
-        if(JsonFileManager.LoadObject("Animations", fileName, out Object o))
+        if(FileManager.LoadObject("Animations", fileName, out Object o))
         {
             clip = (AnimationClip)o;
             PlayCurrent();
@@ -55,7 +55,7 @@ public class CharacterController : MonoBehaviour
 
     public void CreateMaterial(string fileName)
     {
-        if(JsonFileManager.LoadPNG(Application.dataPath +  "/Resources/Textures/" + fileName + ".png", out Texture2D tex))
+        if(FileManager.LoadPNG(Application.dataPath +  "/Resources/Textures/" + fileName + ".png", out Texture2D tex))
         {
             Material ins = Instantiate(baseMaterial);
             ins.SetTexture("MainTexture", tex);
@@ -71,7 +71,7 @@ public class CharacterController : MonoBehaviour
         Texture2D[] textures = new Texture2D[fileNames.Length];
         for (int i = 0; i < textures.Length; i++)
         {
-            if (JsonFileManager.LoadPNG(Application.dataPath + "/Resources/Textures/Facial/" + fileNames[i] + ".png", out Texture2D tex))
+            if (FileManager.LoadPNG(Application.dataPath + "/Resources/Textures/Facial/" + fileNames[i] + ".png", out Texture2D tex))
             {
                 textures[i] = tex;
             }

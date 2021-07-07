@@ -8,12 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/GameCollection/MainScene.unity
-    guid: a207e687a450d3f4890059ff166884c5
+  - enabled: 0
+    path: Assets/Scenes/InitScene.unity
+    guid: a135d43bc91121347bd5af339cf19c6e
   - enabled: 1
     path: Assets/Scenes/GameCollection/VirtualWorld.unity
     guid: 40b9c4b45ca033e4299a924fe40ba8f4
+  - enabled: 1
+    path: Assets/Scenes/GameCollection/MainScene.unity
+    guid: a207e687a450d3f4890059ff166884c5
   - enabled: 1
     path: Assets/Scenes/GameCollection/TriviaQuiz.unity
     guid: 182c6be487ea1aa4babe749d89c380d9

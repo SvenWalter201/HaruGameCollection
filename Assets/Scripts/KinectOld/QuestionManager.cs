@@ -15,7 +15,7 @@ class QuestionManager : Singleton<QuestionManager>
 
     void LoadQuestions()
     {
-        if(JsonFileManager.Load("", out QuestionCard[] allQuestions)){
+        if(FileManager.LoadJSON("", out QuestionCard[] allQuestions)){
             this.allQuestions = allQuestions;
         }
         else

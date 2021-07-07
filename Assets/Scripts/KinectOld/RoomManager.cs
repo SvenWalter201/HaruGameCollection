@@ -28,14 +28,14 @@ class RoomManager : Singleton<RoomManager>
             return;
         }
 
-        JsonFileManager.Save(defaultPath, room);
+        FileManager.SaveJSON(defaultPath, room);
     }
 
     public Room LoadRoom()
     {
         if(room == null)
         {
-            if (JsonFileManager.Load(defaultPath, out Room room))
+            if (FileManager.LoadJSON(defaultPath, out Room room))
             {
                 this.room = room;
             }
