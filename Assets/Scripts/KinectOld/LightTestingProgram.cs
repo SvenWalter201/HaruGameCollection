@@ -5,6 +5,7 @@ using System.Linq;
 using System.Drawing;
 using System.Threading;
 using UnityEngine;
+using Color = UnityEngine.Color;
 
 
 class LightTestingProgram : IKinectProgram

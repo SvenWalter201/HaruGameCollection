@@ -163,7 +163,7 @@ public class PictureGenerationManager : Game
 
     private GameObject SpawnObject(string placableObject, Vector3 p, Quaternion q)
     {
-        if(JsonFileManager.LoadObject("Prefabs",placableObject,out UnityEngine.Object o))
+        if(FileManager.LoadObject("Prefabs",placableObject,out UnityEngine.Object o))
         {
             return Instantiate((GameObject)o, p, q);
         }

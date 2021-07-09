@@ -15,7 +15,11 @@ class QuestionManager : Singleton<QuestionManager>
 
     void LoadQuestions()
     {
+<<<<<<< HEAD
         if(JsonFileManager.Load("Resources/Fragenkataog_Trivia", out QuestionCard[] allQuestions)){
+=======
+        if(FileManager.LoadJSON("", out QuestionCard[] allQuestions)){
+>>>>>>> 027a30af0569ff4d25fa1e29af68134e70f43a0a
             this.allQuestions = allQuestions;
         }
         else

@@ -3,9 +3,9 @@ using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
 
-public static class JsonFileManager
+public static class FileManager
 {
-    public static bool Save<T>(string fileName, T content)
+    public static bool SaveJSON<T>(string fileName, T content)
     {
         try
         {
@@ -24,7 +24,23 @@ public static class JsonFileManager
 
     }
 
-    public static bool Load<T>(string path, out T content)
+    public static bool LoadJSONFromResources<T>(string fileName, out T content)
+    {
+        TextAsset a = Resources.Load<TextAsset>(fileName);
+        if (!a)
+        {
+            Debug.LogError("Missing asset: " + fileName + " could not be found.");
+            content = default;
+            return false;
+        }
+
+        string jsonString = a.text;
+        content = JsonConvert.DeserializeObject<T>(jsonString);
+
+        return true;
+    }
+
+    public static bool LoadJSON<T>(string path, out T content)
     {
         if (File.Exists(path))
         {
@@ -72,4 +88,6 @@ public static class JsonFileManager
         }
         return true;
     }
+
+
 }

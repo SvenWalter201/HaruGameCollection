@@ -46,6 +46,27 @@
   "_DuplikLevelSeniors": {
     "ENG": "Duplik Level:Seniors",
     "DE": "Meisterwerke Level:Senioren"
+  },
+  "_MotionMemoryName": {
+    "ENG": "Motion Memory",
+    "DE": "Bewegungsmemory"
+  },
+  "_MotionMemoryUI": {
+    "ENG": "Motion Memory (UI only)",
+    "DE": "Bewegungsmemory (Nur UI)"
+  },
+  "_MotionMemoryHouse": {
+    "ENG": "Motion Memory (House)",
+    "DE": "Bewegungsmemory (Haus)"
+  },
+  "_TriviaQuizName": {
+    "ENG": "Left or Right?",
+    "DE": "Links oder Rechts?"
+
+  },
+  "_DuplikName": {
+    "ENG": "Duplik",
+    "DE": "Meisterwerke"
   }
 
 }

@@ -78,24 +78,31 @@ public class MotionMemoryHouse : Game
     readonly string[] motions = new string[] { "w", "m", "c", "a" };
     MemoryCardHouse[] cards;
 
+    readonly Vector3 cameraPositionOffset = new Vector3(0.3f, 8.8f, 13f);
+    readonly Quaternion cameraRotation = Quaternion.Euler(17f, 180f, 0f);
+    
     void Start()
     {
-        //get the required resources from the virtual world
-        if (AppManager.useVirtualWorld)
-        {
-            houseGO.SetActive(false);
-            windowController = VirtualWorldController.Instance.windowController;
-            Transform house = VirtualWorldController.Instance.house;
-            cam.transform.position = house.position + house.forward * 13f + house.up * 8.8f + house.right * 0.3f;
-            //cam.transform.position = VirtualWorldController.Instance.house.position + new Vector3(0.3f, 8.8f, 13f);
-            cam.transform.rotation = VirtualWorldController.Instance.house.rotation * Quaternion.Euler(17f, 180f, 0f);
-            mainLight.enabled = false;
-        }
         PlayGame();
     }
 
     protected override IEnumerator Init()
     {
+        if (AppManager.useVirtualWorld)
+        {
+            cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
+            cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
+            mainLight.enabled = false;
+            houseGO.SetActive(false);
+            windowController = VirtualWorldController.Instance.windowController;
+            Transform house = windowController.transform;
+
+            Vector3 positionOffset = house.right * cameraPositionOffset.x + house.up * cameraPositionOffset.y + house.forward * cameraPositionOffset.z;
+            yield return StartCoroutine(Tween.TweenPositionAndRotation(cam.transform, house.position + positionOffset, house.rotation * cameraRotation, 3f));
+            //cam.transform.position = house.position + house.forward * 13f + house.up * 8.8f + house.right * 0.3f;
+            //cam.transform.rotation = VirtualWorldController.Instance.house.rotation * Quaternion.Euler(17f, 180f, 0f);
+        }
+
         //initialize UI-components
         progressBar.enabled = false;
         taskText.text = "";

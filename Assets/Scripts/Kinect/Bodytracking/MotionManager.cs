@@ -41,14 +41,14 @@ public class MotionManager : Singleton<MotionManager>
 
         string path = Application.persistentDataPath + "/" + fileName + ".json";
 
-        JsonFileManager.Save(path, motion);
+        FileManager.SaveJSON(path, motion);
     }
 
     public Motion Load(string fileName)
     {
         string path = Application.persistentDataPath + "/" + fileName + ".json";
 
-        if (JsonFileManager.Load(path, out Motion motion))
+        if (FileManager.LoadJSON(path, out Motion motion))
         {
             loadedMotion = motion;
             AppManager.motionLoaded = true;
@@ -67,6 +67,6 @@ public class MotionManager : Singleton<MotionManager>
         };
 
         string path = Application.persistentDataPath + "/" + fileName + ".json";
-        JsonFileManager.Save(path, motion);
+        FileManager.SaveJSON(path, motion);
     }
 }

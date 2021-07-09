@@ -12,6 +12,7 @@ using Q42.HueApi.ColorConverters.HSB;
 using System.Drawing;
 using UnityEngine;
 using Light = Q42.HueApi.Light;
+using Color = UnityEngine.Color;
 
 class LightManager
 {

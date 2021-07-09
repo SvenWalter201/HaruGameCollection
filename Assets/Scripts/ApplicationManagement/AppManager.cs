@@ -21,15 +21,14 @@ public static class AppManager
     public static JointId[] jointConstraints;
 
     static AppConfig appConfig;
-    static string appConfigPath = "/Resources/AppConfig.json";
+    static string appConfigPath = "AppConfig";
 
     /// <summary>
     /// TODO: 
     /// </summary>
     public static bool LoadConfig()
     {
-        appConfigPath = Application.dataPath + appConfigPath;
-        if (JsonFileManager.Load(appConfigPath, out AppConfig appConfig))
+        if (FileManager.LoadJSONFromResources(appConfigPath, out AppConfig appConfig))
         {
             AppManager.appConfig = appConfig;
         }

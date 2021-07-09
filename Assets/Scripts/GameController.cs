@@ -15,7 +15,7 @@ public class GameController : Singleton<GameController>
     [SerializeField]
     Light mainSceneLight;
     [SerializeField]
-    Camera mainSceneCamera;
+    public Camera mainSceneCamera;
 
     Game currentGame;
 
@@ -23,16 +23,12 @@ public class GameController : Singleton<GameController>
 
     public void StartGame(int index)
     {
-
-
         StartCoroutine(LoadLevel(index));
     }
 
 
     IEnumerator LoadLevel(int levelBuildIndex)
     {
-
-
         yield return SceneManager.LoadSceneAsync(levelBuildIndex, LoadSceneMode.Additive);
 
         FlipMainScene();

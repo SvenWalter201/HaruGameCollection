@@ -38,7 +38,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         priorityKeywords = new string[] { "thing", "animal", "person"};
         string appDataPath = Application.dataPath;
         string filePath = appDataPath + fileName;
-        if (JsonFileManager.Load(filePath, out MasterDataClass data))
+        if (FileManager.LoadJSON(filePath, out MasterDataClass data))
         {
             masterData = data;
             //Debug.Log("loading json");
