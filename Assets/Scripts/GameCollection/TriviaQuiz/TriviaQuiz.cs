@@ -73,7 +73,9 @@ public class TriviaQuiz : Game
 
         //get Questionary from json
         List<QuestionCard> questions = QuestionManager.Instance.GetQuestions(questionAmount);
+        Debug.Log("before trim: " + questions[0].ToString());
         QuestionManager.Instance.TrimQuestions(questions, answerAmount, true);
+        Debug.Log("after trim: " +questions[0].ToString());
 
         panels = new AnswerPanel[answerAmount];
 

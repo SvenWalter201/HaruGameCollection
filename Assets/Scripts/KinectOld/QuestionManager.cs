@@ -15,12 +15,13 @@ class QuestionManager : Singleton<QuestionManager>
 
     void LoadQuestions()
     {
-        if(JsonFileManager.Load("", out QuestionCard[] allQuestions)){
+        if(JsonFileManager.Load("Resources/Fragenkataog_Trivia", out QuestionCard[] allQuestions)){
             this.allQuestions = allQuestions;
         }
         else
         {
             this.allQuestions = defaultCatalogue.QuestionCards.ToArray();
+            Debug.Log("1st card later: "+this.allQuestions[0].Answers[1]);
         }
     }
 
@@ -63,7 +64,9 @@ class QuestionManager : Singleton<QuestionManager>
 
         for (int i = 0; i < questionCatalog.Count; i++)
         {
+            Debug.Log("before clone: "+questionCatalog[i].ToString());
             QuestionCard currentCard = (QuestionCard)questionCatalog[i].Clone();
+            Debug.Log("after clone: " + currentCard.ToString());
             List<string> answers = currentCard.Answers;
             int amountToRemove = answers.Count - newAnswerCount;
 
@@ -82,7 +85,7 @@ class QuestionManager : Singleton<QuestionManager>
             {
                 currentCard.Reshuffle();
             }
-            newQuestionCatalog[i] = currentCard;
+            newQuestionCatalog.Add(currentCard);
         }
         
         return newQuestionCatalog;

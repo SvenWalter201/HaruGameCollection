@@ -65,7 +65,22 @@ public class QuestionCard : ScriptableObject, ICloneable
 
     public object Clone()
     {
-        return CreateInstance<QuestionCard>();
+        return new QuestionCard(question,answers,trueAnswer);
+    }
+
+    public override string ToString()
+    {
+
+        string text = "q: "+ question + ", a: ";
+        if(answers == null)
+        {
+            Debug.Log("null answers");
+        }
+        for(int i = 0; i < answers.Count; i++)
+        {
+            text += answers[i];
+        }
+        return text;
     }
 }
 
