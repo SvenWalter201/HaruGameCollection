@@ -18,10 +18,13 @@ public class BodyDisplay : Singleton<BodyDisplay>
     LineRenderer body = default, leftLeg = default, rightLeg = default, leftArm = default, rightArm = default;
 
     [SerializeField]
-    bool useHumanoid = true;
+    bool useSillouette = true;
 
     [SerializeField]
     Transform rootBone;
+
+    [SerializeField]
+    SilhouetteRig characterRig2D;
 
     GameObject bodyParentGO;
 
@@ -50,9 +53,10 @@ public class BodyDisplay : Singleton<BodyDisplay>
     void Awake()
     {
         currentTimeStep = FPS_30_DELTA;
-        OnValidate();
+        //OnValidate();
     }
 
+    /*
     void OnValidate()
     {  
         if (useHumanoid)
@@ -73,13 +77,13 @@ public class BodyDisplay : Singleton<BodyDisplay>
             /*
                      if (display == DisplayOption.IGNORE || display == DisplayOption.NONE)
             return;
-             */
+             
             bodyParentGO.SetActive(true);
 
             if (rootBone != null && rootBone.gameObject.activeInHierarchy)
                 rootBone.gameObject.SetActive(false);
         }
-    }
+    }*/
 
     public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy, TMP_InputField smoothingFrames)
     {
@@ -131,18 +135,20 @@ public class BodyDisplay : Singleton<BodyDisplay>
                     loadedMotion = MotionManager.Instance.loadedMotion;
                     if (loadedMotion != null && loadedMotion.motion != null)
                     {
-                        if (!useHumanoid)
+                        if (!useSillouette)
                         {
+                            /*
                             if (!bodyParentGO.activeInHierarchy)
                                 OnBeginDisplay();
-
+                            */
                             DisplayLoaded();
                         }
                         else
                         {
+                            /*
                             if (!rootBone.gameObject.activeInHierarchy)
                                 rootBone.gameObject.SetActive(true);
-
+                            */
                             DisplayHumanoid(loadedMotion.motion[0]);
                         }
 
@@ -256,7 +262,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
     }
 
     public void OnBeginDisplay() {
-        if (useHumanoid)
+        if (useSillouette)
         {
             
         }
@@ -267,7 +273,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
     
     public void OnStopDisplay() {
-        if (useHumanoid)
+        if (useSillouette)
         {
 
         }
@@ -451,6 +457,13 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
     public void DisplayHumanoid(UJoint[] jointPositions)
     {
+        Vector3[] joints = GetPositions(jointPositions);
+        characterRig2D.Resolve(joints);
+    }
+
+    /*
+    public void DisplayHumanoid(UJoint[] jointPositions)
+    {
         //get all the transforms from the hierarchy
 
         Transform
@@ -570,8 +583,8 @@ public class BodyDisplay : Singleton<BodyDisplay>
             t.Rotate(transform.up, angle, Space.Self);
             //t.rotation =  Quaternion.LookRotation(newForward);
         }
-        */
-    }
+        
+    }*/
 
     #endregion DISPLAY
 
