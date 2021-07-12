@@ -41,6 +41,8 @@ public class SilhouetteRig : MonoBehaviour
 
     public void Resolve(Vector3[] positions)
     {
+        pelvis.position = positions[(int)Pelvis];
+
         Rotate(pelvis, Pelvis, SpineNavel);
         Rotate(spineNaval, SpineNavel, SpineChest);
         Rotate(spinechest, SpineChest, Neck);

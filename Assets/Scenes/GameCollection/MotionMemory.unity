@@ -161,8 +161,9 @@ MonoBehaviour:
   rightLeg: {fileID: 1359628799}
   leftArm: {fileID: 697857854}
   rightArm: {fileID: 1572791608}
-  useHumanoid: 0
+  useSillouette: 1
   rootBone: {fileID: 0}
+  characterRig2D: {fileID: 0}
   frame: 0
   comparePercentage: 0
 --- !u!4 &20510692
@@ -255,6 +256,8 @@ MonoBehaviour:
   mainsceneCanvas: {fileID: 0}
   mainSceneAudioListener: {fileID: 0}
   mainSceneEventSystem: {fileID: 0}
+  mainSceneLight: {fileID: 0}
+  mainSceneCamera: {fileID: 0}
 --- !u!4 &35573545
 Transform:
   m_ObjectHideFlags: 0
@@ -1010,7 +1013,7 @@ Transform:
   - {fileID: 408445724}
   - {fileID: 1359628798}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &630459246
 GameObject:
@@ -1758,11 +1761,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846369832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalPosition: {x: 0, y: 0, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1003437552
 GameObject:
@@ -3432,7 +3435,7 @@ MonoBehaviour:
   timeBeforeStart: 5
   maxGroupSize: 2
   maximumRounds: 3
-  cardShowingTime: 7
+  cardShowingTime: 3
   motionGuessingTime: 12
   timeBeforeMotionTracking: 1
   timeBetweenRounds: 2

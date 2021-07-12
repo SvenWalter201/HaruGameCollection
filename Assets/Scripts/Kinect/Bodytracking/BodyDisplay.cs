@@ -125,34 +125,27 @@ public class BodyDisplay : Singleton<BodyDisplay>
                 case DisplayOption.TRACKED:
                     if (AppManager.bodyTrackingRunning)
                     {
+                        /*
                         if (!bodyParentGO.activeInHierarchy)
                             OnBeginDisplay();
+                        */
+                        if (!useSillouette)
+                        {
+                            DisplayArmature(trackedJoints);
 
-                        DisplayArmature(trackedJoints);
+                        }
+                        else
+                        {
+                            DisplayHumanoid(trackedJoints);
+
+                        }
                     }
                     break;
                 case DisplayOption.LOADED:
                     loadedMotion = MotionManager.Instance.loadedMotion;
                     if (loadedMotion != null && loadedMotion.motion != null)
                     {
-                        if (!useSillouette)
-                        {
-                            /*
-                            if (!bodyParentGO.activeInHierarchy)
-                                OnBeginDisplay();
-                            */
-                            DisplayLoaded();
-                        }
-                        else
-                        {
-                            /*
-                            if (!rootBone.gameObject.activeInHierarchy)
-                                rootBone.gameObject.SetActive(true);
-                            */
-                            DisplayHumanoid(loadedMotion.motion[0]);
-                        }
-
-
+                        DisplayLoaded();
                     }
                     break;
                 case DisplayOption.NONE:
@@ -174,7 +167,14 @@ public class BodyDisplay : Singleton<BodyDisplay>
     {
         if (loadedMotion.motion.Count == 1)
         {
-            DisplayArmature(loadedMotion.motion[0]);
+            if (!useSillouette)
+            {
+                DisplayArmature(loadedMotion.motion[0]);
+            }
+            else
+            {
+                DisplayHumanoid(loadedMotion.motion[0]);
+            }
             return;
         }
 
@@ -187,7 +187,15 @@ public class BodyDisplay : Singleton<BodyDisplay>
         else if (replayFrame == loadedMotion.motion.Count)
                 replayFrame--;
 
-        DisplayArmature(GetInterpolatedValue(loadedMotion.motion, replayFrame));
+        if (!useSillouette)
+        {
+            DisplayArmature(GetInterpolatedValue(loadedMotion.motion, replayFrame));
+
+        }
+        else
+        {
+            DisplayHumanoid(GetInterpolatedValue(loadedMotion.motion, replayFrame));
+        }
     }
 
     public Vector3[] GetInterpolatedValue(List<UJoint[]> motion, int currentFrame)
@@ -453,6 +461,11 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
         void SetPosition(LineRenderer l, int index, JointId id) => 
             l.SetPosition(index, joints[(int)id].Position);
+    }
+
+    public void DisplayHumanoid(Vector3[] jointPositions)
+    {
+        characterRig2D.Resolve(jointPositions);
     }
 
     public void DisplayHumanoid(UJoint[] jointPositions)
@@ -807,7 +820,7 @@ public struct UJoint
 
     public static Vector3 AdjustScale(Vector3 v3)
     {
-        Vector3 n_v3 = new Vector3(v3.x, -v3.y, v3.z);
+        Vector3 n_v3 = new Vector3(-v3.x, -v3.y, v3.z);
         n_v3 *= 0.001f;
         return n_v3;
     }
