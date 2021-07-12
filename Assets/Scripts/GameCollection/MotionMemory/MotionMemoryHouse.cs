@@ -65,6 +65,9 @@ public class MotionMemoryHouse : Game
     GameObject houseGO;
 
     [SerializeField]
+    GameObject sceneryGO;
+
+    [SerializeField]
     WindowController windowController;
 
     [SerializeField]
@@ -94,6 +97,7 @@ public class MotionMemoryHouse : Game
             cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
             mainLight.enabled = false;
             houseGO.SetActive(false);
+            sceneryGO.SetActive(false);
             windowController = VirtualWorldController.Instance.windowController;
             Transform house = windowController.transform;
 

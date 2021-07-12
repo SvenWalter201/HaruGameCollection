@@ -67,6 +67,14 @@
   "_DuplikName": {
     "ENG": "Duplik",
     "DE": "Meisterwerke"
+  },
+  "_EnterVirtualWorld": {
+    "ENG": "Enter virtual world",
+    "DE": "Virtuelle Welt betreten"
+  },
+  "_MainMenuHeader": {
+    "ENG": "Haru Game Collection",
+    "DE": "Haru Spielesammlung"
   }
 
 }

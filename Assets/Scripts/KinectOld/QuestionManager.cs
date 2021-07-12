@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using Newtonsoft.Json;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 class QuestionManager : Singleton<QuestionManager>
@@ -15,11 +10,8 @@ class QuestionManager : Singleton<QuestionManager>
 
     void LoadQuestions()
     {
-<<<<<<< HEAD
-        if(JsonFileManager.Load("Resources/Fragenkataog_Trivia", out QuestionCard[] allQuestions)){
-=======
-        if(FileManager.LoadJSON("", out QuestionCard[] allQuestions)){
->>>>>>> 027a30af0569ff4d25fa1e29af68134e70f43a0a
+        if(FileManager.LoadJSONFromResources("Fragenkataog_Trivia", out QuestionCard[] allQuestions))
+        {
             this.allQuestions = allQuestions;
         }
         else

@@ -4729,12 +4729,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1614654948}
   m_Layer: 0
-  m_Name: BackGround
+  m_Name: Scenery
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1614654948
 Transform:
   m_ObjectHideFlags: 0
@@ -6111,6 +6111,7 @@ MonoBehaviour:
   semitransparentPanel: {fileID: 1408926338}
   house: {fileID: 266477582}
   houseGO: {fileID: 449293970}
+  sceneryGO: {fileID: 1614654947}
   windowController: {fileID: 449293972}
   cam: {fileID: 793099370}
   mainLight: {fileID: 420787560}

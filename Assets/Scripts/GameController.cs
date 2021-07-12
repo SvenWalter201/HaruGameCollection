@@ -26,7 +26,6 @@ public class GameController : Singleton<GameController>
         StartCoroutine(LoadLevel(index));
     }
 
-
     IEnumerator LoadLevel(int levelBuildIndex)
     {
         yield return SceneManager.LoadSceneAsync(levelBuildIndex, LoadSceneMode.Additive);

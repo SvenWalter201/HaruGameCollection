@@ -3,6 +3,15 @@ using UnityEngine;
 
 public static class AppManager
 {
+    public static readonly int
+        virtualWorldBuildIndex = 0,
+        mainMenuBuildIndex = 1,
+        initSceneBuildIndex = 2,
+        motionMemoryBuildIndex = 3,
+        motionMemoryHouseBuildIndex = 4,
+        duplikBuildIndex = 5,
+        triviaQuizBuildIndex = 6;
+
     public static bool
         applicationInitialized = false,
         applicationRunning = false,
