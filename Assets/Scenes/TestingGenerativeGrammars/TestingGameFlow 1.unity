@@ -2102,7 +2102,8 @@ MonoBehaviour:
   count: 0
   radius: 1.5
   drawingTime: 2
-  showingTime: 15
+  showingTime: 8
+  maxRounds: 3
   Panel: {fileID: 1093716908}
   ProgressBar: {fileID: 1599325261}
   modeText: {fileID: 46120009}

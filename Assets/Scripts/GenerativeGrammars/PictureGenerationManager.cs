@@ -44,6 +44,8 @@ public class PictureGenerationManager : Game
     float drawingTime = 5;
     [SerializeField]
     float showingTime = 20;
+    [SerializeField]
+    float maxRounds = 3;
 
     [Space]
     [Header("UIElements")]
@@ -116,21 +118,50 @@ public class PictureGenerationManager : Game
         yield break;
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Debug.Log("Escape key was released");
+            //stop corutines?
+            Finish();
+        }
+    }
+
     protected override IEnumerator Execute()
     {
-
-        for (int i = 0; i < MAX_SENTENCES; i++)
+        while(maxRounds > 0)
         {
-            PaintPicture();
-            sentenceArray[i].text = grammars.PrintSentence();
-            progressBar.enabled = true;
-            yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
-            progressBar.enabled = false;
-        }
+            Panel.SetActive(true);
+            Debug.Log("starting Round: " + maxRounds);
+            for (int i = 0; i < MAX_SENTENCES; i++)
+            {
+                PaintPicture();
+                sentenceArray[i].text = grammars.PrintSentence();
+                progressBar.enabled = true;
+                yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+                progressBar.enabled = false;
+            }
 
-        Panel.SetActive(false);
-        curtain.MoveCurtain();
-        yield return timer.SimpleTimer(showingTime);
+            Panel.SetActive(false);
+            curtain.MoveCurtain();
+            maxRounds--;
+            yield return timer.SimpleTimer(showingTime);
+            curtain.MoveCurtain();
+            foreach (TextMeshProUGUI t in sentenceArray)
+            {
+                t.text = "";
+            }
+            //Array.Clear(sentenceArray, 0, sentenceArray.Length);
+            Debug.Log("waiting 10 to restart");
+            yield return timer.SimpleTimer(10);
+
+            foreach (GameObject presentOb in presentGameObjects)
+            {
+                Destroy(presentOb);
+            }
+            presentGameObjects.Clear();
+        }
         yield break;
     }
 
@@ -366,7 +397,6 @@ public class PictureGenerationManager : Game
     {
         if (current.TryGetComponent<AnimalController>(out AnimalController ac))
         {
-            Debug.Log("setting the colour");
             current.GetComponent<AnimalController>().CreateColor(si.Colour.name);
         }
     }

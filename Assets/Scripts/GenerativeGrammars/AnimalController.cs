@@ -19,7 +19,7 @@ public class AnimalController : MonoBehaviour
 
     public void CreateColor(string fileName)
     {
-        Debug.Log(Application.dataPath + "/Resources/Textures/ColorPalettes/" + fileName + ".png");
+        //Debug.Log(Application.dataPath + "/Resources/Textures/ColorPalettes/" + fileName + ".png");
         if (FileManager.LoadPNG(Application.dataPath + "/Resources/Textures/ColorPalettes/" + fileName + ".png", out Texture2D tex))
         {
             Material ins = Instantiate(animalBaseMaterial);

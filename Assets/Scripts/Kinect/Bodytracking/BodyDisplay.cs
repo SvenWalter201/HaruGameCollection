@@ -321,7 +321,19 @@ public class BodyDisplay : Singleton<BodyDisplay>
             StartCoroutine(BodyCompareCoroutine());
     }
 
-
+    public Vector3 GetBodyPosition(UJoint[] joints)
+    {
+        if (joints == null)
+        {
+            Debug.Log("joints are null");
+            //returning a unit vector for testing reason
+            return new Vector3(1, 1, 1);
+        }
+        else
+        {
+            return joints[(int)Pelvis].Position;
+        }
+    }
 
     public Vector3 GetBodyPosition() =>
             GetBodyPosition(trackedJoints);
@@ -331,8 +343,8 @@ public class BodyDisplay : Singleton<BodyDisplay>
     /// </summary>
     /// <param name="joints"></param>
     /// <returns></returns>
-    public Vector3 GetBodyPosition(UJoint[] joints) => 
-        joints[(int)Pelvis].Position;
+    //public Vector3 GetBodyPosition(UJoint[] joints) => 
+    //    joints[(int)Pelvis].Position;
 
     public bool GetBodyBoundingBox(out Bounds b) =>
         GetBodyBoundingBox(trackedJoints, out b);

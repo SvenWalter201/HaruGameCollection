@@ -118,7 +118,6 @@ public class MotionMemory : Game
             yield return timer.SimpleTimer(timeBetweenRounds);
         }
 
-        //Debug.Log("???");
         BodyDisplay.Instance.OnStopDisplay();
         taskText.text = "";
 

@@ -132,7 +132,7 @@
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
-		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "positions":["im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
 		  "moods":["deformed","colorful",""]
@@ -149,7 +149,7 @@
 		  "scalable":"true",
 		  "rotatable":"true",
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts","im Vordergund"],
-		  "colours":["red","blue","purple"],
+		  "colours":["red","blue","purple","green","yellow","orange","grey","brown"],
 		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
@@ -165,7 +165,7 @@
 		  "scalable":"true",
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
-		  "colours":["red","blue","purple"],
+		  "colours":["red","blue","purple","green","yellow","orange","grey","brown"],
 		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
@@ -181,7 +181,7 @@
 		  "scalable":"true",
 		  "rotatable":"true",
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
-		  "colours":["red","blue","purple"],
+		  "colours":["red","blue","purple","green","yellow","orange","grey","brown"],
 		  "actions":["ist","läuft","steht"],
 		  "moods":["bored","excited","friendly"]
 		},
@@ -191,7 +191,7 @@
 		  "gender":"m",
 		  "model":"character",
 		  "asset":"teacher",
-		  "texture":"grandma",
+		  "texture":"teacher_M",
 		  "scalable":false,
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
@@ -205,7 +205,7 @@
 		  "gender":"f",
 		  "model":"character",
 		  "asset":"teacher",
-		  "texture":"grandma",
+		  "texture":"teacher_F",
 		  "scalable":false,
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
@@ -219,7 +219,7 @@
 		  "gender":"f",
 		  "model":"character",
 		  "asset":"princess",
-		  "texture":"grandma",
+		  "texture":"princess",
 		  "scalable":false,
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
@@ -247,7 +247,7 @@
 		  "gender":"m",
 		  "model":"character",
 		  "asset":"constructionworker",
-		  "texture":"grandma",
+		  "texture":"boy",
 		  "scalable":false,
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
@@ -261,7 +261,7 @@
 		  "gender":"n",
 		  "model":"character",
 		  "asset":"girl",
-		  "texture":"grandma",
+		  "texture":"girl",
 		  "scalable":false,
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
@@ -281,7 +281,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
 		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
-		  "moods":["bored","excited","friendly"]
+		  "moods":["bored","excited","friendly"] 
 		},
 		{
 		  "type":"person",
@@ -331,6 +331,38 @@
                 "lila",
                 "lila",
                 "lila"
+            ]
+        },"brown": {
+            "type": "colour",
+            "name": "brown",
+            "translation": [
+                "dunkler",
+                "dunkle",
+                "dunkles"
+            ]
+        },"grey": {
+            "type": "colour",
+            "name": "grey",
+            "translation": [
+                "grauer",
+                "graue",
+                "graues"
+            ]
+        },"orange": {
+            "type": "colour",
+            "name": "orange",
+            "translation": [
+                "orangener",
+                "orangene",
+                "orangenes"
+            ]
+        },"yellow": {
+            "type": "colour",
+            "name": "yellow",
+            "translation": [
+                "gelber",
+                "gelbe",
+                "gelbes"
             ]
         }
 	},
@@ -396,9 +428,9 @@
 				"gelangweiltes"
 			],
 			"textures": [
-				"happyMouth",
+				"neutralMouth",
 				"eyes",
-				"sadEyebrows"
+				"neutralEyebrows"
 			]
         },
 		"excited": {

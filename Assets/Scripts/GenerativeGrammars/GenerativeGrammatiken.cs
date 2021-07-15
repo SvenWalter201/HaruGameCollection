@@ -79,7 +79,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         //si.ClearInformation();
         string template = GetTemplate();
         sentence = FillInTemplate(template);
-        //Debug.Log(sentence);
+        Debug.Log(sentence);
         return si;
     }
 
@@ -330,7 +330,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         else
         {
             int r = UnityEngine.Random.Range(1, masterData.template.Length);
-            //Debug.Log(masterData.template[r]);
+            Debug.Log(masterData.template[r]);
             return masterData.template[r];
         }
 
@@ -373,23 +373,15 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
         if (si.Singular == true)
         {
-            Debug.Log("IN THE IF STATEMENT");
-
             switch (currentperson.gender)
             {
                 case 'm':
-                    //Debug.Log("peron mood (m) : " + currentperson.moods[r]);
-                    //Debug.Log("printed word M " + masterData.moods[currentperson.moods[r]].translation[0]);
                     return masterData.moods[currentperson.moods[r]].translation[0];
 
                 case 'f':
-                    //Debug.Log("peron mood (f): " + currentperson.moods[r]);
-                    //Debug.Log("printed word F " + masterData.moods[currentperson.moods[r]].translation[1]);
                     return masterData.moods[currentperson.moods[r]].translation[1];
 
                 case 'n':
-                    //Debug.Log("peron mood (n): " + currentperson.moods[r]);
-                    //Debug.Log("printed word N " + masterData.moods[currentperson.moods[r]].translation[2]);
                     return masterData.moods[currentperson.moods[r]].translation[2];
 
                 default: return "default";
@@ -397,12 +389,12 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         else
         {
-            Debug.Log(si.Singular);
-            Debug.Log(masterData.moods[currentperson.moods[r]].name);
+            Debug.Log("why are we here ?");
+            //Debug.Log(si.Singular);
+            Debug.Log("retruning: " + masterData.moods[currentperson.moods[r]].name);
             return "default:" + masterData.moods[currentperson.moods[r]].name;
+            
         }
-
-
     }
 
     private string GetAction()
@@ -654,6 +646,9 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 return "[eine @mood@ Gruppe von Wolkenkratzern,einige Wolkenkratzer, ein paar Wolkenkratzer]";
             case "Auto":
                 return "einige Autos";
+            case "Vulkan":
+                si.Singular = true;
+                return "Vulkan";
             default://,einige" + word + "en,ein paar " + word + "en 
                 return "[eine Gruppe von " + word + "n,einige " + word + "n, ein paar " + word + "n ]";
         }
