@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb312cdd9c1520f41a4e63c78eb2251b, type: 3}
-  m_Name: TEST
+  m_Name: BetterSpatz
   m_EditorClassIdentifier: 
-  question: Test
+  question: Besser den Spatz in der Hand...
   answers:
-  - Test1
-  - Test2
+  - ...den Spatz aif dem Kopf
+  - ...die Taube auf dem Dach
   trueAnswer: 1
