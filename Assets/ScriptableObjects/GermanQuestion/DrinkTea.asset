@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb312cdd9c1520f41a4e63c78eb2251b, type: 3}
-  m_Name: AllRoutes
+  m_Name: DrinkTea
   m_EditorClassIdentifier: 
-  question: "Alle Wege f\xFChren nach..."
+  question: Abwarten und...
   answers:
-  - Rom
-  - London
-  trueAnswer: 0
+  - ...Oma fragen
+  - ...Tee trinken
+  trueAnswer: 1
