@@ -58,11 +58,11 @@ public class SilhouetteRig : MonoBehaviour
 
         Rotate(hipRight, HipRight, KneeRight);
         Rotate(kneeRight, KneeRight, AnkleRight);
-        Rotate(ankleRight, AnkleRight, FootRight);
+        //Rotate(ankleRight, AnkleRight, FootRight);
 
         Rotate(hipLeft, HipLeft, KneeLeft);
         Rotate(kneeLeft, KneeLeft, AnkleLeft);
-        Rotate(ankleLeft, AnkleLeft, FootLeft);
+        //Rotate(ankleLeft, AnkleLeft, FootLeft);
 
         void Rotate(Transform parentTransform, JointId parent, JointId child)
         {
