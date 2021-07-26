@@ -41,7 +41,7 @@ public class MotionManager : Singleton<MotionManager>
 
         string path = Application.persistentDataPath + "/" + fileName + ".json";
 
-        FileManager.SaveJSON(path, motion);
+        FileManager.SaveJSON(path, loadedMotion);
     }
 
     public Motion Load(string fileName)
@@ -63,8 +63,10 @@ public class MotionManager : Singleton<MotionManager>
         Motion motion = new Motion
         {
             fps = 30,
-            motion = new List<UJoint[]> { poseJoints }
+            motion = new List<UJoint[]> { poseJoints },
+            notInvolvedLimbs = loadedMotion.notInvolvedLimbs
         };
+        
 
         string path = Application.persistentDataPath + "/" + fileName + ".json";
         FileManager.SaveJSON(path, motion);
