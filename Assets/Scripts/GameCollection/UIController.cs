@@ -16,7 +16,8 @@ public class UIController : Singleton<UIController>
     [SerializeField] 
     InputField fileNameField;
     [SerializeField] 
-    Button loadMotion, saveMotion, savePose;
+    Button loadMotion, saveMotion, savePose, addLimbConstraint;
+    TMP_Dropdown limbConstraints;
     [Space]
     [Header("ReplaySection")]
     [SerializeField] 
@@ -36,7 +37,7 @@ public class UIController : Singleton<UIController>
     [SerializeField] 
     GameObject imageDisplayPanel;
 
-    GameObject savePoseGO, bodyTrackingGO, displayGO, recordGO, saveMotionGO, frameSliderGO, playPauseButtonGO, imageDisplayGO, bodyCompareGO;
+    //GameObject savePoseGO, bodyTrackingGO, displayGO, recordGO, saveMotionGO, frameSliderGO, playPauseButtonGO, imageDisplayGO, bodyCompareGO;
 
     public readonly ColorBlock regularButtonColors = new ColorBlock
     {
@@ -65,6 +66,7 @@ public class UIController : Singleton<UIController>
 
     void Start()
     {
+        /*
         bodyTrackingGO = bodyTracking.gameObject;
         displayGO = display.gameObject;
         recordGO = record.gameObject;
@@ -74,7 +76,7 @@ public class UIController : Singleton<UIController>
         savePoseGO = savePose.gameObject;
         imageDisplayGO = imageDisplay.gameObject;
         bodyCompareGO = bodyCompare.gameObject;
-
+        */
         imageTracking.onClick.AddListener(TrackImageData);
         imageTracking.colors = offStateColors;
 
@@ -94,14 +96,15 @@ public class UIController : Singleton<UIController>
         bodyCompare.onClick.AddListener(RunBodyCompare);
         bodyCompare.colors = offStateColors;
 
-        imageDisplayGO.SetActive(false);
-
-        recordGO.SetActive(false);
-        frameSliderGO.SetActive(false);
-        playPauseButtonGO.SetActive(false);
-        saveMotionGO.SetActive(false);
-        savePoseGO.SetActive(false);
-        bodyCompareGO.SetActive(false);
+        //imageDisplayGO.SetActive(false);
+        imageDisplay.gameObject.SetActive(false);
+        record.gameObject.SetActive(false);
+        frameSlider.gameObject.SetActive(false);
+        playPauseButton.gameObject.SetActive(false);
+        saveMotion.gameObject.SetActive(false);
+        savePose.gameObject.SetActive(false);
+        bodyCompare.gameObject.SetActive(false);
+        
 
         BodyDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy, smoothingFrames);
 
@@ -113,7 +116,7 @@ public class UIController : Singleton<UIController>
         {
             AppManager.imageTrackingRunning = false;
             imageTracking.colors = offStateColors;
-            imageDisplayGO.SetActive(false);
+            imageDisplay.gameObject.SetActive(false);
         }
         else
         {
@@ -122,7 +125,7 @@ public class UIController : Singleton<UIController>
                 imageTracking.colors = onStateColors;
 
                 //enable UI elements
-                imageDisplayGO.SetActive(true);
+                imageDisplay.gameObject.SetActive(true);
             }
         }
     }
@@ -169,9 +172,9 @@ public class UIController : Singleton<UIController>
             AppManager.bodyTrackingRunning = false;
             bodyTracking.colors = offStateColors;
 
-            recordGO.SetActive(false);
+            record.gameObject.SetActive(false);
             AppManager.bodyCompareRunning = false;
-            bodyCompareGO.SetActive(false);
+            bodyCompare.gameObject.SetActive(false);
         }
         else
         {
@@ -180,10 +183,10 @@ public class UIController : Singleton<UIController>
                 bodyTracking.colors = onStateColors;
 
                 //enable UI elements
-                recordGO.SetActive(true);
+                record.gameObject.SetActive(true);
                 if (AppManager.motionLoaded)
                 {
-                    bodyCompareGO.SetActive(true);
+                    bodyCompare.gameObject.SetActive(true);
                     //compare enable
                 }
             }
@@ -202,26 +205,26 @@ public class UIController : Singleton<UIController>
     {
         if (!AppManager.motionLoaded)
         {
-            bodyCompareGO.SetActive(false);
+            bodyCompare.gameObject.SetActive(false);
             Debug.Log("couldn't load motion. File either doesn't exist or is broken");
             return;
         }
         else if(motion.motion.Count > 1){
-            frameSliderGO.SetActive(true);
-            playPauseButtonGO.SetActive(true);
-            savePoseGO.SetActive(true);
-            bodyCompareGO.SetActive(false);
+            frameSlider.gameObject.SetActive(true);
+            playPauseButton.gameObject.SetActive(true);
+            savePose.gameObject.SetActive(true);
+            bodyCompare.gameObject.SetActive(false);
         }
         else
         {
-            frameSliderGO.SetActive(false);
-            playPauseButtonGO.SetActive(false);
-            savePoseGO.SetActive(false);
+            frameSlider.gameObject.SetActive(false);
+            playPauseButton.gameObject.SetActive(false);
+            savePose.gameObject.SetActive(false);
         }
-        saveMotionGO.SetActive(true);
+        saveMotion.gameObject.SetActive(true);
         if (AppManager.bodyTrackingRunning)
         {
-            bodyCompareGO.SetActive(true);
+            bodyCompare.gameObject.SetActive(true);
         }
     }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb312cdd9c1520f41a4e63c78eb2251b, type: 3}
   m_Name: BetterSpatz
   m_EditorClassIdentifier: 
-  question: Besser den Spatz in der Hand...
+  question: Besser den Spatz in der Hand als...
   answers:
   - ...den Spatz auf dem Kopf
   - ...die Taube auf dem Dach

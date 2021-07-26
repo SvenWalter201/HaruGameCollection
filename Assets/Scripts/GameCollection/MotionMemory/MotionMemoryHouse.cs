@@ -94,7 +94,6 @@ public class MotionMemoryHouse : Game
         if (AppManager.useVirtualWorld)
         {
             cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
-            cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
             mainLight.enabled = false;
             houseGO.SetActive(false);
             sceneryGO.SetActive(false);
@@ -213,6 +212,8 @@ public class MotionMemoryHouse : Game
     {
         taskText.text = StringRes.Get("_MotionMemorize");
 
+        yield return timer.SimpleTimer(3f);
+
         yield return timer.SimpleTimer(timeBetweenCardsShowing);
 
         int remainingGroupSize = unsolved.Count < maxGroupSize ? unsolved.Count : maxGroupSize;
@@ -323,13 +324,8 @@ public class MotionMemoryHouse : Game
 
             tempStack.Remove(card);
 
-
-
-
             if (i < tempStackSize)
-            {
                 yield return timer.SimpleTimer(timeBetweenCardsGuessing);
-            }
         }
     }
 

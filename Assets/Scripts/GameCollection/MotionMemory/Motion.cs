@@ -6,6 +6,7 @@ public class Motion
 {
     public int fps;
     public List<UJoint[]> motion;
+    public List<Limbs> notInvolvedLimbs;
 }
 
 [Serializable]

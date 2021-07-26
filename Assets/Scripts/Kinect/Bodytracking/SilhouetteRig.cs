@@ -50,11 +50,11 @@ public class SilhouetteRig : MonoBehaviour
 
         Rotate(shoulderRight, ShoulderRight, ElbowRight);
         Rotate(elbowRight, ElbowRight, WristRight);
-        Rotate(wristRight, WristRight, HandRight);
+        //Rotate(wristRight, WristRight, HandRight);
 
         Rotate(shoulderLeft, ShoulderLeft, ElbowLeft);
         Rotate(elbowLeft, ElbowLeft, WristLeft);
-        Rotate(wristLeft, WristLeft, HandLeft);
+        //Rotate(wristLeft, WristLeft, HandLeft);
 
         Rotate(hipRight, HipRight, KneeRight);
         Rotate(kneeRight, KneeRight, AnkleRight);
@@ -64,6 +64,15 @@ public class SilhouetteRig : MonoBehaviour
         Rotate(kneeLeft, KneeLeft, AnkleLeft);
         //Rotate(ankleLeft, AnkleLeft, FootLeft);
 
+        /*
+        wristRight.localRotation = (shoulderRight.localRotation.eulerAngles.z < 90 && shoulderRight.localRotation.eulerAngles.z > -90) ?
+            Quaternion.Euler(180, 0, 18) :
+            Quaternion.Euler(0, 0, -18);
+
+        wristLeft.localRotation = (shoulderLeft.localRotation.eulerAngles.z < 90 && shoulderLeft.localRotation.eulerAngles.z > -90) ?
+            Quaternion.Euler(180, 0, -18) :
+            Quaternion.Euler(0, 0, 18);
+        */
         void Rotate(Transform parentTransform, JointId parent, JointId child)
         {
             Vector3 pp = positions[(int)parent];

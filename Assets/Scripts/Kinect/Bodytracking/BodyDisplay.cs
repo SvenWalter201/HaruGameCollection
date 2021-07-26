@@ -130,15 +130,9 @@ public class BodyDisplay : Singleton<BodyDisplay>
                             OnBeginDisplay();
                         */
                         if (!useSillouette)
-                        {
                             DisplayArmature(trackedJoints);
-
-                        }
                         else
-                        {
                             DisplayHumanoid(trackedJoints);
-
-                        }
                     }
                     break;
                 case DisplayOption.LOADED:
@@ -168,13 +162,9 @@ public class BodyDisplay : Singleton<BodyDisplay>
         if (loadedMotion.motion.Count == 1)
         {
             if (!useSillouette)
-            {
                 DisplayArmature(loadedMotion.motion[0]);
-            }
             else
-            {
                 DisplayHumanoid(loadedMotion.motion[0]);
-            }
             return;
         }
 
@@ -337,6 +327,16 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
     public Vector3 GetBodyPosition() =>
             GetBodyPosition(trackedJoints);
+
+    public float GetTorsoHeight(UJoint[] joints)
+    {
+        Vector3 headPosition = joints[(int)Head].Position;
+        Vector3 pelvisPosition = joints[(int)Pelvis].Position;
+        return Mathf.Abs(headPosition.y - pelvisPosition.y);
+    }
+
+    public float GetTorsoHeight() =>
+    GetTorsoHeight(trackedJoints);
 
     /// <summary>
     /// Return the pelvis position in adjusted scale, not accounting for y position. 
@@ -717,6 +717,35 @@ public class BodyDisplay : Singleton<BodyDisplay>
         return xyz.x && xyz.y && xyz.z;
     }
 
+    const float normalizationTorsoHeight = 10;
+
+    /// <summary>
+    /// Scales a pose by a certain factor using the pelvis as the origin. This can be used for more accurate pose comparision by using the difference in bodyheights of both poses as the scale factor
+    /// </summary>
+    /// <param name="torsoHeight"></param>
+    /// <param name="pose"></param>
+    /// <returns></returns>
+    public UJoint[] NormalizePose(float scaleFactor, UJoint[] pose)
+    {
+        Vector3 pelvisPosition = pose[(int)Pelvis].Position;
+
+        for (int i = 1; i < pose.Length; i++)
+        {
+            Vector3 pos = pose[i].Position;
+            Vector3 relativeToPelvis = pos - pelvisPosition;
+            relativeToPelvis *= scaleFactor;
+            pose[i].Position = pelvisPosition + relativeToPelvis;
+        }
+
+        return pose;
+    }
+
+
+    public float GetScaleFactor(UJoint[] neutralPose)
+    {
+        float torsoHeight = GetTorsoHeight(neutralPose);
+        return normalizationTorsoHeight / torsoHeight;
+    }
 
     /// <summary>
     /// Determine how much alike two poses are to one another. Return the result in percent
@@ -732,6 +761,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
         JointId[] jointConstraints = AppManager.jointConstraints;
 
         Vector3 posDifferenceSum = Vector3.zero;
+        Vector3 mirrorPosDifferenceSum = Vector3.zero;
 
         Vector3 originalPelvisPosition = lhs[(int)Pelvis].Position;
         Vector3 comparePelvisPosition = rhs[(int)Pelvis].Position;
