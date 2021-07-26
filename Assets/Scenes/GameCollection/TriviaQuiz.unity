@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18284068, g: 0.2260141, b: 0.29228008, a: 1}
+  m_IndirectSpecularColor: {r: 0.18284073, g: 0.22601438, b: 0.29228067, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1088,11 +1088,11 @@ MonoBehaviour:
   panelHolder: {fileID: 451128420}
   normal: {fileID: 4300000, guid: 529542d3d5350154cad8e70fe3099a55, type: 2}
   glowing: {fileID: 1903017430687618170, guid: 29b094960b88312428dbab306614ccbb, type: 3}
-  glowTime: 2
-  answerTime: 2
-  showCorrectAnswerTime: 1
-  questionAmount: 1
-  answerAmount: 4
+  glowTime: 5
+  answerTime: 20
+  showCorrectAnswerTime: 7
+  questionAmount: 5
+  answerAmount: 2
   bulbMaterial: {fileID: 2100000, guid: 014b2b0eb39bb0244bfe10c31a424fe0, type: 2}
   countMode: 1
 --- !u!4 &1155119340
@@ -1138,7 +1138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f63b673971d47da4da471bd3f10ac509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultCatalogue: {fileID: 11400000, guid: 41cc230c62e8bfa409a3c77d33c067b8, type: 2}
+  defaultCatalogue: {fileID: 11400000, guid: 261e1c7b7ca36cd47b653b8fa022a85c, type: 2}
 --- !u!4 &1157317928
 Transform:
   m_ObjectHideFlags: 0

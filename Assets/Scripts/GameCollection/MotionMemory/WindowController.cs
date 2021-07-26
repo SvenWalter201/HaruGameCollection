@@ -45,7 +45,7 @@ public class WindowController : MonoBehaviour
 
     public void BeginShowPose(MemoryCardHouse card)
     {
-        BodyDisplay.Instance.DisplayArmature(card.pose.motion[0]);
+        BodyDisplay.Instance.DisplayHumanoid(card.pose.motion[0]);
         Material[] mats = mR.materials;
         mats[card.index + 1].SetInt("_ShowTex", 1);
         mR.materials = mats;
