@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   question: Besser den Spatz in der Hand...
   answers:
-  - ...den Spatz aif dem Kopf
+  - ...den Spatz auf dem Kopf
   - ...die Taube auf dem Dach
   trueAnswer: 1

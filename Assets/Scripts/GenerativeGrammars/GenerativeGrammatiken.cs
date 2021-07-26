@@ -18,6 +18,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     private string[] priorityKeywords;
     public Text sentenceText;
     private string sentence;
+    private string template;
     public byte count = 0;
     List<Subject> 
         _subjects = new List<Subject>(),
@@ -77,7 +78,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         si = new SentenceInformation();
         si.Singular = true;
         //si.ClearInformation();
-        string template = GetTemplate();
+        template = GetTemplate();
         sentence = FillInTemplate(template);
         Debug.Log(sentence);
         return si;
@@ -339,6 +340,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     private string GetMood()
     {
+        
         //avoid duplicates
         int max_iterations = currentperson.moods.Count;
 
@@ -391,11 +393,13 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         {
             Debug.Log("why are we here ?");
             //Debug.Log(si.Singular);
+            Debug.Log("person: " + currentperson.name);
+            Debug.Log("current template"+template);
             Debug.Log("retruning: " + masterData.moods[currentperson.moods[r]].name);
             return "default:" + masterData.moods[currentperson.moods[r]].name;
-            
         }
     }
+        
 
     private string GetAction()
     {
@@ -645,7 +649,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             case "Wolkenkratzer":
                 return "[eine @mood@ Gruppe von Wolkenkratzern,einige Wolkenkratzer, ein paar Wolkenkratzer]";
             case "Auto":
-                return "einige Autos";
+                return "ein Autounfall mit einigen Autos";
             case "Vulkan":
                 si.Singular = true;
                 return "Vulkan";

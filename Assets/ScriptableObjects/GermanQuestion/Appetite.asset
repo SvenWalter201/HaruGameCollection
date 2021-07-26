@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   question: Der Appetit...
   answers:
-  - "..ist gr\xF6\xDFer wenn man nascht"
+  - "...ist gr\xF6\xDFer wenn man nascht"
   - ...kommt beim Essen
   trueAnswer: 1

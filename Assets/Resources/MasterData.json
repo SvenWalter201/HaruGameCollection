@@ -246,7 +246,7 @@
 		  "name":"Junge",
 		  "gender":"m",
 		  "model":"character",
-		  "asset":"constructionworker",
+		  "asset":"boy",
 		  "texture":"boy",
 		  "scalable":false,
 		  "rotatable":true,
@@ -415,7 +415,13 @@
 			"name":"wartet",
 			"model":"prefab_path",
 			"animation":"Walk"
-        }
+        },
+		"arbeitet": {
+            "type":"verb",
+			"name":"arbeitet",
+			"model":"prefab_path",
+			"animation":"Walk"
+        },
      },
 
 	 "moods": {
@@ -474,8 +480,7 @@
 				"eyes",
 				"sadEyebrows"
 			]
-        }
-		,
+        },
 		"angry": {
             "type":"verb",
 			"name":"böse",
@@ -488,6 +493,20 @@
 				"happyMouth",
 				"eyes",
 				"evilEyebrows"
+			]
+        },
+		"colorful": {
+            "type":"verb",
+			"name":"bunt",
+			"translation": [
+				"farbenfroher",
+				"farbenfrohe",
+				"farbenfrohes"
+			],
+			"textures": [
+				"happyMouth",
+				"eyes",
+				"sadEyebrows"
 			]
         }
 	 }
