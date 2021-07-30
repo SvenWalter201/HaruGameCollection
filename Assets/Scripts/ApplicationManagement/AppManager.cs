@@ -53,7 +53,7 @@ public static class AppManager
         return true;
     }
 
-    public static void ResolveLimbConstraints(Limbs[] limbConstraints)
+    public static void ResolveLimbConstraints(Limb[] limbConstraints)
     {
         jointConstraints = new JointId[0];
 
@@ -62,44 +62,44 @@ public static class AppManager
             int upper, lower;
             switch (constraint)
             {
-                case Limbs.UPPER_BODY:
-                    lower = (int)Limbs.UPPER_BODY;
+                case Limb.UPPER_BODY:
+                    lower = (int)Limb.UPPER_BODY;
                     upper = lower + 17;
                     break;
-                case Limbs.LOWER_BODY:
-                    lower = (int)Limbs.LOWER_BODY;
+                case Limb.LOWER_BODY:
+                    lower = (int)Limb.LOWER_BODY;
                     upper = lower + 7;
                     break;
-                case Limbs.LEFT_ARM_UPPER:
-                    lower = (int)Limbs.LEFT_ARM_UPPER;
+                case Limb.LEFT_ARM_UPPER:
+                    lower = (int)Limb.LEFT_ARM_UPPER;
                     upper = lower + 5;
                     break;
-                case Limbs.LEFT_ARM_LOWER:
-                    lower = (int)Limbs.LEFT_ARM_LOWER;
+                case Limb.LEFT_ARM_LOWER:
+                    lower = (int)Limb.LEFT_ARM_LOWER;
                     upper = lower + 4;
                     break;
-                case Limbs.RIGHT_ARM_UPPER:
-                    lower = (int)Limbs.RIGHT_ARM_UPPER;
+                case Limb.RIGHT_ARM_UPPER:
+                    lower = (int)Limb.RIGHT_ARM_UPPER;
                     upper = lower + 5;
                     break;
-                case Limbs.RIGHT_ARM_LOWER:
-                    lower = (int)Limbs.RIGHT_ARM_LOWER;
+                case Limb.RIGHT_ARM_LOWER:
+                    lower = (int)Limb.RIGHT_ARM_LOWER;
                     upper = lower + 4;
                     break;
-                case Limbs.LEFT_LEG_UPPER:
-                    lower = (int)Limbs.LEFT_LEG_UPPER + 1;
+                case Limb.LEFT_LEG_UPPER:
+                    lower = (int)Limb.LEFT_LEG_UPPER + 1;
                     upper = lower + 3;
                     break;
-                case Limbs.LEFT_LEG_LOWER:
-                    lower = (int)Limbs.LEFT_LEG_LOWER;
+                case Limb.LEFT_LEG_LOWER:
+                    lower = (int)Limb.LEFT_LEG_LOWER;
                     upper = lower + 2;
                     break;
-                case Limbs.RIGHT_LEG_UPPER:
-                    lower = (int)Limbs.RIGHT_LEG_UPPER;
+                case Limb.RIGHT_LEG_UPPER:
+                    lower = (int)Limb.RIGHT_LEG_UPPER;
                     upper = lower + 3;
                     break;
-                case Limbs.RIGHT_LEG_LOWER:
-                    lower = (int)Limbs.RIGHT_LEG_LOWER;
+                case Limb.RIGHT_LEG_LOWER:
+                    lower = (int)Limb.RIGHT_LEG_LOWER;
                     upper = lower + 2;
                     break;
             }  
@@ -126,7 +126,7 @@ public static class AppManager
 /// <summary>
 /// Limbs are mapped to the beginningIndex
 /// </summary>
-public enum Limbs
+public enum Limb
 {
     UPPER_BODY = 0, //+17
     LOWER_BODY = 18, //+7

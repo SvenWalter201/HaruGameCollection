@@ -37,7 +37,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
     const float FPS_30_DELTA = 0.033333f; // 1/30
 
     Slider frameSlider;
-    TextMeshProUGUI compareAccuracy;
+    TextMeshProUGUI compareAccuracy,bodyPosText;
     TMP_InputField smoothingFrames;
 
     bool playing = true, bodyCompareRunning = false;
@@ -85,12 +85,13 @@ public class BodyDisplay : Singleton<BodyDisplay>
         }
     }*/
 
-    public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy, TMP_InputField smoothingFrames)
+    public void InitUIComponents(Slider frameSlider, Button playPauseButton, TextMeshProUGUI compareAccuracy, TMP_InputField smoothingFrames, TextMeshProUGUI bodyPosText)
     {
         playPauseButton.onClick.AddListener(() => playing = !playing);
 
         this.frameSlider = frameSlider;
         this.compareAccuracy = compareAccuracy;
+        this.bodyPosText = bodyPosText;
         this.smoothingFrames = smoothingFrames;
         //this.playPauseButton = playPauseButton;
 
@@ -178,14 +179,9 @@ public class BodyDisplay : Singleton<BodyDisplay>
                 replayFrame--;
 
         if (!useSillouette)
-        {
             DisplayArmature(GetInterpolatedValue(loadedMotion.motion, replayFrame));
-
-        }
         else
-        {
             DisplayHumanoid(GetInterpolatedValue(loadedMotion.motion, replayFrame));
-        }
     }
 
     public Vector3[] GetInterpolatedValue(List<UJoint[]> motion, int currentFrame)
@@ -320,9 +316,8 @@ public class BodyDisplay : Singleton<BodyDisplay>
             return new Vector3(1, 1, 1);
         }
         else
-        {
             return joints[(int)Pelvis].Position;
-        }
+
     }
 
     public Vector3 GetBodyPosition() =>
@@ -330,6 +325,9 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
     public float GetTorsoHeight(UJoint[] joints)
     {
+        if (joints == null)
+            return 0f;
+
         Vector3 headPosition = joints[(int)Head].Position;
         Vector3 pelvisPosition = joints[(int)Pelvis].Position;
         return Mathf.Abs(headPosition.y - pelvisPosition.y);
@@ -635,6 +633,27 @@ public class BodyDisplay : Singleton<BodyDisplay>
         compareAccuracy.text = "";
     }
 
+    public IEnumerator PelvisTrackRoutine()
+    {
+        float timer = 0f;
+        while (AppManager.bodyTrackingRunning)
+        {
+            if (timer <= 0f)
+            {
+                //Vector3 bodyPos = GetBodyPosition();
+                float torsoHeight = GetTorsoHeight();
+                bodyPosText.text = "Pos: " + torsoHeight.ToString();
+
+                timer = FPS_30_DELTA;
+            }
+            else
+                timer -= Time.deltaTime;
+
+            yield return null;
+        }
+        bodyPosText.text = "";
+    }
+
     public IEnumerator BodyCompareCoroutine(UJoint[] pose, float compareTime)
     {
         float timer = 0f;
@@ -717,7 +736,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
         return xyz.x && xyz.y && xyz.z;
     }
 
-    const float normalizationTorsoHeight = 10;
+    const float normalizationTorsoHeight = 0.58f;
 
     /// <summary>
     /// Scales a pose by a certain factor using the pelvis as the origin. This can be used for more accurate pose comparision by using the difference in bodyheights of both poses as the scale factor
@@ -740,7 +759,6 @@ public class BodyDisplay : Singleton<BodyDisplay>
         return pose;
     }
 
-
     public float GetScaleFactor(UJoint[] neutralPose)
     {
         float torsoHeight = GetTorsoHeight(neutralPose);
@@ -760,12 +778,12 @@ public class BodyDisplay : Singleton<BodyDisplay>
 
         JointId[] jointConstraints = AppManager.jointConstraints;
 
-        Vector3 posDifferenceSum = Vector3.zero;
-        Vector3 mirrorPosDifferenceSum = Vector3.zero;
+        Vector3 diffSum = Vector3.zero;
+        Vector3 diffMirrorSum = Vector3.zero;
 
         Vector3 originalPelvisPosition = lhs[(int)Pelvis].Position;
-        Vector3 comparePelvisPosition = rhs[(int)Pelvis].Position;
-
+        Vector3 cPelvisPos = rhs[(int)Pelvis].Position;
+        Vector3 mirrorComparePelvisPosition = new Vector3(cPelvisPos.x * -1f, cPelvisPos.y, cPelvisPos.z);
         //handle unequal length arrays
         if (lhs.Length != rhs.Length)
         {
@@ -795,13 +813,21 @@ public class BodyDisplay : Singleton<BodyDisplay>
             if (jointConstraint)
                 continue;
             */
-            //get the position of the joint in relation to the pelvis
-            Vector3 relativeOriginalPosition = lhs[i].Position - originalPelvisPosition;
-            Vector3 relativeComparePosition = rhs[i].Position - comparePelvisPosition;
 
-            //take absolute values?
-            Vector3 difference = relativeComparePosition - relativeOriginalPosition;
-            posDifferenceSum += difference.Square();
+            //joint positions
+            Vector3 oPos = lhs[i].Position;
+            Vector3 cPos = rhs[i].Position;
+            Vector3 cPosMirror = new Vector3(cPos.x * -1, cPos.y, cPos.z);
+
+            //joint positions relative to pelvis
+            Vector3 relOPos = oPos - originalPelvisPosition;
+            Vector3 relCPos = cPos - cPelvisPos;
+            Vector3 relCPosMirror = cPosMirror - mirrorComparePelvisPosition;
+
+            Vector3 diff = relCPos - relOPos;
+            Vector3 diffMirror = relCPosMirror - relOPos;
+            diffSum += diff.Square();
+            diffMirrorSum += diffMirror.Square();
             comparedJointsCount++;
         }
 
@@ -809,21 +835,26 @@ public class BodyDisplay : Singleton<BodyDisplay>
             Debug.LogWarning("All joints had JointConfidenceLevel.Low or .None");
 
         //average positional difference in mm
-        Vector3 posDifference = posDifferenceSum /= comparedJointsCount;
+        Vector3 diffAverage = diffSum /= comparedJointsCount;
+        Vector3 diffMirrorAverage = diffMirrorSum /= comparedJointsCount;
+        float diffDistance = Mathf.Sqrt(diffAverage.x * diffAverage.x + diffAverage.y * diffAverage.y + diffAverage.z * diffAverage.z);
+        float diffMirrorDistance = Mathf.Sqrt(diffMirrorAverage.x * diffMirrorAverage.x + diffMirrorAverage.y * diffMirrorAverage.y + diffMirrorAverage.z * diffMirrorAverage.z);
 
-        float posDifferenceD = Mathf.Sqrt(posDifference.x * posDifference.x + posDifference.y * posDifference.y + posDifference.z * posDifference.z);
-
-        if (posDifferenceD == float.NaN)
+        if (diffDistance == float.NaN || diffMirrorDistance == float.NaN)
             return 0;
+
+        Debug.Log("DiffDistance: " + diffDistance + ", DiffDistanceMirrored: " + diffMirrorDistance);
+        if (diffMirrorDistance < diffDistance)
+            diffDistance = diffMirrorDistance;
 
         int percent;
 
-        if (posDifferenceD > ZERO_PERCENT)
+        if (diffDistance > ZERO_PERCENT)
             percent = 0;
-        else if (posDifferenceD < HUNDRED_PERCENT)
+        else if (diffDistance < HUNDRED_PERCENT)
             percent = 100;
         else
-            percent = 100 - Mathf.RoundToInt((posDifferenceD-HUNDRED_PERCENT) / (ZERO_PERCENT*0.01f));
+            percent = 100 - Mathf.RoundToInt((diffDistance - HUNDRED_PERCENT) / (ZERO_PERCENT*0.01f));
 
         //Debug.Log("Positional difference in mm: " + posDifferenceD);
         return percent;

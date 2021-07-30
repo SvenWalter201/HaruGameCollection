@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using TMPro;
+using System;
+using System.Linq;
 
 public class UIController : Singleton<UIController>
 {
@@ -17,7 +20,6 @@ public class UIController : Singleton<UIController>
     InputField fileNameField;
     [SerializeField] 
     Button loadMotion, saveMotion, savePose, addLimbConstraint;
-    TMP_Dropdown limbConstraints;
     [Space]
     [Header("ReplaySection")]
     [SerializeField] 
@@ -30,12 +32,23 @@ public class UIController : Singleton<UIController>
     [Space]
     [Header("3D Viewport")]
     [SerializeField] 
-    TextMeshProUGUI compareAccuracy;
+    TextMeshProUGUI compareAccuracy, bodyPosText;
     [SerializeField] 
     TMP_InputField smoothingFrames;
     [Header("ImageDisplayPanel")]
-    [SerializeField] 
+    [SerializeField]
     GameObject imageDisplayPanel;
+
+    [SerializeField]
+    TMP_Dropdown addConstraintOptions;
+    [SerializeField]
+    RectTransform scrollView;
+    [SerializeField]
+    Button addLimbConstraintBtn;
+    [SerializeField]
+    GameObject limbConstraintPrefab;
+
+    List<Limb> constraintOptions = new List<Limb>();
 
     //GameObject savePoseGO, bodyTrackingGO, displayGO, recordGO, saveMotionGO, frameSliderGO, playPauseButtonGO, imageDisplayGO, bodyCompareGO;
 
@@ -96,6 +109,8 @@ public class UIController : Singleton<UIController>
         bodyCompare.onClick.AddListener(RunBodyCompare);
         bodyCompare.colors = offStateColors;
 
+        addLimbConstraintBtn.onClick.AddListener(AddConstraint);
+
         //imageDisplayGO.SetActive(false);
         imageDisplay.gameObject.SetActive(false);
         record.gameObject.SetActive(false);
@@ -106,8 +121,68 @@ public class UIController : Singleton<UIController>
         bodyCompare.gameObject.SetActive(false);
         
 
-        BodyDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy, smoothingFrames);
+        BodyDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy, smoothingFrames, bodyPosText);
 
+    }
+
+    public void RemoveLimbConstraint(Limb limbConstraint)
+    {
+        MotionManager.Instance.loadedMotion.notInvolvedLimbs.Remove(limbConstraint);
+        ReloadConstraintWindow();
+    }
+
+    public void ReloadConstraintWindow()
+    {
+        ClearConstraintDisplay();
+
+        List<Limb> constraints = MotionManager.Instance.loadedMotion.notInvolvedLimbs;
+        if (constraints == null)
+            constraints = new List<Limb>();
+
+        for (int i = 0; i < constraints.Count; i++)
+        {
+            GameObject instance = Instantiate(limbConstraintPrefab, scrollView);
+            instance.GetComponent<LimbConstraint>().Init(constraints[i]);
+        }
+
+        List<string> possibleConstraints = new List<string>();
+        var values = EnumUtil.GetValues<Limb>();
+        foreach(var v in values)
+        {
+            if (!constraints.Contains(v))
+            {
+                possibleConstraints.Add(v.ToString());
+                constraintOptions.Add(v);
+
+            }
+        }
+        addConstraintOptions.AddOptions(possibleConstraints);
+
+    }
+
+    public void AddConstraint()
+    {
+        if (constraintOptions.Count == 0)
+            return;
+
+        int index = addConstraintOptions.value;
+        List<Limb> constraints = MotionManager.Instance.loadedMotion.notInvolvedLimbs;
+        if (constraints == null)
+            constraints = new List<Limb>();
+
+        constraints.Add(constraintOptions[index]);
+        MotionManager.Instance.loadedMotion.notInvolvedLimbs = constraints;
+        ReloadConstraintWindow();
+    }
+
+    void ClearConstraintDisplay()
+    {
+        constraintOptions.Clear();
+        addConstraintOptions.ClearOptions();
+
+        int count = scrollView.childCount;
+        for (int i = 0; i < count; i++)
+            Destroy(scrollView.GetChild(i).gameObject);
     }
 
     public void TrackImageData()
@@ -184,6 +259,8 @@ public class UIController : Singleton<UIController>
 
                 //enable UI elements
                 record.gameObject.SetActive(true);
+                StartCoroutine(BodyDisplay.Instance.PelvisTrackRoutine());
+
                 if (AppManager.motionLoaded)
                 {
                     bodyCompare.gameObject.SetActive(true);
@@ -209,7 +286,8 @@ public class UIController : Singleton<UIController>
             Debug.Log("couldn't load motion. File either doesn't exist or is broken");
             return;
         }
-        else if(motion.motion.Count > 1){
+        else if(motion.motion.Count > 1)
+        {
             frameSlider.gameObject.SetActive(true);
             playPauseButton.gameObject.SetActive(true);
             savePose.gameObject.SetActive(true);
@@ -222,10 +300,11 @@ public class UIController : Singleton<UIController>
             savePose.gameObject.SetActive(false);
         }
         saveMotion.gameObject.SetActive(true);
+
+        ReloadConstraintWindow();
+
         if (AppManager.bodyTrackingRunning)
-        {
             bodyCompare.gameObject.SetActive(true);
-        }
     }
 
     public void RecordCapture()
@@ -256,16 +335,20 @@ public class UIController : Singleton<UIController>
         {
             Motion loaded = MotionManager.Instance.loadedMotion;
             int frame = Mathf.RoundToInt(frameSlider.value * loaded.motion.Count);
+
             if (frame >= loaded.motion.Count)
-            {
                 frame = loaded.motion.Count - 1;
-            }
+
             MotionManager.Instance.SavePose(fileNameField.text, loaded.motion[frame]);
         }
         else
-        {
             Debug.Log("No motion to save");
-        }
 
     }
+}
+
+public static class EnumUtil
+{
+    public static IEnumerable<T> GetValues<T>() =>
+        Enum.GetValues(typeof(T)).Cast<T>();
 }
