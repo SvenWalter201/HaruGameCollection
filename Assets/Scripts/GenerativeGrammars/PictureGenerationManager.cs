@@ -17,7 +17,7 @@ public class PictureGenerationManager : Game
     [SerializeField] private Transform foreground;
     [SerializeField] private Transform down;
     [SerializeField] private Transform up;
-    [SerializeField] private CurtainOpen curtain;
+    [SerializeField] private GameObject curtain;
     [SerializeField] private GameObject gras;
 
 
@@ -64,29 +64,35 @@ public class PictureGenerationManager : Game
     [SerializeField]
     Image progressBar, progressBarMask;
 
-    [SerializeField] 
+    [SerializeField]
     PositionController positionController;
+
+    [SerializeField]
+    Camera cam;
+
+    [SerializeField]
+    Light mainLight;
 
 
     //[Header("Minimum of " + MAX_SENTENCES + " sentences" )]
     [SerializeField]
-    TextMeshProUGUI sentence1;
-    [SerializeField]
-    TextMeshProUGUI sentence2;
-    [SerializeField]
-    TextMeshProUGUI sentence3;
-    [SerializeField]
-    TextMeshProUGUI sentence4;
-    [SerializeField]
-    TextMeshProUGUI sentence5;
+    TextMeshProUGUI 
+        sentence1,
+        sentence2,
+        sentence3,
+        sentence4,
+        sentence5;
 
     TextMeshProUGUI[] sentenceArray = new TextMeshProUGUI[MAX_SENTENCES];
+
+    readonly Vector3 cameraPositionOffset = new Vector3(3.828735f, 2.408f, 10.1715f);
+    readonly Vector3 curtainPositionOffset = new Vector3(4.028f, -2.732f, 8.7115f);
+    readonly Quaternion cameraRotation = Quaternion.Euler(25f, 180f, 0f);
 
     //public SentenceInformation[] Sentences { get => sentences; set => sentences = value; }
 
     void Start()
     {
-        
         PlayGame();
     }
     protected override IEnumerator Init()
@@ -94,8 +100,15 @@ public class PictureGenerationManager : Game
         //get the required resources from the virtual world
         if (!AppManager.useVirtualWorld)
         {
+            cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
+            cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
+            mainLight.enabled = false;
             gras.SetActive(false);
-            positionController = VirtualWorldController.Instance.positionController;
+            Debug.Log(positionController.ToString());
+            curtain.transform.position = positionController.transform.right * curtainPositionOffset.x + positionController.transform.up * curtainPositionOffset.y + positionController.transform.forward * curtainPositionOffset.z;
+            Vector3 positionOffset = positionController.transform.right * cameraPositionOffset.x + positionController.transform.up * cameraPositionOffset.y + positionController.transform.forward * cameraPositionOffset.z;
+            yield return StartCoroutine(Tween.TweenPositionAndRotation(cam.transform, positionController.transform.position + positionOffset, positionController.transform.rotation * cameraRotation, 3f));
+
         }
 
         modeText.text = StringRes.Get("_DuplikLevelSeniors");
@@ -118,15 +131,6 @@ public class PictureGenerationManager : Game
         yield break;
     }
 
-    public void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            Debug.Log("Escape key was released");
-            //stop corutines?
-            Finish();
-        }
-    }
 
     protected override IEnumerator Execute()
     {
@@ -144,10 +148,10 @@ public class PictureGenerationManager : Game
             }
 
             Panel.SetActive(false);
-            curtain.MoveCurtain();
+            curtain.GetComponentInChildren<CurtainOpen>().MoveCurtain();
             maxRounds--;
             yield return timer.SimpleTimer(showingTime);
-            curtain.MoveCurtain();
+            curtain.GetComponentInChildren<CurtainOpen>().MoveCurtain();
             foreach (TextMeshProUGUI t in sentenceArray)
             {
                 t.text = "";
@@ -275,7 +279,7 @@ public class PictureGenerationManager : Game
         }
 
 
-        int max_iter = 200;
+        int max_iter = 1000;
         int iter = 0;
         while (iter < max_iter) //while, colliding generate new position and check if its working
         {

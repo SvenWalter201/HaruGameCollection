@@ -468,7 +468,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 506458965}
         m_TargetAssemblyTypeName: MainMenu, Scripts
-        m_MethodName: EnterMotionMemory
+        m_MethodName: EnterDuplik
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -840,7 +840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   motionMemoryModeMenu: {fileID: 3464123894834005202, guid: da62939dd5640354cb2444fe096495c9, type: 3}
   triviaQuizModeMenu: {fileID: 0}
-  duplikModeMenu: {fileID: 0}
+  duplikModeMenu: {fileID: 3464123894834005202, guid: 410c62dd25794e541abbb8a9a9d5f6a0, type: 3}
   header: {fileID: 760736216}
   triviaQuizBtn: {fileID: 1356660459}
   motionMemoryBtn: {fileID: 372971822}

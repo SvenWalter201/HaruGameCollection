@@ -13,6 +13,14 @@ public abstract class Game : MonoBehaviour
         StartCoroutine(Play());
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Finish();
+        }
+    }
+
     IEnumerator Play()
     {
         //wait for kinect to be setup

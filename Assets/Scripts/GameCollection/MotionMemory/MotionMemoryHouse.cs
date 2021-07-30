@@ -94,6 +94,7 @@ public class MotionMemoryHouse : Game
         if (AppManager.useVirtualWorld)
         {
             cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
+            cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
             mainLight.enabled = false;
             houseGO.SetActive(false);
             sceneryGO.SetActive(false);

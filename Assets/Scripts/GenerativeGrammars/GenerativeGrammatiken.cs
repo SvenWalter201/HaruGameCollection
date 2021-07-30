@@ -340,30 +340,32 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     private string GetMood()
     {
-        
+
         //avoid duplicates
         int max_iterations = currentperson.moods.Count;
 
         int r = UnityEngine.Random.Range(0, max_iterations);
 
-        for (int i = 0; i < max_iterations; i++)
-        {
-            if (recentlyUsed.Contains(currentperson.moods[r]))
+        if (currentperson.moods.Count != 0) { 
+            if (masterData.moods.ContainsKey(currentperson.moods[r]))
             {
-                r = UnityEngine.Random.Range(0, max_iterations);
+                for (int i = 0; i < max_iterations; i++)
+                {
+                    if (recentlyUsed.Contains(currentperson.moods[r]))
+                    {
+                        r = UnityEngine.Random.Range(0, max_iterations);
 
-            }
-            else //if word is not recently used, use it.
-            {
-                break;
-            }
-        }
-        recentlyUsed.Add(currentperson.moods[r]);
-        if (masterData.moods.ContainsKey(currentperson.moods[r]))
-        {
-            si.Mood = masterData.moods[currentperson.moods[r]];
-        }
+                    }
+                    else //if word is not recently used, use it.
+                    {
+                        break;
+                    }
+                }
+                recentlyUsed.Add(currentperson.moods[r]);
 
+                si.Mood = masterData.moods[currentperson.moods[r]];
+            }
+        }  
         /*
         WAS MACH ICH HIER WARUM????
         //find correct adjective and insert in sentence
@@ -391,12 +393,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
         else
         {
-            Debug.Log("why are we here ?");
-            //Debug.Log(si.Singular);
-            Debug.Log("person: " + currentperson.name);
-            Debug.Log("current template"+template);
-            Debug.Log("retruning: " + masterData.moods[currentperson.moods[r]].name);
-            return "default:" + masterData.moods[currentperson.moods[r]].name;
+            return ""; //masterData.moods[currentperson.moods[r]].translation[1];
         }
     }
         
@@ -649,6 +646,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             case "Wolkenkratzer":
                 return "[eine @mood@ Gruppe von Wolkenkratzern,einige Wolkenkratzer, ein paar Wolkenkratzer]";
             case "Auto":
+                si.Singular = true;
                 return "ein Autounfall mit einigen Autos";
             case "Vulkan":
                 si.Singular = true;
