@@ -43,7 +43,7 @@ class QuestionManager : Singleton<QuestionManager>
         List<QuestionCard> questions = new List<QuestionCard>((QuestionCard[])allQuestions.Clone());
         while(questions.Count > amount)
         {
-            int r = UnityEngine.Random.Range(0, questions.Count);
+            int r = Random.Range(0, questions.Count);
             questions.RemoveAt(r);
         }
         return questions;

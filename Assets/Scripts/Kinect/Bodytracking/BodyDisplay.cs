@@ -311,9 +311,9 @@ public class BodyDisplay : Singleton<BodyDisplay>
     {
         if (joints == null)
         {
-            Debug.Log("joints are null");
+            //Debug.Log("joints are null");
             //returning a unit vector for testing reason
-            return new Vector3(1, 1, 1);
+            return Vector3.one;
         }
         else
             return joints[(int)Pelvis].Position;

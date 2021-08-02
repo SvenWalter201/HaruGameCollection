@@ -1,4 +1,3 @@
-#define STEP_BY_STEP
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,21 +9,27 @@ public class TriviaQuizLeftorRight : Game
     [SerializeField]
     TextMeshProUGUI countDownText;
     [SerializeField]
-    Image countDownMask, countDownBar;
+    Image countDownMask, countDownBar, leftArrow, rightArrow, centerImg;
     [SerializeField]
     Text question;
     [SerializeField]
-    GameObject panel, panelHolder;
+    GameObject panel;
+
     [SerializeField]
-    Mesh normal, glowing;
+    Transform panelHolder;
+    //[SerializeField]
+    //Mesh normal, glowing;
     [SerializeField, Range(0f, 30f)]
     float glowTime = 4f, answerTime = 10f, showCorrectAnswerTime = 3f;
     [SerializeField]
     int questionAmount = 2;
-    [SerializeField]
-    Material bulbMaterial;
+    //[SerializeField]
+    //Material bulbMaterial;
     [SerializeField]
     VisualEffect e;
+    [SerializeField]
+    Slider slider;
+
     [SerializeField]
     CountMode countMode;
 
@@ -35,24 +40,26 @@ public class TriviaQuizLeftorRight : Game
         Roman
     }
 
-    CoroutineTimer timer = new CoroutineTimer();
     AnswerPanel[] panels;
 
-    static readonly Color[] colorsDimm = new Color[] { Color.red / 4f, Color.yellow / 4f, Color.green / 4f, Color.cyan / 4f };
-    static readonly Color[] colorsBright = new Color[] { Color.red * 3f, Color.yellow * 3f, Color.green * 3f, Color.cyan * 3f };
+    //static readonly Color[] colorsDimm = new Color[] { Color.red / 4f, Color.yellow / 4f, Color.green / 4f, Color.cyan / 4f };
+    //static readonly Color[] colorsBright = new Color[] { Color.red * 3f, Color.yellow * 3f, Color.green * 3f, Color.cyan * 3f };
 
     static readonly string[] numeric = new string[] { "1", "2", "3", "4", "5", "6", "7" };
     static readonly string[] alphabetic = new string[] { "A", "B", "C", "D", "E", "F", "G" };
     static readonly string[] roman = new string[] { "I", "II", "III", "IV", "V", "VI", "VII" };
 
-    static readonly int emissionId = Shader.PropertyToID("_EmissionColor");
+    //static readonly int emissionId = Shader.PropertyToID("_EmissionColor");
+    
+    List<QuestionCard> questions;
 
-    Room room;
-
-    private void Awake()
+    void Awake()
     {
         countDownBar.enabled = false;
         countDownText.text = "";
+        leftArrow.enabled = false;
+        rightArrow.enabled = false;
+        centerImg.gameObject.SetActive(false);
     }
 
     void Start()
@@ -62,34 +69,37 @@ public class TriviaQuizLeftorRight : Game
 
     protected override IEnumerator Init()
     {
+        //get Questionary from json
+        questions = QuestionManager.Instance.GetQuestions(questionAmount);
+
+        panels = new AnswerPanel[2];
+
+        GameObject left = Instantiate(panel, panelHolder, false);
+        left.transform.SetAsFirstSibling();
+        GameObject right = Instantiate(panel, panelHolder, false);
+
+        panels[0] = left.GetComponent<AnswerPanel>();
+        panels[1] = right.GetComponent<AnswerPanel>();
+
+
+        ToggleSlider(false);
         yield break;
+    }
+
+    void ToggleSlider(bool enable)
+    {
+        int childCount = slider.transform.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            slider.transform.GetChild(i).gameObject.SetActive(enable);
+        }
+
+        leftArrow.enabled = enable;
+        rightArrow.enabled = enable;
     }
 
     protected override IEnumerator Execute()
     {
-        /*
-        room = RoomManager.Instance.LoadRoom();
-        if (room == null)
-        {
-            yield break;
-        }
-        */
-
-
-        //get Questionary from json
-        List<QuestionCard> questions = QuestionManager.Instance.GetQuestions(questionAmount);
-
-        panels = new AnswerPanel[2];
-
-        for (int i = 0; i < panels.Length; i++)
-        {
-            GameObject p = Instantiate(panel);
-            p.transform.SetParent(panelHolder.transform, false);
-            AnswerPanel a = p.GetComponent<AnswerPanel>();
-            a.Bulb.GetComponent<MeshRenderer>().material = GetMaterial(colorsDimm[i]);
-            panels[i] = a;
-        }
-
         KinectDeviceManager.Instance.BeginBodyTracking();
 
         while (questions.Count > 0)
@@ -115,10 +125,10 @@ public class TriviaQuizLeftorRight : Game
     /// <returns></returns>
     IEnumerator AskQuestion(QuestionCard q)
     {
+        q.Reshuffle();
         InitQuestionUI(q);
 
-        //Vector3 cornerPosition = room.Corners[q.TrueAnswer];
-
+        /*
         //highlight the answers
         for (int i = 0; i < q.Answers.Count; i++)
         {
@@ -131,18 +141,39 @@ public class TriviaQuizLeftorRight : Game
             yield return new WaitForSeconds(glowTime);
             mR.material.SetColor(emissionId, colorsDimm[i]);
             mF.mesh = normal;
+        }*/
+        yield return new WaitForSeconds(glowTime);
+
+
+        Vector3 playerPosition = Vector3.zero;
+
+        ToggleSlider(true);
+
+        float remainingTime = answerTime;
+        countDownBar.enabled = true;
+        countDownMask.gameObject.SetActive(true);
+        while (remainingTime > 0f)
+        {
+            playerPosition = BodyDisplay.Instance.GetBodyPosition();
+            float adjustedX = Mathf.Clamp(playerPosition.x, -1, 1f);
+            adjustedX *= 0.5f;
+            adjustedX += 0.5f;
+            slider.value = adjustedX;
+
+            remainingTime -= Time.deltaTime;
+            countDownMask.fillAmount = 1 - remainingTime / answerTime;
+            countDownText.text = Mathf.RoundToInt(remainingTime).ToString();
+            yield return null;
         }
 
-        countDownBar.enabled = true;
-        yield return timer.UITimer(answerTime, countDownMask, countDownText);
+        //yield return timer.UITimer(answerTime, countDownMask, countDownText);
 
-        Vector3 playerPosition = BodyDisplay.Instance.GetBodyPosition();
-
+        countDownText.text = "";
         countDownBar.enabled = false;
+        countDownMask.gameObject.SetActive(false);
+        ToggleSlider(false);
 
-        bool correct = false;
-
-        correct = (q.TrueAnswer == 0) ?
+        bool correct = (q.TrueAnswer == 0) ?
             playerPosition.x < 0f :
             playerPosition.x > 0f;
 
@@ -156,19 +187,25 @@ public class TriviaQuizLeftorRight : Game
             {
                 p.gameObject.SetActive(false);
             }
+            /*
             else
             {
                 p.Bulb.GetComponent<MeshFilter>().mesh = glowing;
                 p.Bulb.GetComponent<MeshRenderer>().material.SetColor(emissionId, colorsBright[i]);
-            }
+            }*/
         }
+
+        centerImg.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(showCorrectAnswerTime);
     }
 
     void InitQuestionUI(QuestionCard q)
     {
+        centerImg.gameObject.SetActive(true);
+
         question.text = q.Question;
+
         for (int i = 0; i < q.Answers.Count; i++)
         {
             AnswerPanel p = panels[i];
@@ -190,9 +227,14 @@ public class TriviaQuizLeftorRight : Game
             }
 
             p.AnswerText.text = q.Answers[i];
-            p.Bulb.GetComponent<MeshRenderer>().enabled = true;
-            p.Bulb.GetComponent<MeshRenderer>().material.SetColor(emissionId, colorsDimm[i]);
+
+            //p.Bulb.GetComponent<MeshRenderer>().enabled = true;
+            //p.Bulb.GetComponent<MeshRenderer>().material.SetColor(emissionId, colorsDimm[i]);
         }
+
+        centerImg.sprite = q.Image;
+
+
     }
 
     void ClearQuestionUI()
@@ -203,12 +245,13 @@ public class TriviaQuizLeftorRight : Game
         question.text = "";
     }
 
+    /*
     Material GetMaterial(Color color)
     {
         Material ins = Instantiate(bulbMaterial);
         ins.SetColor(emissionId, color);
         return ins;
-    }
+    }*/
 
     void ConfettiBurst() =>
     e.SendEvent("TriggerBurst");

@@ -15,10 +15,14 @@ public class QuestionCard : ScriptableObject, ICloneable
     List<string> answers;
 
     [SerializeField]
+    Sprite image;
+
+    [SerializeField]
     int trueAnswer;
 
     public string Question => question;
     public List<string> Answers => answers;
+    public Sprite Image => image;
 
     //index of true answer
     public int TrueAnswer { get => trueAnswer; set => trueAnswer = value; }
