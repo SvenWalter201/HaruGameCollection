@@ -10,15 +10,16 @@ class QuestionManager : Singleton<QuestionManager>
 
     void LoadQuestions()
     {
-        if(FileManager.LoadJSONFromResources("Fragenkataog_Trivia", out QuestionCard[] allQuestions))
+        /*
+        if(FileManager.LoadJSONFromResources("Fragenkatalog_Trivia", out QuestionCard[] allQuestions))
         {
             this.allQuestions = allQuestions;
         }
         else
-        {
+        {*/
             this.allQuestions = defaultCatalogue.QuestionCards.ToArray();
             Debug.Log("1st card later: "+this.allQuestions[0].Answers[1]);
-        }
+        //}
     }
 
     void Awake()
