@@ -3,7 +3,6 @@
     "Das ganze spielt @setting@, wobei {ein} @colour@ @animal@ @position@ @action@",
     "@position@ <ist> {ein} @thing@.",
 	"@linkingword@ {ein} @thing@ <ist> @position@.",
-	"@linkingword@ {ein} @thing@ <ist> @position@.",
     "@linkingword@ @position@ @action@ {ein} @mood@ @person@.",
     "{ein} @colour@ @animal@ @action@ @position@",
 	"{ein} @mood@ @person@ @action@ @position@"
@@ -20,7 +19,6 @@
 	"hinten rechts"
 	],
 	"linkingword":[
-	"Weiter",
 	"Und",
 	"Nicht zu vergessen,",
 	"Auch",
@@ -53,7 +51,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":[]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -67,7 +65,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":[]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -81,7 +79,7 @@
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":[]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -94,7 +92,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":[]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -108,7 +106,7 @@
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":[]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -122,7 +120,7 @@
 		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":[]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"thing",
@@ -136,7 +134,7 @@
 		  "positions":["im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
-		  "moods":[]
+		  "moods":["deformed","colorful",""]
 		},
 		{
 		  "type":"animal",
@@ -197,7 +195,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["musiziert"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -211,7 +209,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["musiziert"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -225,7 +223,21 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Großmutter",
+		  "gender":"f",
+		  "model":"character",
+		  "asset":"grandma",
+		  "texture":"grandma",
+		  "scalable":false,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":[],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -239,7 +251,49 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Mädchen",
+		  "gender":"n",
+		  "model":"character",
+		  "asset":"girl",
+		  "texture":"girl",
+		  "scalable":false,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "moods":["bored","excited","friendly"]
+		},
+		{
+		  "type":"person",
+		  "name":"Bäcker",
+		  "gender":"m",
+		  "model":"character",
+		  "asset":"chef",
+		  "texture":"baker",
+		  "scalable":false,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "moods":["bored","excited","friendly"] 
+		},
+		{
+		  "type":"person",
+		  "name":"Bauarbeiter",
+		  "gender":"m",
+		  "model":"character",
+		  "asset":"constructionworker",
+		  "texture":"constructionworker",
+		  "scalable":false,
+		  "rotatable":true,
+		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
+		  "colours":["rot","blau","grün"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 	],
@@ -316,13 +370,13 @@
         "musiziert": {
             "type":"verb",
 			"name":"musiziert",
-			"model":"prefab_path",
+			"model":"guitar",
 			"animation":"Guitar"
         },
 		"singt": {
             "type":"verb",
 			"name":"singt",
-			"model":"prefab_path",
+			"model":"microphone",
 			"animation":"Singing"
         },
 		"überlegt": {
@@ -334,7 +388,7 @@
 		"isst": {
             "type":"verb",
 			"name":"isst",
-			"model":"prefab_path",
+			"model":"pizza",
 			"animation":"Eat"
         },
 		"läuft": {
@@ -346,7 +400,7 @@
 		"malt": {
             "type":"verb",
 			"name":"malt",
-			"model":"prefab_path",
+			"model":"paintbrush",
 			"animation":"Paint"
         },
 		"wartet": {

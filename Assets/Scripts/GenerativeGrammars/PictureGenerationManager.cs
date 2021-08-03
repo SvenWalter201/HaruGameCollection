@@ -285,8 +285,7 @@ public class PictureGenerationManager : Game
         {
             Vector2 pv = UnityEngine.Random.insideUnitCircle * radius;
             Vector3 positionObject = new Vector3(pv.x, 0, pv.y) + position;
-
-            GameObject gameObject = SpawnObject(si.Subject.model, positionObject, Quaternion.identity);
+            GameObject gameObject = SpawnObject(si.Subject.model, positionObject,Quaternion.identity);
             current = gameObject;
             current.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             Collider c = current.GetComponent<Collider>();
@@ -369,6 +368,10 @@ public class PictureGenerationManager : Game
                     break;
                 case "ist":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
+                    break;
+                default:
+                    current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
+                    StartCoroutine(SpawnAtEndOfFrame(si.Action.model, current, PositionAtCharacter.RIGHTHAND));
                     break;
 
             }
