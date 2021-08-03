@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - "Als g\xE4b's kein morgen"
   - Wie sie fallen
+  image: {fileID: 21300000, guid: ac04c24883a753b4ba95d06388d1fa89, type: 3}
   trueAnswer: 1

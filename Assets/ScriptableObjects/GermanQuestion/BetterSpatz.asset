@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - ...den Spatz auf dem Kopf
   - ...die Taube auf dem Dach
+  image: {fileID: 21300000, guid: 6de195527e2730a4a8a496cb4742001e, type: 3}
   trueAnswer: 1

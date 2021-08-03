@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Dem Morgen loben
   - Dem Abend loben
+  image: {fileID: 21300000, guid: e2a8ac736ea6e7c439105b7794e7263c, type: 3}
   trueAnswer: 1

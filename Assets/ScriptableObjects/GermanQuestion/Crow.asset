@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Der anderen kein Auge aus
   - Der anderen nicht ins Bein
+  image: {fileID: 21300000, guid: 32e0bb89c6e07c543a6c0dc88342edae, type: 3}
   trueAnswer: 0

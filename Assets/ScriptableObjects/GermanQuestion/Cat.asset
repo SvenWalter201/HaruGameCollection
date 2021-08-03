@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Katzen schwarz
   - Katzen grau
+  image: {fileID: 21300000, guid: 5fd0ccbf90e2f494b829fc88594977e6, type: 3}
   trueAnswer: 1

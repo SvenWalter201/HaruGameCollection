@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - ... Mist
   - ... Dreck
+  image: {fileID: 21300000, guid: ba9fc9859d558854393512cf2b7dc2ce, type: 3}
   trueAnswer: 0

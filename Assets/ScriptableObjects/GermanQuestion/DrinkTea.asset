@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - ...Oma fragen
   - ...Tee trinken
+  image: {fileID: 21300000, guid: 0431e92527321a24d8583fd5fa0c7aa5, type: 3}
   trueAnswer: 1

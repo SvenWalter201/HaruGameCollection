@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Trotzdem ans Ziel kommen
   - Die ersten sein
+  image: {fileID: 21300000, guid: 84c002203bb4b324eb0f3601cc4a9b37, type: 3}
   trueAnswer: 1

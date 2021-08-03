@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Darf man nicht trauen
   - Schaut man nicht ins Maul
+  image: {fileID: 21300000, guid: 2dd8e3848542da34d8bbf8a8facafb68, type: 3}
   trueAnswer: 1

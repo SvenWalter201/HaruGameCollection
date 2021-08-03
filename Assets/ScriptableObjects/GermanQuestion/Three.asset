@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Drei
   - Zwei
+  image: {fileID: 21300000, guid: dd87da2395be61e46a61a16b4a465575, type: 3}
   trueAnswer: 0

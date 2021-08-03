@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Sommer
   - Regen
+  image: {fileID: 21300000, guid: 1076cf229f8346d4393a358cdd82f2ea, type: 3}
   trueAnswer: 0

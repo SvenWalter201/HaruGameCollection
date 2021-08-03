@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Hunde
   - "Fl\xF6he"
+  image: {fileID: 21300000, guid: 0daeb08653abc6748b57101ecc4ebabd, type: 3}
   trueAnswer: 0

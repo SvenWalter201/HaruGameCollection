@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - Rom
   - London
+  image: {fileID: 21300000, guid: 87bd903866393ec4e8934958d72d0057, type: 3}
   trueAnswer: 0

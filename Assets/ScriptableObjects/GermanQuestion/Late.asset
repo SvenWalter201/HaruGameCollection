@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - "Sp\xE4ter"
   - Nie
+  image: {fileID: 21300000, guid: d97c5be4573770c4886e4d267a728dbe, type: 3}
   trueAnswer: 1

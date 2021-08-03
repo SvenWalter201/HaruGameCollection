@@ -16,4 +16,5 @@ MonoBehaviour:
   answers:
   - "F\xE4llt selbst hinein"
   - "Der hat den Wind nun selbst ges\xE4t"
+  image: {fileID: 21300000, guid: ce58f629401221f43a1993259a876461, type: 3}
   trueAnswer: 0
