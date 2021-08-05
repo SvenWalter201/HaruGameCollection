@@ -36,6 +36,7 @@ public class PictureGenerationManager : Game
     List<Bounds> colliderBounds = new List<Bounds>();
     readonly CoroutineTimer timer = new CoroutineTimer();
     [SerializeField] float radius = 1.5f;
+    private bool placed;
 
     [Space]
     [Header("Timing")]
@@ -172,6 +173,7 @@ public class PictureGenerationManager : Game
 
 
 
+   
     public void PaintPicture()
     {
         SentenceInformation si = grammars.GenerateSentence();
@@ -181,12 +183,18 @@ public class PictureGenerationManager : Game
             int r = UnityEngine.Random.Range(2, 5);
             for (int i = 0; i < r; i++)
             {
-                PlaceObjectAt(si);
+                while (!PlaceObjectAt(si))
+                {
+                    si = grammars.GenerateSentence();
+                }
             }
         }
         else
         {
-            PlaceObjectAt(si);
+            while (!PlaceObjectAt(si))
+            {
+                si = grammars.GenerateSentence();
+            }
         }
 
         ChangeActionTo(si);
@@ -225,9 +233,9 @@ public class PictureGenerationManager : Game
 
 
     //seting location, scale and rotaion
-    private void PlaceObjectAt(SentenceInformation si)
+    private bool PlaceObjectAt(SentenceInformation si)
     {
-
+        placed = false;
 
         Vector3 position;
 
@@ -278,11 +286,11 @@ public class PictureGenerationManager : Game
 
         }
 
-
         int max_iter = 1000;
         int iter = 0;
         while (iter < max_iter) //while, colliding generate new position and check if its working
         {
+            
             Vector2 pv = UnityEngine.Random.insideUnitCircle * radius;
             Vector3 positionObject = new Vector3(pv.x, 0, pv.y) + position;
             GameObject gameObject = SpawnObject(si.Subject.model, positionObject,Quaternion.identity);
@@ -295,11 +303,13 @@ public class PictureGenerationManager : Game
                 if (ValidateSpawn(c.bounds)) //check if object is intersecting with another object 
                 {
                     Destroy(current);
+                    radius = radius + 0.1f;
                 }
                 else
                 {
                     colliderBounds.Add(c.bounds);
-                    radius = radius + 0.2f;
+                    placed = true;
+                    presentGameObjects.Add(current);
                     break;
                 }
 
@@ -307,6 +317,7 @@ public class PictureGenerationManager : Game
             else
             {
                 Debug.LogError("Object has no Collider");
+                placed = false;
                 break;
             }
             iter++;
@@ -329,7 +340,7 @@ public class PictureGenerationManager : Game
             current.transform.rotation = Quaternion.Euler(current.transform.rotation.x,randomY, current.transform.rotation.z);
         }
 
-        presentGameObjects.Add(current);
+        return placed;
     }
 
     private void ChangeActionTo(SentenceInformation si)
