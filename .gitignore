@@ -9,16 +9,25 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
-/[Pp]ackages/
+#/[Pp]ackages/
 /[Uu]serSettings/
-
+/[Aa]ssets/Plugins/
 
 
 # ddls for kinect azure
-/cublas64_100.dll
-/cudart64_100.dll
-/cudnn64_7.dll
-/dnn_model_2_0.onnx
+#/cublas64_100.dll
+#/cudart64_100.dll
+#/cudnn64_7.dll
+#/dnn_model_2_0.onnx
+
+/cublas64_11.dll
+/cublasLt64_11.dll
+/cudart64_110.dll
+/cudnn_cnn_infer64_8.dll
+/cudnn_ops_infer64_8.dll
+/cudnn64_8.dll
+/dnn_model_2_0_op11.onnx
+/onnxruntime.dll
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
