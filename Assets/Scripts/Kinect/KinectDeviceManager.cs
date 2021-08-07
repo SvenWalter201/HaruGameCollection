@@ -215,7 +215,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         {
             try
             {
-                Tracker tracker = Tracker.Create(calibration, TrackerConfiguration.Default);
+                Tracker tracker = Tracker.Create(calibration, new TrackerConfiguration { ProcessingMode = TrackerProcessingMode.Cpu, SensorOrientation = SensorOrientation.Default});
                 Task.Run(() => BodyCapture(tracker));
                 AppManager.bodyTrackingRunning = true;
                 Debug.Log("Bodytracking started");
