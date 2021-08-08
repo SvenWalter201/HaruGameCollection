@@ -11,28 +11,28 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/InitScene.unity
     guid: a135d43bc91121347bd5af339cf19c6e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameCollection/VirtualWorld.unity
     guid: 40b9c4b45ca033e4299a924fe40ba8f4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameCollection/MainScene.unity
     guid: a207e687a450d3f4890059ff166884c5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameCollection/TriviaQuiz.unity
     guid: 182c6be487ea1aa4babe749d89c380d9
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameCollection/MotionMemory.unity
     guid: b1242c21458cd154cbabd9053718125a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/UITests/UIGenerative.unity
     guid: f19557b43f4a3b84aabf2af239c2269e
   - enabled: 1
     path: Assets/Scenes/KinectMoCapStudio.unity
     guid: f36e3123688db1c44bf631a5e149d813
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameCollection/MotionMemoryHouse.unity
     guid: 456302ff75d519f41a1fe785e3a51a73
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TestingGenerativeGrammars/TestingGameFlow 1.unity
     guid: 11c3a1d889c0bcf4da5dce981f2b2060
   m_configObjects: {}

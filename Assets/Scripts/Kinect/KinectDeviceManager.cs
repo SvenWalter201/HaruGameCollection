@@ -20,6 +20,9 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     public DepthMode depthMode;
     public bool syncronizedImagesOnly;
 
+    public TrackerProcessingMode processingMode = TrackerProcessingMode.Cpu;
+
+
     public Device device;
     public Calibration calibration;
     public int corners;
@@ -215,7 +218,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         {
             try
             {
-                Tracker tracker = Tracker.Create(calibration, new TrackerConfiguration { ProcessingMode = TrackerProcessingMode.Cpu, SensorOrientation = SensorOrientation.Default});
+                Tracker tracker = Tracker.Create(calibration, new TrackerConfiguration { ProcessingMode = processingMode, SensorOrientation = SensorOrientation.Default});
                 Task.Run(() => BodyCapture(tracker));
                 AppManager.bodyTrackingRunning = true;
                 Debug.Log("Bodytracking started");
