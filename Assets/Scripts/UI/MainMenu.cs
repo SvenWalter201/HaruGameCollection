@@ -6,11 +6,12 @@ public class MainMenu : MonoBehaviour
 {
 
     [SerializeField]
-    GameObject motionMemoryModeMenu;
-    [SerializeField]
-    GameObject triviaQuizModeMenu;
-    [SerializeField]
-    GameObject duplikModeMenu;
+    GameObject 
+        motionMemoryModeMenu, 
+        triviaQuizModeMenu, 
+        duplikModeMenu,
+        mainPanel,
+        optionsPanel;
 
     [SerializeField]
     Text header, triviaQuizBtn, motionMemoryBtn, duplikBtn, virtualWorldBtn;
@@ -24,6 +25,27 @@ public class MainMenu : MonoBehaviour
         motionMemoryBtn.text = StringRes.Get("_MotionMemoryName");
         duplikBtn.text = StringRes.Get("_DuplikName");
         virtualWorldBtn.text = StringRes.Get("_EnterVirtualWorld");
+    }
+
+    public void OpenOptionsMenu()
+    {
+        mainPanel.SetActive(false);
+        optionsPanel.SetActive(true);
+    }
+
+    public void CloseOptionsMenu()
+    {
+        mainPanel.SetActive(true);
+        optionsPanel.SetActive(false);
+    }
+
+    public void QuitApplication()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
     }
 
     public void EnterVirtualWorld()

@@ -24,6 +24,21 @@ public static class FileManager
 
     }
 
+    public static bool SaveJSONToResources<T>(string fileName, out T content)
+    {
+        TextAsset a = Resources.Load<TextAsset>(fileName);
+        if (!a)
+        {
+            Debug.LogError("Missing asset: " + fileName + " could not be found.");
+            content = default;
+            return false;
+        }
+
+        string jsonString = a.text;
+        content = JsonConvert.DeserializeObject<T>(jsonString);
+
+        return true;
+    }
     public static bool LoadJSONFromResources<T>(string fileName, out T content)
     {
         TextAsset a = Resources.Load<TextAsset>(fileName);

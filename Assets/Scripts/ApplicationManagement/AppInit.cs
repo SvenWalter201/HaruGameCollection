@@ -15,13 +15,13 @@ public class AppInit : MonoBehaviour
 
         if(!AppManager.Initialize()){
             Debug.LogWarning("App couldn't be initialized and will now shut down");
-            /*
+            
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
-            */
+            
         }
         if (forwardToMainScene)
         {

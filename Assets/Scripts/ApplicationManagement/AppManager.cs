@@ -1,4 +1,5 @@
 using Microsoft.Azure.Kinect.BodyTracking;
+using Microsoft.Azure.Kinect.Sensor;
 using UnityEngine;
 
 public static class AppManager
@@ -26,6 +27,13 @@ public static class AppManager
         vfxGraphSupported = false,
         useVirtualWorld = false;
 
+    public static ColorResolution colorResolution;
+    public static ImageFormat colorFormat;
+    public static FPS fps;
+    public static DepthMode depthMode;
+    public static bool syncronizedImagesOnly;
+    public static TrackerProcessingMode processingMode = TrackerProcessingMode.Cpu;
+
     public static Lang language = Lang.DE;
     public static JointId[] jointConstraints;
 
@@ -48,9 +56,20 @@ public static class AppManager
         }
 
         language = appConfig.Language;
+        colorResolution = appConfig.ColorResolution;
+        colorFormat = appConfig.ColorFormat;
+        fps = appConfig.Fps;
+        depthMode = appConfig.DepthMode;
+        syncronizedImagesOnly = appConfig.SyncronizedImagesOnly;
+        processingMode = appConfig.ProcessingMode;
         useVirtualWorld = appConfig.UseVirtualWorld;
 
         return true;
+    }
+
+    public static void SaveConfig()
+    {
+        FileManager
     }
 
     public static void ResolveLimbConstraints(Limb[] limbConstraints)

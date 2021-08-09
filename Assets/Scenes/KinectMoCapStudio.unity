@@ -780,7 +780,7 @@ MonoBehaviour:
   fps: 2
   depthMode: 2
   syncronizedImagesOnly: 0
-  processingMode: 0
+  processingMode: 1
   corners: 0
   accelerometerTimestamp: 00:00:42
   accel: {x: -1.1326796, y: 0.07606189, z: -9.837001}
@@ -3129,7 +3129,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 608221380}
   m_HandleRect: {fileID: 608221379}
   m_Direction: 2
-  m_Value: 1.0000001
+  m_Value: 0.9999999
   m_Size: 0.27666667
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -9380,8 +9380,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1235894195}
   m_HandleRect: {fileID: 1235894194}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
