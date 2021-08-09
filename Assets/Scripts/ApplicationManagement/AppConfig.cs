@@ -6,7 +6,7 @@ public class AppConfig
 {
     public Lang Language { get; set; }
     public ColorResolution ColorResolution { get; set; }
-    public ImageFormat ColorFormat { get; set; }
+    public ImageFormat ImageFormat { get; set; }
     public FPS Fps { get; set; }
     public DepthMode DepthMode { get; set; }
     public bool SyncronizedImagesOnly { get; set; }

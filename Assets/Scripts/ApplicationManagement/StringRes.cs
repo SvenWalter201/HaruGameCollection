@@ -22,7 +22,7 @@ public static class StringRes
 
     public static string Get(string key) {
         if (stringResources.TryGetValue(key, out Dictionary<Lang, string> d))
-            return d[AppManager.language];
+            return d[AppManager.AppConfig.Language];
         
         else
         {

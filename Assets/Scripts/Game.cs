@@ -8,6 +8,8 @@ public abstract class Game : MonoBehaviour
 
     public bool IsExecuting => isExecuting;
 
+    bool paused = false;
+
     public void PlayGame()
     {
         StartCoroutine(Play());
@@ -18,6 +20,12 @@ public abstract class Game : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             Finish();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            paused = !paused;
+            Time.timeScale = (paused) ? 0f : 1f;
         }
     }
 

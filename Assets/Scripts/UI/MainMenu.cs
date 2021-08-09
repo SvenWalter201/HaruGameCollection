@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Microsoft.Azure.Kinect.BodyTracking;
+using Microsoft.Azure.Kinect.Sensor;
+using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
@@ -16,6 +19,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     Text header, triviaQuizBtn, motionMemoryBtn, duplikBtn, virtualWorldBtn;
 
+    [SerializeField]
+    TMP_Dropdown languageDD, colorResolutionDD, imageFormatDD, fpsDD, depthModeDD, processingModeDD;
+
     void Start()
     {
         //change the language on the buttons
@@ -25,6 +31,26 @@ public class MainMenu : MonoBehaviour
         motionMemoryBtn.text = StringRes.Get("_MotionMemoryName");
         duplikBtn.text = StringRes.Get("_DuplikName");
         virtualWorldBtn.text = StringRes.Get("_EnterVirtualWorld");
+
+        AppConfig conf = AppManager.AppConfig;
+
+        languageDD.onValueChanged.AddListener(OnLanguageChanged);
+        languageDD.value = (int)conf.Language;
+
+        colorResolutionDD.onValueChanged.AddListener(OnColorResolutionChanged);
+        colorResolutionDD.value = (int)conf.ColorResolution;
+
+        imageFormatDD.onValueChanged.AddListener(OnImageFormatChanged);
+        imageFormatDD.value = (int)conf.ImageFormat;
+
+        fpsDD.onValueChanged.AddListener(OnFPSChanged);
+        fpsDD.value = (int)conf.Fps;
+
+        depthModeDD.onValueChanged.AddListener(OnDepthModeChanged);
+        depthModeDD.value = (int)conf.DepthMode;
+
+        processingModeDD.onValueChanged.AddListener(OnProcessingModeChanged);
+        processingModeDD.value = (int)conf.ProcessingMode;
     }
 
     public void OpenOptionsMenu()
@@ -35,6 +61,7 @@ public class MainMenu : MonoBehaviour
 
     public void CloseOptionsMenu()
     {
+        AppManager.SaveConfig();
         mainPanel.SetActive(true);
         optionsPanel.SetActive(false);
     }
@@ -71,4 +98,34 @@ public class MainMenu : MonoBehaviour
         AppManager.useVirtualWorld = false;
         Instantiate(duplikModeMenu);
     }
+
+    public void EnterMoCapStudio()
+    {
+        GameController.Instance.StartGame(0);
+    }
+
+    public void OnColorResolutionChanged(int value) => 
+        AppManager.AppConfig.ColorResolution = (ColorResolution)value;
+
+    public void OnImageFormatChanged(int value) => 
+        AppManager.AppConfig.ImageFormat = (ImageFormat)value;
+
+    public void OnFPSChanged(int value) => 
+        AppManager.AppConfig.Fps = (FPS)value;
+
+    public void OnDepthModeChanged(int value) => 
+        AppManager.AppConfig.DepthMode = (DepthMode)value;
+
+    public void OnProcessingModeChanged(int value) => 
+        AppManager.AppConfig.ProcessingMode = (TrackerProcessingMode)value;
+
+    //public void OnSyncedImagesOnlyChanged(int value) =>  AppManager.AppConfig.ProcessingMode = (TrackerProcessingMode)value;
+
+    public void OnLanguageChanged(int value)
+    {
+        AppManager.AppConfig.Language = (Lang)value;
+        //reload UI?
+    }
+
+
 }

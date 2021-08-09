@@ -13,15 +13,17 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     public BodyDisplay skeletonDisplay;
 
+
+    public bool useAppConfig = false;
+
     [Header("Configuration Parameters. Cant be changed at runtime")]
     public ColorResolution colorResolution;
-    public ImageFormat colorFormat;
+    public ImageFormat imageFormat;
     public FPS fps;
     public DepthMode depthMode;
     public bool syncronizedImagesOnly;
 
     public TrackerProcessingMode processingMode = TrackerProcessingMode.Cpu;
-
 
     public Device device;
     public Calibration calibration;
@@ -69,8 +71,18 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     Image transformedDepth;
 
-    void Awake()
+    void Start()
     {
+        if (useAppConfig)
+        {
+            AppConfig conf = AppManager.AppConfig;
+            colorResolution = conf.ColorResolution;
+            imageFormat = conf.ImageFormat;
+            fps = conf.Fps;
+            depthMode = conf.DepthMode;
+            processingMode = conf.ProcessingMode;
+        }
+
         colourKernelId = computeShader.FindKernel("ColourTex");
         irKernelId = computeShader.FindKernel("IRTex");
         depthKernelId = computeShader.FindKernel("DepthTex");
@@ -121,15 +133,12 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
             depthTex.Create();
             depthImage.texture = depthTex;
         }
-    }
 
-    void Start() =>
         Init();
+    }
 
     void OnApplicationQuit() =>
         Close(null, null);
-    
-
 
     void Update()
     {
@@ -178,7 +187,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         var config = new DeviceConfiguration
         {
             ColorResolution = colorResolution,
-            ColorFormat = colorFormat,
+            ColorFormat = imageFormat,
             DepthMode = depthMode,
             CameraFPS = fps,
             SynchronizedImagesOnly = syncronizedImagesOnly

@@ -776,7 +776,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
         if(lhs == null || rhs == null)
             return -1;
 
-        JointId[] jointConstraints = AppManager.jointConstraints;
+        //JointId[] jointConstraints = AppManager.jointConstraints;
 
         Vector3 diffSum = Vector3.zero;
         Vector3 diffMirrorSum = Vector3.zero;

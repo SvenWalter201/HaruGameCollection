@@ -27,17 +27,17 @@ public static class AppManager
         vfxGraphSupported = false,
         useVirtualWorld = false;
 
-    public static ColorResolution colorResolution;
-    public static ImageFormat colorFormat;
-    public static FPS fps;
-    public static DepthMode depthMode;
-    public static bool syncronizedImagesOnly;
-    public static TrackerProcessingMode processingMode = TrackerProcessingMode.Cpu;
-
-    public static Lang language = Lang.DE;
-    public static JointId[] jointConstraints;
-
-    static AppConfig appConfig;
+    /*
+    public static ColorResolution ColorResolution { get => appConfig.ColorResolution; set { ColorResolution = value; appConfig.ColorResolution = value; } }
+    public static ImageFormat ImageFormat { get => ImageFormat; set { ImageFormat = value; appConfig.ColorFormat = value; } }
+    public static FPS FPS { get => FPS; set { FPS = value; appConfig.Fps = value; } }
+    public static DepthMode DepthMode { get => DepthMode; set { DepthMode = value; appConfig.DepthMode = value; } }
+    public static bool SyncedImagesOnly { get => SyncedImagesOnly; set { SyncedImagesOnly = value; appConfig.SyncronizedImagesOnly = value; } }
+    public static TrackerProcessingMode ProcessingMode { get => ProcessingMode; set { ProcessingMode = value; appConfig.ProcessingMode = value; } }
+    public static Lang Language { get => Language; set { Language = value; appConfig.Language = value; } }
+    public static JointId[] jointConstraints; //{ get => jointConstraints; set { jointConstraints = value; appConfig.LimbConstraints = value; } }
+    */
+    public static AppConfig AppConfig { get; private set; }
     static string appConfigPath = "AppConfig";
 
     /// <summary>
@@ -45,9 +45,9 @@ public static class AppManager
     /// </summary>
     public static bool LoadConfig()
     {
-        if (FileManager.LoadJSONFromResources(appConfigPath, out AppConfig appConfig))
+        if (FileManager.LoadFromEditableResources(appConfigPath, out AppConfig appConfig))
         {
-            AppManager.appConfig = appConfig;
+            AppManager.AppConfig = appConfig;
         }
         else
         {
@@ -55,26 +55,31 @@ public static class AppManager
             return false;
         }
 
-        language = appConfig.Language;
-        colorResolution = appConfig.ColorResolution;
-        colorFormat = appConfig.ColorFormat;
-        fps = appConfig.Fps;
-        depthMode = appConfig.DepthMode;
-        syncronizedImagesOnly = appConfig.SyncronizedImagesOnly;
-        processingMode = appConfig.ProcessingMode;
+        /*
+        Language = appConfig.Language;
+        ColorResolution = appConfig.ColorResolution;
+        ImageFormat = appConfig.ColorFormat;
+        FPS = appConfig.Fps;
+        DepthMode = appConfig.DepthMode;
+        SyncedImagesOnly = appConfig.SyncronizedImagesOnly;
+        ProcessingMode = appConfig.ProcessingMode;
         useVirtualWorld = appConfig.UseVirtualWorld;
-
+        */
         return true;
     }
 
     public static void SaveConfig()
     {
-        FileManager
+        if(!FileManager.SaveToEditableResources(appConfigPath, AppConfig))
+        {
+            Debug.Log("Couldn't save appConfig");
+        }
     }
 
+    /*
     public static void ResolveLimbConstraints(Limb[] limbConstraints)
     {
-        jointConstraints = new JointId[0];
+        AppConfig.LimbConstraints = new JointId[0];
 
         foreach (var constraint in limbConstraints)
         {
@@ -124,6 +129,7 @@ public static class AppManager
             }  
         }
     }
+    */
 
     public static bool Initialize()
     {
@@ -133,7 +139,7 @@ public static class AppManager
         if (!StringRes.LoadStringResources())
             return false;
 
-        ResolveLimbConstraints(appConfig.LimbConstraints);
+        //ResolveLimbConstraints(AppConfig.LimbConstraints);
 
         vfxGraphSupported = SystemInfo.supportsComputeShaders && SystemInfo.maxComputeBufferInputsVertex != 0;
 
@@ -161,6 +167,6 @@ public enum Limb
 
 public enum Lang
 {
-    ENG,
+    EN,
     DE
 }
