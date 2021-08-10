@@ -25,13 +25,15 @@
 	"",
 	"Fast vergessen, ",
 	"Huch, was ist das denn? ",
-	"Währendessen",
 	"Wenn man genauer hinschaut, sieht man",
-	"Nicht zu übersehen, "
+	"Nicht zu übersehen, ",
+	"Auch im Bild ist "
 	], 
 	"setting":[
-	"in [der heutigen Zeit, der Zukunft,den 80ern]",
-	"auf einer schönen Wiese"
+	"in [der heutigen Zeit, der Zukunft]",
+	"auf einer schönen Wiese",
+	"in einer grünen Umgebung",
+	"bei gutem Wetter"
 	],
 	"settingdescription":[
 	"[auf einer schönen Wiese, ]",
@@ -195,7 +197,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -209,7 +211,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -223,7 +225,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -237,7 +239,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -251,7 +253,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -265,7 +267,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -279,7 +281,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"] 
 		},
 		{
@@ -293,7 +295,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 	],
@@ -388,6 +390,18 @@
 		"isst": {
             "type":"verb",
 			"name":"isst",
+			"model":"pizza",
+			"animation":"Eat"
+        },
+		"schlemmt": {
+            "type":"verb",
+			"name":"schlemmt",
+			"model":"pizza",
+			"animation":"Eat"
+        },
+		"nascht": {
+            "type":"verb",
+			"name":"nascht",
 			"model":"pizza",
 			"animation":"Eat"
         },

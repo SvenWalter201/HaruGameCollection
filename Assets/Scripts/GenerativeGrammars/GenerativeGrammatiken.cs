@@ -331,7 +331,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         else
         {
             int r = UnityEngine.Random.Range(1, masterData.template.Length);
-            Debug.Log(masterData.template[r]);
+            //Debug.Log(masterData.template[r]);
             return masterData.template[r];
         }
 

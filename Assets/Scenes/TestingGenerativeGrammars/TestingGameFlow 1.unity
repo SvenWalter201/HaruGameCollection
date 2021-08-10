@@ -257,16 +257,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46120007}
   m_CullTransparentMesh: 1
---- !u!4 &60567180 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895631953227660, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &105601574 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895631916833574, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &190666247
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,11 +357,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!4 &263372568 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895631754952216, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &299001757
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,11 +646,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &518612435 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895631507760339, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &550330490
 GameObject:
   m_ObjectHideFlags: 0
@@ -832,11 +812,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
---- !u!4 &747604775 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895631199390247, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &849206361
 GameObject:
   m_ObjectHideFlags: 0
@@ -996,11 +971,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!4 &904533766 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895631054984710, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1041544641
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,11 +1645,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1519374962 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895632642216818, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1534429222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2077,22 +2042,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560516840cd7f0b4390dcdaf17ec6f45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  right: {fileID: 904533766}
-  left: {fileID: 518612435}
-  backRright: {fileID: 1519374962}
-  backLeft: {fileID: 1984673931}
-  background: {fileID: 60567180}
-  foreground: {fileID: 747604775}
-  down: {fileID: 105601574}
-  up: {fileID: 263372568}
   curtain: {fileID: 418590388}
   gras: {fileID: 2073647301}
   character: {fileID: 0}
   count: 0
   radius: 1.5
-  drawingTime: 2
-  showingTime: 8
-  maxRounds: 3
+  drawingTime: 45
+  showingTime: 45
+  maxRounds: 1
   Panel: {fileID: 1093716908}
   ProgressBar: {fileID: 1599325261}
   modeText: {fileID: 46120009}
@@ -2111,11 +2068,6 @@ MonoBehaviour:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6511235990069509797, guid: 643f1fae1dee4f049b924960dc731e99, type: 3}
   m_PrefabInstance: {fileID: 738981895}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1984673931 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7575895632185325963, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-  m_PrefabInstance: {fileID: 7575895631946662144}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2031971400
 GameObject:

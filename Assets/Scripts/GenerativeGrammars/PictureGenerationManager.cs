@@ -9,14 +9,6 @@ using TMPro;
 
 public class PictureGenerationManager : Game
 {
-    [SerializeField] private Transform right;
-    [SerializeField] private Transform left;
-    [SerializeField] private Transform backRright;
-    [SerializeField] private Transform backLeft;
-    [SerializeField] private Transform background;
-    [SerializeField] private Transform foreground;
-    [SerializeField] private Transform down;
-    [SerializeField] private Transform up;
     [SerializeField] private GameObject curtain;
     [SerializeField] private GameObject gras;
 
@@ -99,7 +91,7 @@ public class PictureGenerationManager : Game
     protected override IEnumerator Init()
     {
         //get the required resources from the virtual world
-        if (!AppManager.useVirtualWorld)
+        if (AppManager.useVirtualWorld)
         {
             cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
             cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
@@ -359,7 +351,9 @@ public class PictureGenerationManager : Game
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
                     StartCoroutine(SpawnAtEndOfFrame("microphone", current, PositionAtCharacter.RIGHTHAND));
                     break;
-                case "isst":
+                case "isst": 
+                case "schlemmt":
+                case "nascht":
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
                     StartCoroutine(SpawnAtEndOfFrame("pizza", current, PositionAtCharacter.RIGHTHAND));
                     break;
@@ -404,7 +398,6 @@ public class PictureGenerationManager : Game
     {
         yield return new WaitForEndOfFrame();
         Transform t = current.GetComponent<AssetHolder>().GetTransform(p);
-        Debug.Log(t.rotation.ToString());
         GameObject ins = SpawnObject(asset, t.position, t.rotation);
         ins.transform.parent = t;
 
