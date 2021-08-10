@@ -5,13 +5,14 @@ using UnityEngine;
 public static class AppManager
 {
     public static readonly int
-        virtualWorldBuildIndex = 0,
-        mainMenuBuildIndex = 1,
-        initSceneBuildIndex = 2,
+        initSceneBuildIndex = 0,
+        virtualWorldBuildIndex = 1,
+        mainMenuBuildIndex = 2,
         motionMemoryBuildIndex = 3,
         motionMemoryHouseBuildIndex = 4,
         duplikBuildIndex = 5,
-        triviaQuizBuildIndex = 6;
+        triviaQuizBuildIndex = 6,
+        motionCaptureBuildIndex = 7;
 
     public static bool
         applicationInitialized = false,

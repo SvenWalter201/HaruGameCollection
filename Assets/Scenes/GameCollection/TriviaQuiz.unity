@@ -1551,8 +1551,8 @@ MonoBehaviour:
   colourImage: {fileID: 0}
   depthImage: {fileID: 0}
   irImage: {fileID: 0}
-  skeletonDisplay: {fileID: 0}
-  useAppConfig: 0
+  bodyDisplay: {fileID: 0}
+  useAppConfig: 1
   colorResolution: 2
   imageFormat: 0
   fps: 2
@@ -2989,7 +2989,6 @@ MonoBehaviour:
   useSillouette: 1
   rootBone: {fileID: 0}
   characterRig2D: {fileID: 0}
-  frame: 0
   comparePercentage: -1
 --- !u!4 &1740990713
 Transform:

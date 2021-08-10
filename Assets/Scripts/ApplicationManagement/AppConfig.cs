@@ -14,7 +14,7 @@ public class AppConfig
                 DepthMode = DepthMode.NFOV_Unbinned,
                 SyncronizedImagesOnly = true,
                 ProcessingMode = TrackerProcessingMode.Cuda,
-                UseVirtualWorld = true,
+                UseVirtualWorld = false,
                 LimbConstraints = new Limb[0]
             };
     

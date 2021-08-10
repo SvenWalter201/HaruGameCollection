@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028364, g: 0.22571458, b: 0.3069237, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028387, g: 0.22571489, b: 0.3069244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -234,7 +234,6 @@ MonoBehaviour:
   useSillouette: 1
   rootBone: {fileID: 0}
   characterRig2D: {fileID: 1581196694}
-  frame: 0
   comparePercentage: 0
 --- !u!4 &20510692
 Transform:
@@ -364,12 +363,14 @@ MonoBehaviour:
   colourImage: {fileID: 0}
   depthImage: {fileID: 0}
   irImage: {fileID: 0}
-  skeletonDisplay: {fileID: 20510691}
+  bodyDisplay: {fileID: 0}
+  useAppConfig: 1
   colorResolution: 2
-  colorFormat: 3
+  imageFormat: 0
   fps: 2
   depthMode: 2
   syncronizedImagesOnly: 0
+  processingMode: 1
   corners: 0
   accelerometerTimestamp: 00:00:42
   accel: {x: -1.1326796, y: 0.07606189, z: -9.837001}
@@ -2271,6 +2272,63 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!1001 &697964812
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087764, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326920871985087770, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
+      propertyPath: m_Name
+      value: AppInit
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3a9e9f62ffa041d459c6bfba993da3a4, type: 3}
 --- !u!1 &736743285
 GameObject:
   m_ObjectHideFlags: 0
@@ -2808,6 +2866,10 @@ PrefabInstance:
     - target: {fileID: 5510943422898368962, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: m_Name
       value: GrassLeft
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510943422898368962, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
@@ -4053,6 +4115,10 @@ PrefabInstance:
     - target: {fileID: 5510943422898368962, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
       propertyPath: m_Name
       value: GrassRight
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510943422898368962, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b34daaa592ec42a4cb83233da7d946c2, type: 3}
@@ -5346,50 +5412,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &1825059371
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1825059373}
-  - component: {fileID: 1825059372}
-  m_Layer: 0
-  m_Name: AppInitialize
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1825059372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825059371}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08c3bc2ab3f8f544fa71db3e43540d05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forwardToMainScene: 0
---- !u!4 &1825059373
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825059371}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 16
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1861237151
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6270,8 +6292,8 @@ MonoBehaviour:
   timeBeforeStart: 5
   maxGroupSize: 2
   maximumRounds: 1
-  cardShowingTime: 10
-  motionGuessingTime: 30
+  cardShowingTime: 5
+  motionGuessingTime: 15
   timeBeforeMotionTracking: 3
   timeBetweenRounds: 5
   timeBetweenShowingAndGuessing: 2

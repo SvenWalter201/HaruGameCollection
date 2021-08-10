@@ -14,10 +14,11 @@ public class MainMenu : MonoBehaviour
         triviaQuizModeMenu, 
         duplikModeMenu,
         mainPanel,
-        optionsPanel;
+        optionsPanel,
+        sidePanel;
 
     [SerializeField]
-    Text header, triviaQuizBtn, motionMemoryBtn, duplikBtn, virtualWorldBtn, moCapStudioBtn, optionsBtn, quitBtn, saveExitBtn;
+    Text header, triviaQuizBtn, motionMemoryBtn, duplikBtn, virtualWorldBtn, moCapStudioBtn, saveExitBtn;
 
     [SerializeField]
     TMP_Dropdown languageDD, colorResolutionDD, imageFormatDD, fpsDD, depthModeDD, processingModeDD;
@@ -30,8 +31,6 @@ public class MainMenu : MonoBehaviour
         duplikBtn.text = StringRes.Get("_DuplikName");
         virtualWorldBtn.text = StringRes.Get("_EnterVirtualWorld");
         moCapStudioBtn.text = StringRes.Get("_MoCapStudio");
-        optionsBtn.text = StringRes.Get("_Options");
-        quitBtn.text = StringRes.Get("_QuitApp");
         saveExitBtn.text = StringRes.Get("_SaveAndReturn");
     }
 
@@ -65,6 +64,7 @@ public class MainMenu : MonoBehaviour
     public void OpenOptionsMenu()
     {
         mainPanel.SetActive(false);
+        sidePanel.SetActive(false);
         optionsPanel.SetActive(true);
     }
 
@@ -72,6 +72,7 @@ public class MainMenu : MonoBehaviour
     {
         AppManager.SaveConfig();
         mainPanel.SetActive(true);
+        sidePanel.SetActive(true);
         optionsPanel.SetActive(false);
     }
 
@@ -93,24 +94,28 @@ public class MainMenu : MonoBehaviour
     public void EnterMotionMemory()
     {
         AppManager.useVirtualWorld = false;
-        Instantiate(motionMemoryModeMenu);
+        GameController.Instance.StartGame(AppManager.motionMemoryHouseBuildIndex);
+        //Instantiate(motionMemoryModeMenu);
     }
 
     public void EnterTriviaQuiz()
     {
-        GameController.Instance.StartGame(0);
+        AppManager.useVirtualWorld = false;
+        GameController.Instance.StartGame(AppManager.triviaQuizBuildIndex);
 
     }
 
     public void EnterDuplik()
     {
         AppManager.useVirtualWorld = false;
-        Instantiate(duplikModeMenu);
+        GameController.Instance.StartGame(AppManager.duplikBuildIndex);
+
+        //Instantiate(duplikModeMenu);
     }
 
     public void EnterMoCapStudio()
     {
-        GameController.Instance.StartGame(1);
+        GameController.Instance.StartGame(AppManager.motionCaptureBuildIndex);
     }
 
     public void OnColorResolutionChanged(int value) => 

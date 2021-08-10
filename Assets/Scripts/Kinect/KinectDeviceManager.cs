@@ -264,10 +264,10 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                     Capture sensorCapture = device.GetCapture();
                     if (sensorCapture != null)
                     {
-                        tracker.EnqueueCapture(sensorCapture, TimeSpan.MaxValue);
+                        tracker.EnqueueCapture(sensorCapture);
                         sensorCapture.Dispose();
 
-                        bodyFrame = tracker.PopResult(TimeSpan.MaxValue);
+                        bodyFrame = tracker.PopResult();
                         if (bodyFrame != null)
                         {
                             // Successfully popped the body tracking result. Start your processing

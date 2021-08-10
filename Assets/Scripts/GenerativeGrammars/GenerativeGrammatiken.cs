@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 {
-    private const string fileName = "/Resources/MasterData.json";
+    private const string fileName = "MasterData";
     //private Vocabulary vocabulary;
     MasterDataClass masterData = new MasterDataClass();
     public List<string> recentlyUsed = new List<string>();
@@ -38,8 +38,8 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     {
         priorityKeywords = new string[] { "thing", "animal", "person"};
         string appDataPath = Application.dataPath;
-        string filePath = appDataPath + fileName;
-        if (FileManager.LoadJSON(filePath, out MasterDataClass data))
+        //string filePath = appDataPath + fileName;
+        if (FileManager.LoadJSONFromResources(fileName, out MasterDataClass data))
         {
             masterData = data;
             //Debug.Log("loading json");

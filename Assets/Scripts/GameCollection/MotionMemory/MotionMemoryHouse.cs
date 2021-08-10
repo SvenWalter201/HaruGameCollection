@@ -272,7 +272,7 @@ public class MotionMemoryHouse : Game
                 if (currentAccuracy > maxAccuracy)
                     maxAccuracy = currentAccuracy;
 
-                if (maxAccuracy > 95)
+                if (maxAccuracy > 90)
                 {
                     solved.Add(card);
                     StopCoroutine(cR);

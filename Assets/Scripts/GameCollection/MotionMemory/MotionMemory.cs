@@ -250,7 +250,7 @@ public class MotionMemory : Game
             StopShowPose(card);
 
             //Debug.Log("Acc: "+ maxAccuracy);
-            if (maxAccuracy <= 95)
+            if (maxAccuracy <= 90)
             {
                 unsolved.Add(card);
             }

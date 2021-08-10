@@ -413,7 +413,6 @@ MonoBehaviour:
   useSillouette: 1
   rootBone: {fileID: 0}
   characterRig2D: {fileID: 1704649916}
-  frame: 0
   comparePercentage: 0
 --- !u!4 &20510692
 Transform:
@@ -774,14 +773,14 @@ MonoBehaviour:
   colourImage: {fileID: 1908862186}
   depthImage: {fileID: 665841641}
   irImage: {fileID: 1137995665}
-  skeletonDisplay: {fileID: 20510691}
+  bodyDisplay: {fileID: 0}
   useAppConfig: 1
   colorResolution: 2
   imageFormat: 0
   fps: 2
   depthMode: 2
   syncronizedImagesOnly: 0
-  processingMode: 1
+  processingMode: 0
   corners: 0
   accelerometerTimestamp: 00:00:42
   accel: {x: -1.1326796, y: 0.07606189, z: -9.837001}

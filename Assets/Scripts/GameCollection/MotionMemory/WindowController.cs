@@ -45,6 +45,15 @@ public class WindowController : MonoBehaviour
 
     public void BeginShowPose(MemoryCardHouse card)
     {
+        if(card.pose == null)
+        {
+            Debug.Log("Pose = null");
+        }
+        else if(card.pose.motion == null)
+        {
+            Debug.Log("PoseMotion = null");
+
+        }
         BodyDisplay.Instance.DisplayHumanoid(card.pose.motion[0]);
         Material[] mats = mR.materials;
         mats[card.index + 1].SetInt("_ShowTex", 1);

@@ -6,12 +6,12 @@ public class AppInit : MonoBehaviour
     [SerializeField]
     bool forwardToMainScene;
 
-    const int mainMenuBuildIndex = 0, virtualWorldBuildIndex = 1;
-
     void Awake() 
     {
+
         if (AppManager.applicationInitialized)
             return;
+
 
         if(!AppManager.Initialize()){
             Debug.LogWarning("App couldn't be initialized and will now shut down");
@@ -23,13 +23,14 @@ public class AppInit : MonoBehaviour
 #endif
             
         }
+
         if (forwardToMainScene)
         {
-            bool useVirtualWorld = AppManager.useVirtualWorld;
+            bool useVirtualWorld = false;//AppManager.useVirtualWorld;
             if(useVirtualWorld)
-                SceneManager.LoadScene(virtualWorldBuildIndex, LoadSceneMode.Single);
+                SceneManager.LoadScene(AppManager.virtualWorldBuildIndex, LoadSceneMode.Single);
             else
-                SceneManager.LoadScene(mainMenuBuildIndex, LoadSceneMode.Single);
+                SceneManager.LoadScene(AppManager.mainMenuBuildIndex, LoadSceneMode.Single);
         }
     }
 }
