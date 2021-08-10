@@ -31,7 +31,9 @@ public static class FileManager
         path = path.Substring(0, path.Length - 6) + "EditableResources/" + subDirectory;
         return GetDirectoryContents(path);
 #else
-        return LoadJSON(fileName, out content);
+        string path = Application.dataPath;
+        path = path.Substring(0, path.Length - 6) + "EditableResources/" + subDirectory;
+        return GetDirectoryContents(path);
 #endif 
     }
     public static string[] GetDirectoryContents(string directory) =>
@@ -39,23 +41,38 @@ public static class FileManager
 
     public static bool LoadFromEditableResources<T>(string fileName, out T content)
     {
-#if UNITY_EDITOR
         string path = Application.dataPath;
+
+#if UNITY_EDITOR
         path = path.Substring(0, path.Length - 6) + "EditableResources/" + fileName + ".json";
         return LoadJSON(path, out content);
+
+
 #else
-        return LoadJSON(fileName, out content);
+        path += "/EditableResources/" + fileName + ".json";
+        return LoadJSON(path, out content);
 #endif 
     }
 
     public static bool SaveToEditableResources<T>(string fileName, T content)
     {
-#if UNITY_EDITOR
         string path = Application.dataPath;
-        path = path.Substring(0, path.Length - 6) + "EditableResources/" + fileName + ".json";
+
+
+#if UNITY_EDITOR
+        path = path.Substring(0, path.Length - 6) + "EditableResources";
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+
+        path += "/" + fileName + ".json";
         return SaveJSON(path, content);
 #else
+        path += "/EditableResources";
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
 
+        path += "/" + fileName + ".json";
+        return SaveJSON(path, content);
 #endif
     }
 

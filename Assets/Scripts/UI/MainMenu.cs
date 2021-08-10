@@ -98,8 +98,8 @@ public class MainMenu : MonoBehaviour
 
     public void EnterTriviaQuiz()
     {
-        AppManager.useVirtualWorld = false;
-        Instantiate(triviaQuizModeMenu);
+        GameController.Instance.StartGame(0);
+
     }
 
     public void EnterDuplik()
@@ -110,7 +110,7 @@ public class MainMenu : MonoBehaviour
 
     public void EnterMoCapStudio()
     {
-        GameController.Instance.StartGame(0);
+        GameController.Instance.StartGame(1);
     }
 
     public void OnColorResolutionChanged(int value) => 

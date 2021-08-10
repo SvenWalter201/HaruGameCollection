@@ -27,16 +27,6 @@ public static class AppManager
         vfxGraphSupported = false,
         useVirtualWorld = false;
 
-    /*
-    public static ColorResolution ColorResolution { get => appConfig.ColorResolution; set { ColorResolution = value; appConfig.ColorResolution = value; } }
-    public static ImageFormat ImageFormat { get => ImageFormat; set { ImageFormat = value; appConfig.ColorFormat = value; } }
-    public static FPS FPS { get => FPS; set { FPS = value; appConfig.Fps = value; } }
-    public static DepthMode DepthMode { get => DepthMode; set { DepthMode = value; appConfig.DepthMode = value; } }
-    public static bool SyncedImagesOnly { get => SyncedImagesOnly; set { SyncedImagesOnly = value; appConfig.SyncronizedImagesOnly = value; } }
-    public static TrackerProcessingMode ProcessingMode { get => ProcessingMode; set { ProcessingMode = value; appConfig.ProcessingMode = value; } }
-    public static Lang Language { get => Language; set { Language = value; appConfig.Language = value; } }
-    public static JointId[] jointConstraints; //{ get => jointConstraints; set { jointConstraints = value; appConfig.LimbConstraints = value; } }
-    */
     public static AppConfig AppConfig { get; private set; }
     static string appConfigPath = "AppConfig";
 
@@ -47,24 +37,27 @@ public static class AppManager
     {
         if (FileManager.LoadFromEditableResources(appConfigPath, out AppConfig appConfig))
         {
-            AppManager.AppConfig = appConfig;
+            AppConfig = appConfig;
         }
         else
         {
-            Debug.LogWarning("App Config could not be loaded.");
-            return false;
+            Debug.Log("App Config could not be loaded. Creating a new one with default settings");
+
+            
+
+            if(FileManager.SaveToEditableResources(appConfigPath, AppConfig.DefaultConfig()))
+            {
+                AppConfig = AppConfig.DefaultConfig();
+                return true;
+            }
+            else
+            {
+                Debug.Log("Couldn't create default App Config");
+                return false;
+
+            }
         }
 
-        /*
-        Language = appConfig.Language;
-        ColorResolution = appConfig.ColorResolution;
-        ImageFormat = appConfig.ColorFormat;
-        FPS = appConfig.Fps;
-        DepthMode = appConfig.DepthMode;
-        SyncedImagesOnly = appConfig.SyncronizedImagesOnly;
-        ProcessingMode = appConfig.ProcessingMode;
-        useVirtualWorld = appConfig.UseVirtualWorld;
-        */
         return true;
     }
 

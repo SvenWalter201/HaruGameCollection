@@ -11,7 +11,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     [SerializeField] 
     UnityEngine.UI.RawImage colourImage, depthImage, irImage;
 
-    public BodyDisplay skeletonDisplay;
+    public BodyDisplay bodyDisplay;
 
 
     public bool useAppConfig = false;
@@ -164,7 +164,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         if (game != null)
             game.OnGameFinished += Close;
 
-        skeletonDisplay = BodyDisplay.Instance;
+        bodyDisplay = BodyDisplay.Instance;
 
         int count = Device.GetInstalledCount();
         if (count == 0)
@@ -250,7 +250,7 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
     void BodyCapture(Tracker tracker)
     {
         Frame bodyFrame = null;
-        int btFrame = 0;
+        //int btFrame = 0;
         
         while (AppManager.bodyTrackingRunning && AppManager.applicationRunning)
         {
@@ -274,10 +274,18 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                             uint numBodies = bodyFrame.NumberOfBodies;
                             if (numBodies > 0)
                             {
-                                //Debug.Log("tracking Body");
+                                Body b = bodyFrame.GetBody(0);
 
-                                skeletonDisplay.trackedBody = bodyFrame.GetBody(0).Skeleton;
-                                skeletonDisplay.frame = btFrame;
+                                if(b.Id != Body.InvalidId)
+                                {
+                                    bodyDisplay.trackedBody = b.Skeleton;
+
+                                }
+                                else
+                                {
+                                    Debug.LogWarning("Body ID wrong");
+                                }
+
                             }
                         }
                     }

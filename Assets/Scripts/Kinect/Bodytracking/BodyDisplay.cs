@@ -31,7 +31,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
     public Skeleton trackedBody;
 
     [HideInInspector]
-    public int frame = 0, comparePercentage = -1;
+    public int comparePercentage = -1;
 
     float currentTimeStep;
     const float FPS_30_DELTA = 0.033333f; // 1/30

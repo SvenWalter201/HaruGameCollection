@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.VFX;
 using TMPro;
+using Microsoft.Azure.Kinect.BodyTracking;
 
 public class TriviaQuizLeftorRight : Game
 {
     [SerializeField]
-    TextMeshProUGUI countDownText;
+    TextMeshProUGUI countDownText, answerFeedback;
     [SerializeField]
     Image countDownMask, countDownBar, leftArrow, rightArrow, centerImg;
     [SerializeField]
@@ -49,12 +50,14 @@ public class TriviaQuizLeftorRight : Game
     
     List<QuestionCard> questions;
 
+    BodyDisplay.PositionCompare hRC;
     void Awake()
     {
         countDownBar.enabled = false;
         countDownText.text = "";
         leftArrow.enabled = false;
         rightArrow.enabled = false;
+        answerFeedback.gameObject.SetActive(false);
         centerImg.gameObject.SetActive(false);
     }
 
@@ -79,6 +82,9 @@ public class TriviaQuizLeftorRight : Game
 
 
         ToggleSlider(false);
+
+        hRC = BodyDisplay.handRaisedCompare;
+
         yield break;
     }
 
@@ -161,19 +167,57 @@ public class TriviaQuizLeftorRight : Game
                     ToggleSlider(false);
 
                     correct = (q.TrueAnswer == 0) ?
-                        playerPosition.x < 0f :
+                        playerPosition.x <= 0f :
                         playerPosition.x > 0f;
                     break;
                 }
             case AnsweringMode.RAISE_HANDS:
                 {
+                    float remainingTime = answerTime / 2f;
+                    countDownBar.enabled = true;
+                    countDownMask.gameObject.SetActive(true);
+                    while (remainingTime > 0f)
+                    {
+                        remainingTime -= Time.deltaTime;
+                        countDownMask.fillAmount = 1 - remainingTime / answerTime;
+                        countDownText.text = Mathf.RoundToInt(remainingTime).ToString();
+                        yield return null;
+                    }
+
+                    //yield return timer.UITimer(answerTime, countDownMask, countDownText);
+
+                    countDownText.text = "";
+                    countDownBar.enabled = false;
+                    countDownMask.gameObject.SetActive(false);
+
+                    bool leftHandRaised = BodyDisplay.Instance.JointCompare(JointId.Head, JointId.HandLeft, hRC);
+                    bool rightHandRaised = BodyDisplay.Instance.JointCompare(JointId.Head, JointId.HandRight, hRC);
+
+                    //Debug.Log("Left" + leftHandRaised);
+                    //Debug.Log("Right" + rightHandRaised);
+                    
+                    correct = (q.TrueAnswer == 0) ?
+                        leftHandRaised && !rightHandRaised :
+                        rightHandRaised && !leftHandRaised;
+    
                     break;
                 }
         }
 
+        answerFeedback.gameObject.SetActive(true);
+        countDownBar.gameObject.SetActive(false);
+        countDownText.gameObject.SetActive(false);
+
         if (correct)
+        {
+            answerFeedback.text = StringRes.Get("_RightAnswer");
             ConfettiBurst();
-        
+        }
+        else
+        {
+            answerFeedback.text = StringRes.Get("_WrongAnswer");
+        }
+
         for (int i = 0; i < q.Answers.Count; i++)
         {
             AnswerPanel p = panels[i];
@@ -186,6 +230,10 @@ public class TriviaQuizLeftorRight : Game
         centerImg.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(showCorrectAnswerTime);
+
+        answerFeedback.gameObject.SetActive(false);
+        countDownBar.gameObject.SetActive(true);
+        countDownText.gameObject.SetActive(true);
     }
 
     void InitQuestionUI(QuestionCard q)
