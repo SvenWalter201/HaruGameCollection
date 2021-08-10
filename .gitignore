@@ -12,7 +12,7 @@
 /[Pp]ackages/
 /[Uu]serSettings/
 /[Aa]ssets/Plugins/
-
+/[Ee]ditableResources/
 
 # ddls for kinect azure
 #/cublas64_100.dll
