@@ -89,5 +89,20 @@
   "_ReturnToMainMenu": {
     "EN": "Return to Main Menu",
     "DE": "Zurück zum Hauptmenü"
+  },
+
+  "_QuitApp": {
+    "EN": "Quit Application",
+    "DE": "Applikation verlassen"
+  },
+
+  "_Options": {
+    "EN": "Options",
+    "DE": "Optionen"
+  },
+
+  "_MoCapStudio": {
+    "EN": "Motion Capture Studio",
+    "DE": "Motion Capture Studio"
   }
 }

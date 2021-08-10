@@ -24,6 +24,19 @@ public static class FileManager
 
     }
 
+    public static string[] GetDirectoryContentsFromEditableResources(string subDirectory)
+    {
+#if UNITY_EDITOR
+        string path = Application.dataPath;
+        path = path.Substring(0, path.Length - 6) + "EditableResources/" + subDirectory;
+        return GetDirectoryContents(path);
+#else
+        return LoadJSON(fileName, out content);
+#endif 
+    }
+    public static string[] GetDirectoryContents(string directory) =>
+        Directory.GetFiles(directory);
+
     public static bool LoadFromEditableResources<T>(string fileName, out T content)
     {
 #if UNITY_EDITOR
