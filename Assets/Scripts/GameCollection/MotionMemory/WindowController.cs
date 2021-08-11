@@ -20,14 +20,19 @@ public class WindowController : MonoBehaviour
     public IEnumerator OpenWindows(int index, float time)
     {
         float remainingTime = time;
+        float iTime = 1 / time;
         WindowPair pair = windowPairs[index];
         while(remainingTime > 0f)
         {
-            pair.left.Rotate(new Vector3(0, 170f * 1/time * Time.deltaTime, 0));
-            pair.right.Rotate(new Vector3(0, -170f * 1/time * Time.deltaTime, 0));
+            pair.left.Rotate(new Vector3(0, 170f * iTime * Time.deltaTime, 0));
+            pair.right.Rotate(new Vector3(0, -170f * iTime * Time.deltaTime, 0));
             remainingTime -= Time.deltaTime;
             yield return null;
         }
+
+        pair.left.localEulerAngles = new Vector3(0, 170, 0);
+        pair.right.localEulerAngles = new Vector3(0, -170, 0);
+
     }
 
     public IEnumerator CloseWindows(int index, float time)
@@ -41,6 +46,9 @@ public class WindowController : MonoBehaviour
             remainingTime -= Time.deltaTime;
             yield return null;
         }
+
+        pair.left.localEulerAngles = new Vector3(0, 0, 0);
+        pair.right.localEulerAngles = new Vector3(0, 0, 0);
     }
 
     public void BeginShowPose(MemoryCardHouse card)

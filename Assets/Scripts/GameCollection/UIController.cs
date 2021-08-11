@@ -50,8 +50,6 @@ public class UIController : Singleton<UIController>
 
     List<Limb> constraintOptions = new List<Limb>();
 
-    //GameObject savePoseGO, bodyTrackingGO, displayGO, recordGO, saveMotionGO, frameSliderGO, playPauseButtonGO, imageDisplayGO, bodyCompareGO;
-
     public readonly ColorBlock regularButtonColors = new ColorBlock
     {
         normalColor = Color.grey,
@@ -79,17 +77,6 @@ public class UIController : Singleton<UIController>
 
     void Start()
     {
-        /*
-        bodyTrackingGO = bodyTracking.gameObject;
-        displayGO = display.gameObject;
-        recordGO = record.gameObject;
-        saveMotionGO = saveMotion.gameObject;
-        frameSliderGO = frameSlider.gameObject;
-        playPauseButtonGO = playPauseButton.gameObject;
-        savePoseGO = savePose.gameObject;
-        imageDisplayGO = imageDisplay.gameObject;
-        bodyCompareGO = bodyCompare.gameObject;
-        */
         imageTracking.onClick.AddListener(TrackImageData);
         imageTracking.colors = offStateColors;
 
@@ -111,7 +98,6 @@ public class UIController : Singleton<UIController>
 
         addLimbConstraintBtn.onClick.AddListener(AddConstraint);
 
-        //imageDisplayGO.SetActive(false);
         imageDisplay.gameObject.SetActive(false);
         record.gameObject.SetActive(false);
         frameSlider.gameObject.SetActive(false);
@@ -120,15 +106,24 @@ public class UIController : Singleton<UIController>
         savePose.gameObject.SetActive(false);
         bodyCompare.gameObject.SetActive(false);
         
-
         BodyDisplay.Instance.InitUIComponents(frameSlider, playPauseButton, compareAccuracy, smoothingFrames, bodyPosText);
 
+        FillPoseDropdown();
     }
 
     public void RemoveLimbConstraint(Limb limbConstraint)
     {
         MotionManager.Instance.loadedMotion.notInvolvedLimbs.Remove(limbConstraint);
         ReloadConstraintWindow();
+    }
+
+    void FillPoseDropdown()
+    {
+        string[] poses = FileManager.GetDirectoryContentsFromEditableResources("DefaultPoses");
+        foreach(var pose in poses)
+        {
+            //Debug.Log(pose);
+        }
     }
 
     public void ReloadConstraintWindow()
