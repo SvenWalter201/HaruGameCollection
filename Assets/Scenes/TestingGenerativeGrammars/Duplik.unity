@@ -548,7 +548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &418590389
 Transform:
   m_ObjectHideFlags: 0
@@ -2637,10 +2637,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: gras
       objectReference: {fileID: 0}
-    - target: {fileID: 7575895632087620039, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 9ee2c7d9d1dccae48bf938522f315ed5, type: 2}
     - target: {fileID: 7575895632087620041, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
       propertyPath: m_RootOrder
       value: 8
