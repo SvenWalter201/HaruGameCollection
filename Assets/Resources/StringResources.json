@@ -7,13 +7,25 @@
     "EN": "Get Ready",
     "DE": "Mach dich Bereit"
   },
+  "_Accuracy": {
+    "EN": "Accuracy",
+    "DE": "Genauigkeit"
+  },
   "_MotionGuess": {
     "EN": "Which pose is behind the marked card?",
     "DE": "Welche Pose steckt hinter der umrahmten Karte?"
   },
   "_MotionMemorize": {
-    "EN": "Memorize which pose was behind which card!",
+    "EN": "Memorize which pose is behind which card!",
     "DE": "Merke dir welche Pose hinter welcher Karte steckt!"
+  },
+  "_MotionGuessHouse": {
+    "EN": "Which pose is behind the bright window?",
+    "DE": "Welche Pose steckt hinter dem leuchtenden Fenster?"
+  },
+  "_MotionMemorizeHouse": {
+    "EN": "Memorize which pose is behind which window!",
+    "DE": "Merke dir welche Pose hinter welchem Fenster steckt!"
   },
   "_RightAnswer": {
     "EN": "Right!",

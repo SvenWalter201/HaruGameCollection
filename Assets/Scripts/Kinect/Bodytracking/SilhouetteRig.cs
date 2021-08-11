@@ -39,9 +39,10 @@ public class SilhouetteRig : MonoBehaviour
         ankleLeft = kneeLeft.GetChild(0);
     }
 
-    public void Resolve(Vector3[] positions)
+    public void Resolve(Vector3[] positions, bool lockPosition = false)
     {
-        pelvis.position = positions[(int)Pelvis];
+        if(!lockPosition)
+            pelvis.position = positions[(int)Pelvis];
 
         Rotate(pelvis, Pelvis, SpineNavel);
         Rotate(spineNaval, SpineNavel, SpineChest);

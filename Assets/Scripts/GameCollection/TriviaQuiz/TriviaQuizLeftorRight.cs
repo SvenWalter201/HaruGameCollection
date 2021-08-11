@@ -102,7 +102,7 @@ public class TriviaQuizLeftorRight : Game
 
     protected override IEnumerator Execute()
     {
-        KinectDeviceManager.Instance.BeginBodyTracking();
+        KinectDeviceManager.Instance.BeginBodyTracking(true);
 
         while (questions.Count > 0)
         {

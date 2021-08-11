@@ -11,7 +11,10 @@ public class WindowController : MonoBehaviour
     MeshFilter mF;
     MeshRenderer mR;
 
-    void Start()
+    public MeshRenderer MR => mR;
+    public int WindowAmount => windowPairs.Length;
+
+    void Awake()
     {
         mF = GetComponent<MeshFilter>();
         mR = GetComponent<MeshRenderer>();
@@ -53,6 +56,7 @@ public class WindowController : MonoBehaviour
 
     public void BeginShowPose(MemoryCardHouse card)
     {
+        /*
         if(card.pose == null)
         {
             Debug.Log("Pose = null");
@@ -61,8 +65,8 @@ public class WindowController : MonoBehaviour
         {
             Debug.Log("PoseMotion = null");
 
-        }
-        BodyDisplay.Instance.DisplayHumanoid(card.pose.motion[0]);
+        }*/
+        BodyDisplay.Instance.DisplayHumanoid(card.pose.motion[0], true);
         Material[] mats = mR.materials;
         mats[card.index + 1].SetInt("_ShowTex", 1);
         mR.materials = mats;

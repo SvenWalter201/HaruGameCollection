@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Microsoft.Azure.Kinect.Sensor;
 using Microsoft.Azure.Kinect.BodyTracking;
@@ -142,6 +143,9 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
     void Update()
     {
+        if (retry)
+            StartCoroutine(RetryOnFailure(2f));
+
         if(syncedUpdateTimer <= 0f)
         {
             syncedUpdateTimer = 0.033f;
@@ -221,14 +225,14 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         }
     }
 
-    public bool BeginBodyTracking()
+    public bool BeginBodyTracking(bool retryOnFailure = false)
     {
         if(device != null)
         {
             try
             {
                 Tracker tracker = Tracker.Create(calibration, new TrackerConfiguration { ProcessingMode = processingMode, SensorOrientation = SensorOrientation.Default});
-                Task.Run(() => BodyCapture(tracker));
+                Task.Run(() => BodyCapture(tracker, retryOnFailure));
                 AppManager.bodyTrackingRunning = true;
                 Debug.Log("Bodytracking started");
                 return true;
@@ -247,7 +251,9 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
         }
     }
 
-    void BodyCapture(Tracker tracker)
+    bool retry = false;
+
+    void BodyCapture(Tracker tracker, bool retryOnFailure = false)
     {
         Frame bodyFrame = null;
         //int btFrame = 0;
@@ -261,13 +267,13 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                     if (bodyFrame != null)
                         bodyFrame.Dispose();
 
-                    Capture sensorCapture = device.GetCapture();
+                    Capture sensorCapture = device.GetCapture(TimeSpan.MaxValue);
                     if (sensorCapture != null)
                     {
-                        tracker.EnqueueCapture(sensorCapture);
+                        tracker.EnqueueCapture(sensorCapture, TimeSpan.MaxValue);
                         sensorCapture.Dispose();
 
-                        bodyFrame = tracker.PopResult();
+                        bodyFrame = tracker.PopResult(TimeSpan.MaxValue);
                         if (bodyFrame != null)
                         {
                             // Successfully popped the body tracking result. Start your processing
@@ -298,6 +304,9 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
                         bodyFrame.Dispose();
                     tracker.Shutdown();
                     tracker.Dispose();
+
+                    if (retryOnFailure)
+                        retry = true;
                 }
             }
         }
@@ -307,8 +316,14 @@ public class KinectDeviceManager : Singleton<KinectDeviceManager>
 
         tracker.Shutdown();
         tracker.Dispose();
-    
-}
+    }
+
+    IEnumerator RetryOnFailure(float time)
+    {
+        retry = false;
+        yield return new WaitForSeconds(time);
+        BeginBodyTracking(true);
+    }
 
     void CameraCapture()
     {

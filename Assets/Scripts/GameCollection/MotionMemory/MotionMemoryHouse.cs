@@ -7,7 +7,15 @@ using UnityEngine.VFX;
 
 public class MotionMemoryHouse : Game
 {
-    const int amount = 4;
+    [SerializeField]
+    bool overrideAppConfigSettings = true;
+
+    [SerializeField]
+    int amount = 6;
+    [SerializeField]
+    HouseSize houseSize;
+    [SerializeField]
+    WindowController wc2x2, wc3x3;
 
     [SerializeField]
     bool standaloneScene;
@@ -59,15 +67,8 @@ public class MotionMemoryHouse : Game
     Image semitransparentPanel;
 
     [SerializeField]
-    MeshRenderer house;
-
-    [SerializeField]
-    GameObject houseGO;
-
-    [SerializeField]
     GameObject sceneryGO;
 
-    [SerializeField]
     WindowController windowController;
 
     [SerializeField]
@@ -78,7 +79,7 @@ public class MotionMemoryHouse : Game
 
     List<MemoryCardHouse> unsolved, solved, tempStack;
     readonly CoroutineTimer timer = new CoroutineTimer();
-    readonly string[] motions = new string[] { "w", "m", "c", "a" };
+    readonly string[] motions = new string[] { "w", "m", "c", "a", "n", "chicken" };
     MemoryCardHouse[] cards;
 
     readonly Vector3 cameraPositionOffset = new Vector3(0.3f, 8.8f, 13f);
@@ -91,12 +92,13 @@ public class MotionMemoryHouse : Game
 
     protected override IEnumerator Init()
     {
+        /*
         if (AppManager.useVirtualWorld)
         {
             cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
             cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
             mainLight.enabled = false;
-            houseGO.SetActive(false);
+            windowController.gameObject.SetActive(false);
             sceneryGO.SetActive(false);
             windowController = VirtualWorldController.Instance.windowController;
             Transform house = windowController.transform;
@@ -105,12 +107,48 @@ public class MotionMemoryHouse : Game
             yield return StartCoroutine(Tween.TweenPositionAndRotation(cam.transform, house.position + positionOffset, house.rotation * cameraRotation, 3f));
             //cam.transform.position = house.position + house.forward * 13f + house.up * 8.8f + house.right * 0.3f;
             //cam.transform.rotation = VirtualWorldController.Instance.house.rotation * Quaternion.Euler(17f, 180f, 0f);
+        }*/
+
+        if (!overrideAppConfigSettings)
+        {
+            MotionMemoryConfiguration conf = AppManager.AppConfig.MotionMemoryConfiguration;
+            houseSize = conf.HouseSize;
+            amount = conf.Amount;
+            solvePercentage = conf.SolvePercentage;
+            maxGroupSize = conf.MaxGroupSize;
+            maximumRounds = conf.MaximumRounds;
+            cardShowingTime = conf.CardShowingTime;
+            motionGuessingTime =conf.MotionGuessingTime;
+            timeBeforeMotionTracking = conf.TimeBeforeMotionTracking;
+            timeBetweenRounds = conf.TimeBetweenRounds;
+            timeBetweenShowingAndGuessing = conf.TimeBetweenShowingAndGuessing;
+            timeBetweenCardsShowing = conf.TimeBetweenCardsShowing;
+            timeBetweenCardsGuessing = conf.TimeBetweenCardsGuessing;
+        }
+
+        switch (houseSize)
+        {
+            case HouseSize.SIZE_2X2:
+                {
+                    windowController = wc2x2;
+                    wc2x2.gameObject.SetActive(true);
+                    wc3x3.gameObject.SetActive(false);
+                    break;
+                }
+            case HouseSize.SIZE_3X3:
+                {
+                    windowController = wc3x3;
+                    wc2x2.gameObject.SetActive(false);
+                    wc3x3.gameObject.SetActive(true);
+                    break;
+                }
         }
 
         //initialize UI-components
         progressBar.enabled = false;
         taskText.text = "";
         remainingTimeText.text = "";
+        comparePercentage.text = "";
 
         List<Motion> poses = GetRandomSetOfPoses();
         cards = ConstructUI(poses);
@@ -121,7 +159,7 @@ public class MotionMemoryHouse : Game
 
     protected override IEnumerator Execute()
     {
-        KinectDeviceManager.Instance.BeginBodyTracking();
+        KinectDeviceManager.Instance.BeginBodyTracking(true);
 
         memoryCanvas.SetActive(false);
         startScreen.SetActive(true);
@@ -152,7 +190,7 @@ public class MotionMemoryHouse : Game
 
             yield return CardShowingStage();
 
-            taskText.text = StringRes.Get("_MotionGuess");
+            taskText.text = StringRes.Get("_MotionGuessHouse");
 
             yield return timer.SimpleTimer(timeBetweenShowingAndGuessing);
 
@@ -164,7 +202,6 @@ public class MotionMemoryHouse : Game
             yield return timer.SimpleTimer(timeBetweenRounds);
         }
 
-        //Debug.Log("???");
         BodyDisplay.Instance.OnStopDisplay();
         taskText.text = "";
 
@@ -182,10 +219,16 @@ public class MotionMemoryHouse : Game
 
     public List<Motion> GetRandomSetOfPoses()
     {
-        if (amount - 1 > motions.Length)
+
+
+        if (amount > motions.Length)
         {
             Debug.LogWarning("there are more windows than there are available poses");
+            amount = motions.Length;
         }
+
+        if (amount > windowController.WindowAmount)
+            amount = windowController.WindowAmount;
 
         List<string> motionNames = new List<string>();
         motionNames.AddRange((string[])motions.Clone());
@@ -211,7 +254,7 @@ public class MotionMemoryHouse : Game
 
     IEnumerator CardShowingStage()
     {
-        taskText.text = StringRes.Get("_MotionMemorize");
+        taskText.text = StringRes.Get("_MotionMemorizeHouse");
 
         yield return timer.SimpleTimer(3f);
 
@@ -243,6 +286,8 @@ public class MotionMemoryHouse : Game
         }
     }
 
+    int solvePercentage = 90;
+
     IEnumerator CardGuessingPhase()
     {
         yield return timer.SimpleTimer(2f);
@@ -250,13 +295,13 @@ public class MotionMemoryHouse : Game
         int tempStackSize = tempStack.Count;
         for (int i = 0; i < tempStackSize; i++)
         {
-            taskText.text = StringRes.Get("_MotionGuess");
+            taskText.text = StringRes.Get("_MotionGuessHouse");
 
             MemoryCardHouse card = tempStack[GetRandom(tempStack.Count)];
             int maxAccuracy = 0;
             windowController.BeginOutline(card);
 
-            float remainingTime = motionGuessingTime - timeBeforeMotionTracking;
+            float remainingTime = motionGuessingTime;
             comparePercentage.text = "";
             BodyDisplay.Instance.comparePercentage = 0;
 
@@ -272,13 +317,13 @@ public class MotionMemoryHouse : Game
                 if (currentAccuracy > maxAccuracy)
                     maxAccuracy = currentAccuracy;
 
-                if (maxAccuracy > 90)
+                if (maxAccuracy > solvePercentage)
                 {
                     solved.Add(card);
                     StopCoroutine(cR);
                     break;
                 }
-                comparePercentage.text = maxAccuracy.ToString();
+                comparePercentage.text = StringRes.Get("_Accuracy") + ": " + maxAccuracy.ToString() + "%";
 
                 remainingTime -= Time.deltaTime;
                 progressBarMask.fillAmount = 1 - remainingTime / motionGuessingTime;
@@ -286,7 +331,7 @@ public class MotionMemoryHouse : Game
                 yield return null;
             }
 
-            if (maxAccuracy > 95)
+            if (maxAccuracy > solvePercentage)
             {
                 ConfettiBurst();
                 taskText.text = StringRes.Get("_RightAnswer");
@@ -313,7 +358,7 @@ public class MotionMemoryHouse : Game
 
 
             //Debug.Log("Acc: "+ maxAccuracy);
-            if (maxAccuracy <= 95)
+            if (maxAccuracy <= solvePercentage)
             {
                 unsolved.Add(card);
             }
@@ -334,7 +379,7 @@ public class MotionMemoryHouse : Game
     {
 
         MemoryCardHouse[] memory = new MemoryCardHouse[j.Count];
-        Material[] mats = house.materials;
+        Material[] mats = windowController.MR.materials;
         for (int i = 0; i < amount; i++)
         {
             MemoryCardHouse card = new MemoryCardHouse { index = i, pose = j[i], window = mat };
@@ -343,7 +388,7 @@ public class MotionMemoryHouse : Game
             mats[card.index + 1].SetTexture("_MainTex", cameraRenderTexture);
             mats[card.index + 1].SetInt("_ShowTex", 0);
         }
-        house.materials = mats;
+        windowController.MR.materials = mats;
         return memory;
     }
 
@@ -353,11 +398,10 @@ public class MotionMemoryHouse : Game
     void ConfettiBurst() =>
         e.SendEvent("TriggerBurst");
 
-    [System.Serializable]
-    public class MotionMemoryConfiguration
+    public enum HouseSize
     {
-        public WindowController windowController;
-
+        SIZE_2X2,
+        SIZE_3X3
     }
 }
 

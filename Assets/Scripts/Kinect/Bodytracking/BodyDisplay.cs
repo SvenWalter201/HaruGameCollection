@@ -478,10 +478,10 @@ public class BodyDisplay : Singleton<BodyDisplay>
         characterRig2D.Resolve(jointPositions);
     }
 
-    public void DisplayHumanoid(UJoint[] jointPositions)
+    public void DisplayHumanoid(UJoint[] jointPositions, bool lockPosition = false)
     {
         Vector3[] joints = GetPositions(jointPositions);
-        characterRig2D.Resolve(joints);
+        characterRig2D.Resolve(joints, lockPosition);
     }
 
     /*
@@ -843,7 +843,7 @@ public class BodyDisplay : Singleton<BodyDisplay>
         if (diffDistance == float.NaN || diffMirrorDistance == float.NaN)
             return 0;
 
-        Debug.Log("DiffDistance: " + diffDistance + ", DiffDistanceMirrored: " + diffMirrorDistance);
+        //Debug.Log("DiffDistance: " + diffDistance + ", DiffDistanceMirrored: " + diffMirrorDistance);
         if (diffMirrorDistance < diffDistance)
             diffDistance = diffMirrorDistance;
 
