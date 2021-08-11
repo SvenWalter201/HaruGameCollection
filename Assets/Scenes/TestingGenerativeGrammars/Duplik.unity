@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.35237876, g: 0.72419035, b: 0.95839924, a: 1}
+  m_IndirectSpecularColor: {r: 0.35258764, g: 0.72456264, b: 0.9576566, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -548,7 +548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &418590389
 Transform:
   m_ObjectHideFlags: 0
@@ -614,7 +614,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4fb4d134920307346bfbc19de9b38bf9, type: 2}
+  - {fileID: 2100000, guid: e30d92fc5f574e94581a1238a6bc2263, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2637,6 +2637,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: gras
       objectReference: {fileID: 0}
+    - target: {fileID: 7575895632087620039, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9ee2c7d9d1dccae48bf938522f315ed5, type: 2}
     - target: {fileID: 7575895632087620041, guid: 9cc748a2905c7fe4ea8a644e269ba3a9, type: 3}
       propertyPath: m_RootOrder
       value: 8
