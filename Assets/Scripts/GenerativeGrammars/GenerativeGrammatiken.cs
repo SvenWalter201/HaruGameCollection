@@ -647,7 +647,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 return "[eine @mood@ Gruppe von Wolkenkratzern,einige Wolkenkratzer, ein paar Wolkenkratzer]";
             case "Auto":
                 si.Singular = true;
-                return "ein Autounfall mit einigen Autos";
+                return "Auto";
             case "Vulkan":
                 si.Singular = true;
                 return "Vulkan";
