@@ -145,6 +145,7 @@ public static class FileManager
         return false;
     }
 
+
     public static bool LoadObject(string filePrefix, string fileName, out UnityEngine.Object o)
     {
         o = Resources.Load(filePrefix + "/" + fileName);

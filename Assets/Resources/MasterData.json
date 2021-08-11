@@ -64,7 +64,7 @@
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
-		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
 		  "moods":["deformed","colorful",""]
@@ -106,20 +106,6 @@
 		  "scalable":true,
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts"],
-		  "colours":["rot","blau","grün"],
-		  "actions":[],
-		  "moods":["deformed","colorful",""]
-		},
-		{
-		  "type":"thing",
-		  "name":"Auto",
-		  "gender":"n",
-		  "model":"car",
-		  "asset":"",
-		  "texture":"texturepath",
-		  "scalable":true,
-		  "rotatable":true,
-		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
 		  "moods":["deformed","colorful",""]
@@ -197,7 +183,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -211,7 +197,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -225,7 +211,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -239,7 +225,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":[],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -253,7 +239,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -267,7 +253,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 		{
@@ -281,7 +267,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"] 
 		},
 		{
@@ -295,7 +281,7 @@
 		  "rotatable":true,
 		  "positions":["links","vorne links","rechts","vorne rechts","im Hintergrund","hinten links","hinten rechts","unten","im Vordergund"],
 		  "colours":["rot","blau","grün"],
-		  "actions":["schlemmt","nascht","musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
+		  "actions":["musiziert","isst","überlegt","wartet","arbeitet","malt","singt","überlegt","läuft"],
 		  "moods":["bored","excited","friendly"]
 		},
 	],
@@ -432,7 +418,7 @@
 		"arbeitet": {
             "type":"verb",
 			"name":"arbeitet",
-			"model":"girl",
+			"model":"prefab_path",
 			"animation":"Walk"
         },
      },

@@ -7,6 +7,22 @@ public static class Helper
         return ReplaceBetweenTags(template, replacement, tag, tag);
     }
 
+    public static string UpperCase(string sentence)
+    {
+        if(sentence[0].Equals(" "))
+        {
+            return UpperCase(sentence.Substring(1));
+        }
+        else if (Char.IsLower(sentence[0]))
+        {
+            return  Char.ToUpper( sentence[0]) + sentence.Substring(1);
+        }
+        else
+        {
+            return sentence;
+        }
+    }
+
     public static string ReplaceBetweenTags(string template, string replacement, char leftTag, char rightTag)
     {
         int leftIndex = template.IndexOf(leftTag);

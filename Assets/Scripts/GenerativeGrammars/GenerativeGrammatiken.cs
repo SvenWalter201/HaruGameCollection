@@ -80,6 +80,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         //si.ClearInformation();
         template = GetTemplate();
         sentence = FillInTemplate(template);
+        Helper.UpperCase(sentence);
         Debug.Log(sentence);
         return si;
     }

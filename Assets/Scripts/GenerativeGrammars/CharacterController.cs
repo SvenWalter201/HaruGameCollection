@@ -55,10 +55,11 @@ public class CharacterController : MonoBehaviour
 
     public void CreateMaterial(string fileName)
     {
-        if(FileManager.LoadPNG(Application.dataPath +  "/Resources/Textures/" + fileName + ".png", out Texture2D tex))
+        //Application.dataPath +  "/Resources/
+        if (FileManager.LoadObject("Textures", fileName , out Object tex))
         {
             Material ins = Instantiate(baseMaterial);
-            ins.SetTexture("MainTexture", tex);
+            ins.SetTexture("MainTexture", (Texture2D)tex);
             
             Material[] mats = mr.materials;
             mats[1] = ins;
@@ -71,9 +72,10 @@ public class CharacterController : MonoBehaviour
         Texture2D[] textures = new Texture2D[fileNames.Length];
         for (int i = 0; i < textures.Length; i++)
         {
-            if (FileManager.LoadPNG(Application.dataPath + "/Resources/Textures/Facial/" + fileNames[i] + ".png", out Texture2D tex))
+            //Application.dataPath + "/Resources/
+            if (FileManager.LoadObject("Textures/Facial", fileNames[i], out Object tex))
             {
-                textures[i] = tex;
+                textures[i] = (Texture2D)tex;
             }
             else
             {

@@ -376,7 +376,10 @@ public class PictureGenerationManager : Game
                     break;
                 default:
                     current.GetComponent<CharacterController>().LoadAndPlay(si.Action.animation);
-                    StartCoroutine(SpawnAtEndOfFrame(si.Action.model, current, PositionAtCharacter.RIGHTHAND));
+                    if (!si.Action.model.Equals("prefab_path"))
+                    {
+                        StartCoroutine(SpawnAtEndOfFrame(si.Action.model, current, PositionAtCharacter.RIGHTHAND));
+                    }
                     break;
 
             }
