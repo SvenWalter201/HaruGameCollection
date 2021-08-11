@@ -130,7 +130,7 @@ public class PictureGenerationManager : Game
         while(maxRounds > 0)
         {
             Panel.SetActive(true);
-            Debug.Log("starting Round: " + maxRounds);
+            //Debug.Log("starting Round: " + maxRounds);
             for (int i = 0; i < MAX_SENTENCES; i++)
             {
                 PaintPicture();

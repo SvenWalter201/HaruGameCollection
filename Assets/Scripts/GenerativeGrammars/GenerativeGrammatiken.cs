@@ -81,7 +81,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         template = GetTemplate();
         sentence = FillInTemplate(template);
         Helper.UpperCase(sentence);
-        Debug.Log(sentence);
+        //Debug.Log(sentence);
         return si;
     }
 

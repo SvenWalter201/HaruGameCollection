@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7762513258020703144}
   - component: {fileID: -8552906735632001924}
   m_Layer: 0
-  m_Name: Laterne
+  m_Name: lantern
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 097dbaac12d102d4f8cd6708a3775374, type: 2}
+  - {fileID: 2100000, guid: 932237d9a1268ed4fa8123bc1311ce5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3797335158792284004}
   - component: {fileID: -3620775737285646153}
   m_Layer: 0
-  m_Name: Bush (1)
+  m_Name: bush
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6946371992469204984, guid: 872c8c8bbaf0c1c43b5173d7fb1b6df9, type: 3}
+  - {fileID: 2100000, guid: 932237d9a1268ed4fa8123bc1311ce5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

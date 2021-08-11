@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4308959263445551277}
   - component: {fileID: 9077721460433868956}
   m_Layer: 0
-  m_Name: Tree 1
+  m_Name: tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6946371992469204984, guid: a57070f0d12106c4f80f6fca29530e57, type: 3}
+  - {fileID: 2100000, guid: 932237d9a1268ed4fa8123bc1311ce5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
