@@ -1,11 +1,11 @@
 ﻿{
 	"template":[
-    "Das ganze spielt @setting@, wobei {ein} @colour@ @animal@ @position@ @action@",
+    "Das ganze spielt @setting@, wobei {ein} @colour@ @animal@ @position@ @action@.",
     "@position@ <ist> {ein} @thing@.",
 	"@linkingword@ {ein} @thing@ <ist> @position@.",
     "@linkingword@ @position@ @action@ {ein} @mood@ @person@.",
-    "{ein} @colour@ @animal@ @action@ @position@",
-	"{ein} @mood@ @person@ @action@ @position@"
+    "{ein} @colour@ @animal@ @action@ @position@.",
+	"{ein} @mood@ @person@ @action@ @position@."
     ],
 	"position": [
 	"links",
@@ -23,20 +23,20 @@
 	"Nicht zu vergessen,",
 	"Auch",
 	"",
-	"Fast vergessen, ",
+	"Fast vergessen,",
 	"Huch, was ist das denn? ",
 	"Wenn man genauer hinschaut, sieht man",
-	"Nicht zu übersehen, ",
+	"Nicht zu übersehen,",
 	"Auch im Bild ist "
 	], 
 	"setting":[
-	"in [der heutigen Zeit, der Zukunft]",
+	"in [der heutigen Zeit,der Zukunft]",
 	"auf einer schönen Wiese",
 	"in einer grünen Umgebung",
 	"bei gutem Wetter"
 	],
 	"settingdescription":[
-	"[auf einer schönen Wiese, ]",
+	"[auf einer schönen Wiese]",
 	"entgegen aller Erwartungen []",
 	"[]",
 	],
@@ -64,7 +64,7 @@
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
-		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "positions":["im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
 		  "moods":["deformed","colorful",""]
@@ -78,7 +78,7 @@
 		  "texture":"texturepath",
 		  "scalable":true,
 		  "rotatable":true,
-		  "positions":["links","rechts","im Hintergrund","hinten links","hinten rechts"],
+		  "positions":["im Hintergrund","hinten links","hinten rechts"],
 		  "colours":["rot","blau","grün"],
 		  "actions":[],
 		  "moods":["deformed","colorful",""]

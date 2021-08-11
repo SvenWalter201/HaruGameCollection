@@ -81,7 +81,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         template = GetTemplate();
         sentence = FillInTemplate(template);
         Helper.UpperCase(sentence);
-        //Debug.Log(sentence);
+        Debug.Log(sentence);
         return si;
     }
 
@@ -639,13 +639,13 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         switch (word)
         {
             case "Baum": //,einige Bäume,ein paar Bäume
-                return "[eine @mood@ Gruppe von Bäumen,einige Bäume,ein paar Bäume]";
+                return "[eine Gruppe von Bäumen,einige Bäume,ein paar Bäume]";
             case "Haus": //,einige Häuser,ein paar Häuser
-                return "[eine @mood@ Gruppe von Häusern,einige Häuser,ein paar Häuser]";
+                return "[eine Gruppe von Häusern,einige Häuser,ein paar Häuser]";
             case "Busch"://,einige Büsche,ein paar Büsche
-                return "[eine @mood@ Gruppe von Büschen,einige Büsche,ein paar Büsche]";
+                return "[eine Gruppe von Büschen,einige Büsche,ein paar Büsche]";
             case "Wolkenkratzer":
-                return "[eine @mood@ Gruppe von Wolkenkratzern,einige Wolkenkratzer, ein paar Wolkenkratzer]";
+                return "[eine Gruppe von Wolkenkratzern,einige Wolkenkratzer,ein paar Wolkenkratzer]";
             case "Auto":
                 si.Singular = true;
                 return "Auto";
@@ -653,7 +653,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
                 si.Singular = true;
                 return "Vulkan";
             default://,einige" + word + "en,ein paar " + word + "en 
-                return "[eine Gruppe von " + word + "n,einige " + word + "n, ein paar " + word + "n ]";
+                return "[eine Gruppe von " + word + "n,einige " + word + "n,ein paar " + word + "n]";
         }
     }
     #endregion

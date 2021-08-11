@@ -9,11 +9,8 @@ public static class Helper
 
     public static string UpperCase(string sentence)
     {
-        if(sentence[0].Equals(" "))
-        {
-            return UpperCase(sentence.Substring(1));
-        }
-        else if (Char.IsLower(sentence[0]))
+        sentence.Trim();
+        if (Char.IsLower(sentence[0]))
         {
             return  Char.ToUpper( sentence[0]) + sentence.Substring(1);
         }
@@ -37,7 +34,7 @@ public static class Helper
         }
         int lengthFromRightIndex = template.Length - 1 - rightIndex;
 
-        return template.Substring(0, leftIndex) + replacement + template.Substring(rightIndex + 1, lengthFromRightIndex);
+        return template.Substring(0, leftIndex) + replacement.Trim() + template.Substring(rightIndex + 1, lengthFromRightIndex);
     }
 
 
