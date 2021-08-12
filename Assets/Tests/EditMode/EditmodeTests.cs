@@ -2,9 +2,11 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using static UnityEngine.Mathf;
+using System;
 
 public class EditmodeTests
 {
+
     #region EXTENSION_TESTS
     [Test]
     public void PerpendicularVector_001()
@@ -52,8 +54,8 @@ public class EditmodeTests
         Bounds v3s_Bounds = v3s.GetBoundingBox();
 
         Assert.AreEqual(v3s_Bounds.center, new Vector3(2, 2, 2), "bounding box center test failed");
-        Assert.AreEqual(v3s_Bounds.min, new Vector3(1,1,1), "bounding box min test failed"); 
-        Assert.AreEqual(v3s_Bounds.max, new Vector3(3,3,3), "bounding box max test failed");
+        Assert.AreEqual(v3s_Bounds.min, new Vector3(1, 1, 1), "bounding box min test failed");
+        Assert.AreEqual(v3s_Bounds.max, new Vector3(3, 3, 3), "bounding box max test failed");
     }
 
     [Test]
@@ -91,7 +93,7 @@ public class EditmodeTests
     public void TestSphereIntersection_001()
     {
         Bounds b = new Bounds(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
-        Vector3 sphereCenter = new Vector3(0,0,0);
+        Vector3 sphereCenter = new Vector3(0, 0, 0);
         float sphereRadius = 1f;
         Assert.IsTrue(b.IntersectSphere(sphereCenter, sphereRadius));
         Assert.IsTrue(b.IntersectXZCircle(sphereCenter, sphereRadius));
@@ -186,6 +188,29 @@ public class EditmodeTests
         Assert.AreNotEqual(Helper.LookForPriority("Das ganze spielt @setting@, wobei {ein} @description@ Lehrer @position@ @action@", priorityKeywords), "thing");
         Assert.AreNotEqual(Helper.LookForPriority("Das ganze spielt @setting@, wobei {ein} @description@ Haus @position@ @action@", priorityKeywords), "person");
     }
+
+    [Test]
+    public void TestFirstToUppercase_001()//
+    {
+
+        Assert.AreEqual("Das ganze spielt",Helper.UpperCase("Das ganze spielt"));
+        Assert.AreEqual("Das ganze spielt", Helper.UpperCase("das ganze spielt"));
+        Assert.AreEqual("Das ganze spielt",Helper.UpperCase(" Das ganze spielt    "));
+        
+        Assert.AreEqual("Das ganze spielt",Helper.UpperCase("  das ganze spielt"));
+    }
+
+    [Test]
+    public void TestFirstToUppercase_002()//
+    {
+
+        Assert.AreNotEqual(Helper.UpperCase("Das ganze spielt"), " Daas ganze spielt");
+        Assert.AreNotEqual(Helper.UpperCase("  Das ganze spielt"), "  Das ganze spielt");
+        Assert.AreNotEqual(Helper.UpperCase("das ganze spielt"), "das ganze spielt");
+        Assert.AreNotEqual(Helper.UpperCase("  das ganze spielt"), "  das ganze spielt");
+    }
+
+
 
     #endregion
 

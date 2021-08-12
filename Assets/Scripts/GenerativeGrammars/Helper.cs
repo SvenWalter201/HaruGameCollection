@@ -9,10 +9,10 @@ public static class Helper
 
     public static string UpperCase(string sentence)
     {
-        sentence.Trim();
+        sentence = sentence.Trim();
         if (Char.IsLower(sentence[0]))
         {
-            return  Char.ToUpper( sentence[0]) + sentence.Substring(1);
+            return Char.ToUpper(sentence[0]) + sentence.Substring(1);
         }
         else
         {
