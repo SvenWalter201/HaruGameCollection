@@ -38,7 +38,7 @@ public class PictureGenerationManager : Game
     [SerializeField]
     float showingTime = 20;
     [SerializeField]
-    float maxRounds = 3;
+    int rounds = 3;
 
     [Space]
     [Header("UIElements")]
@@ -127,7 +127,8 @@ public class PictureGenerationManager : Game
 
     protected override IEnumerator Execute()
     {
-        while(maxRounds > 0)
+        int remainingRounds = rounds;
+        while(remainingRounds > 0)
         {
             Panel.SetActive(true);
             //Debug.Log("starting Round: " + maxRounds);
@@ -142,24 +143,30 @@ public class PictureGenerationManager : Game
 
             Panel.SetActive(false);
             curtain.GetComponentInChildren<CurtainOpen>().MoveCurtain();
-            maxRounds--;
+            remainingRounds--;
+
             yield return timer.SimpleTimer(showingTime);
+
+            if (remainingRounds == 0)
+                yield break;
+
             curtain.GetComponentInChildren<CurtainOpen>().MoveCurtain();
             foreach (TextMeshProUGUI t in sentenceArray)
             {
                 t.text = "";
             }
+            
             //Array.Clear(sentenceArray, 0, sentenceArray.Length);
-            Debug.Log("waiting 10 to restart");
+            //Debug.Log("waiting 10 to restart");
             yield return timer.SimpleTimer(10);
 
             foreach (GameObject presentOb in presentGameObjects)
             {
                 Destroy(presentOb);
             }
+
             presentGameObjects.Clear();
         }
-        yield break;
     }
 
 

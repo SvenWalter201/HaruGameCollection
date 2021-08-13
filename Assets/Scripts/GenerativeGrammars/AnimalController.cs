@@ -20,10 +20,10 @@ public class AnimalController : MonoBehaviour
     public void CreateColor(string fileName)
     {
         //Debug.Log(Application.dataPath + "/Resources/Textures/ColorPalettes/" + fileName + ".png");
-        if (FileManager.LoadPNG(Application.dataPath + "/Resources/Textures/ColorPalettes/" + fileName + ".png", out Texture2D tex))
+        if (FileManager.LoadObject("Textures/ColorPalettes", fileName, out Object tex))
         {
             Material ins = Instantiate(animalBaseMaterial);
-            ins.SetTexture("MainTexture", tex);
+            ins.SetTexture("MainTexture", (Texture2D)tex);
 
             Material[] mats = mr.materials;
             mats[0] = ins;

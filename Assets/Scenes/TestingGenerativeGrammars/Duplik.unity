@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.35258764, g: 0.72456264, b: 0.9576566, a: 1}
+  m_IndirectSpecularColor: {r: 0.35237876, g: 0.72419035, b: 0.95839924, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2016,9 +2016,9 @@ MonoBehaviour:
   character: {fileID: 0}
   count: 0
   radius: 1.5
-  drawingTime: 4
+  drawingTime: 60
   showingTime: 45
-  maxRounds: 1
+  rounds: 1
   Panel: {fileID: 1093716908}
   ProgressBar: {fileID: 1599325261}
   modeText: {fileID: 46120009}

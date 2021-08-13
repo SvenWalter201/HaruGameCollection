@@ -489,10 +489,10 @@ MonoBehaviour:
   question: {fileID: 1459369035}
   panel: {fileID: 6927717684915526406, guid: ad325f4f6fdb814499249cea0d3e59fd, type: 3}
   panelHolder: {fileID: 451128421}
-  questionTime: 4
-  answerTime: 10
-  showCorrectAnswerTime: 3
-  questionAmount: 4
+  questionTime: 10
+  answerTime: 15
+  showCorrectAnswerTime: 5
+  questionAmount: 10
   e: {fileID: 2047638633}
   slider: {fileID: 679233648}
   countMode: 0
