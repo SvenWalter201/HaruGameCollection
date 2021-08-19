@@ -14,6 +14,12 @@
 /[Aa]ssets/Plugins/
 /[Ee]ditableResources/
 
+# Never ignore DLLs in the FMOD subfolder, so make sure that the FMOD-folder is in the correct path.
+!/[Aa]ssets/Plugins/FMOD/**/*.dll
+
+# Don't ignore images and gizmos used by FMOD in the Unity Editor
+!/[Aa}ssets/Gizmos/FMOD/*
+!/[Aa}ssets/Editor Default Resources/FMOD/*
 
 # Ignore the FMOD Cache-file since it is updated locally either way
 /[Aa]ssets/**/FMODStudioCache.asset
