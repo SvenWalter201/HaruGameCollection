@@ -14,6 +14,21 @@
 /[Aa]ssets/Plugins/
 /[Ee]ditableResources/
 
+
+# Ignore the FMOD Cache-file since it is updated locally either way
+/[Aa]ssets/**/FMODStudioCache.asset
+/[Aa]ssets/**/FMODStudioCache.asset.meta
+/[Aa]ssets/Plugins/FMOD/Cache.meta
+/[Aa]ssets/Plugins/FMOD/Cache/Editor.meta
+
+# FMOD Log-files
+fmod.log
+fmod_editor.log
+
+# FMOD 1.10.x (Legacy)
+/Assets/FMODAssets/*
+/Assets/FMODStudioCache.meta
+
 # ddls for kinect azure
 #/cublas64_100.dll
 #/cudart64_100.dll
