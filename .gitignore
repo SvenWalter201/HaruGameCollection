@@ -4,10 +4,10 @@
 #
 
 # Never ignore DLLs in the FMOD subfolder, so make sure that the FMOD-folder is in the correct path.
-!/Assets/Plugins/FMOD/**/*.dll
+!Assets/Plugins/FMOD/**/*.dll
 
 # Don't ignore images and gizmos used by FMOD in the Unity Editor
-!/Assets/Gizmos/FMOD/*
+!Assets/Gizmos/FMOD/*
 !/Assets/Editor Default Resources/FMOD/*
 
 
