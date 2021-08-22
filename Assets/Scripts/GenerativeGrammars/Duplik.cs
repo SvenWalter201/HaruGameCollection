@@ -7,10 +7,10 @@ using TMPro;
 //using C:\Users\Ann - C\OneDrive\Desktop\UnityProject\HaruGameCollection\Assets\Scripts\LayeredDetailAssetGenerator.cs
 
 
-public class PictureGenerationManager : Game
+public class Duplik : Game
 {
-    [SerializeField] private GameObject curtain;
-    [SerializeField] private GameObject gras;
+    [SerializeField] 
+    GameObject curtain, gras;
 
 
     //component
@@ -19,7 +19,7 @@ public class PictureGenerationManager : Game
 
 
 
-    private GenerativeGrammatiken grammars;
+    GenerativeGrammatiken grammars;
     const int MAX_SENTENCES = 5;
     public SentenceInformation[] sentences = new SentenceInformation[MAX_SENTENCES];
     public int count = 0;
@@ -33,12 +33,9 @@ public class PictureGenerationManager : Game
     [Space]
     [Header("Timing")]
 
+    [Header("GAME CONFIG")]
     [SerializeField]
-    float drawingTime = 5;
-    [SerializeField]
-    float showingTime = 20;
-    [SerializeField]
-    int rounds = 3;
+    DuplikConfiguration conf;
 
     [Space]
     [Header("UIElements")]
@@ -78,8 +75,10 @@ public class PictureGenerationManager : Game
 
     TextMeshProUGUI[] sentenceArray = new TextMeshProUGUI[MAX_SENTENCES];
 
-    readonly Vector3 cameraPositionOffset = new Vector3(3.828735f, 2.408f, 10.1715f);
-    readonly Vector3 curtainPositionOffset = new Vector3(4.028f, -2.732f, 8.7115f);
+    readonly Vector3 
+        cameraPositionOffset = new Vector3(3.828735f, 2.408f, 10.1715f), 
+        curtainPositionOffset = new Vector3(4.028f, -2.732f, 8.7115f);
+
     readonly Quaternion cameraRotation = Quaternion.Euler(25f, 180f, 0f);
 
     //public SentenceInformation[] Sentences { get => sentences; set => sentences = value; }
@@ -124,10 +123,14 @@ public class PictureGenerationManager : Game
         yield break;
     }
 
+    protected override void ConfigSetup()
+    {
+        conf = AppManager.AppConfig.DuplikConfiguration.Clone() as DuplikConfiguration;
+    }
 
     protected override IEnumerator Execute()
     {
-        int remainingRounds = rounds;
+        int remainingRounds = conf.rounds;
         while(remainingRounds > 0)
         {
             Panel.SetActive(true);
@@ -137,7 +140,7 @@ public class PictureGenerationManager : Game
                 PaintPicture();
                 sentenceArray[i].text = grammars.PrintSentence();
                 progressBar.enabled = true;
-                yield return timer.UITimer(drawingTime, progressBarMask, remainingTimeText);
+                yield return timer.UITimer(conf.drawingTime, progressBarMask, remainingTimeText);
                 progressBar.enabled = false;
             }
 
@@ -145,7 +148,7 @@ public class PictureGenerationManager : Game
             curtain.GetComponentInChildren<CurtainOpen>().MoveCurtain();
             remainingRounds--;
 
-            yield return timer.SimpleTimer(showingTime);
+            yield return timer.SimpleTimer(conf.showingTime);
 
             if (remainingRounds == 0)
                 yield break;

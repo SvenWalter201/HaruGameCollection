@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class Game : MonoBehaviour
 {
+    [SerializeField]
+    protected bool useAppConfig = true;
+
     protected bool isExecuting = false;
 
     public bool IsExecuting => isExecuting;
@@ -18,9 +21,7 @@ public abstract class Game : MonoBehaviour
     public void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
-        {
             Finish();
-        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -32,13 +33,22 @@ public abstract class Game : MonoBehaviour
     IEnumerator Play()
     {
         //wait for kinect to be setup
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.01f);
+        yield return new WaitForEndOfFrame();
+
+        if (useAppConfig)
+            ConfigSetup();
 
         yield return Init();
 
         yield return Execute();
 
         Finish();
+    }
+
+    protected virtual void ConfigSetup()
+    {
+
     }
 
     protected virtual IEnumerator Init()

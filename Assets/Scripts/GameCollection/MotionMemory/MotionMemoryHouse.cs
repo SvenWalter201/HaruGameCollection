@@ -8,13 +8,6 @@ using UnityEngine.VFX;
 public class MotionMemoryHouse : Game
 {
     [SerializeField]
-    bool overrideAppConfigSettings = true;
-
-    [SerializeField]
-    int amount = 6;
-    [SerializeField]
-    HouseSize houseSize;
-    [SerializeField]
     WindowController wc2x2, wc3x3;
 
     [SerializeField]
@@ -32,19 +25,12 @@ public class MotionMemoryHouse : Game
     //how many cards get turned around after one another
     [SerializeField]
     float timeBeforeStart = 2;
-    [SerializeField]
-    int maxGroupSize = 2, maximumRounds = 3;
 
+    const float WINDOW_ANIM_TIME = 1f;
+
+    [Header("GAME CONFIG")]
     [SerializeField]
-    float
-        cardShowingTime = 3,
-        motionGuessingTime = 2,
-        timeBeforeMotionTracking = 1f,
-        timeBetweenRounds = 2f,
-        timeBetweenShowingAndGuessing = 2f,
-        timeBetweenCardsShowing = 2f,
-        timeBetweenCardsGuessing = 1f,
-        windowOpenCloseTime = 1f;
+    MotionMemoryConfiguration conf;
 
     [Space]
     [Header("UIElements")]
@@ -109,24 +95,7 @@ public class MotionMemoryHouse : Game
             //cam.transform.rotation = VirtualWorldController.Instance.house.rotation * Quaternion.Euler(17f, 180f, 0f);
         }*/
 
-        if (!overrideAppConfigSettings)
-        {
-            MotionMemoryConfiguration conf = AppManager.AppConfig.MotionMemoryConfiguration;
-            houseSize = conf.HouseSize;
-            amount = conf.Amount;
-            solvePercentage = conf.SolvePercentage;
-            maxGroupSize = conf.MaxGroupSize;
-            maximumRounds = conf.MaximumRounds;
-            cardShowingTime = conf.CardShowingTime;
-            motionGuessingTime =conf.MotionGuessingTime;
-            timeBeforeMotionTracking = conf.TimeBeforeMotionTracking;
-            timeBetweenRounds = conf.TimeBetweenRounds;
-            timeBetweenShowingAndGuessing = conf.TimeBetweenShowingAndGuessing;
-            timeBetweenCardsShowing = conf.TimeBetweenCardsShowing;
-            timeBetweenCardsGuessing = conf.TimeBetweenCardsGuessing;
-        }
-
-        switch (houseSize)
+        switch (conf.houseSize)
         {
             case HouseSize.SIZE_2X2:
                 {
@@ -157,6 +126,11 @@ public class MotionMemoryHouse : Game
         yield break;
     }
 
+    protected override void ConfigSetup()
+    {
+        conf = AppManager.AppConfig.MotionMemoryConfiguration.Clone() as MotionMemoryConfiguration;
+    }
+
     protected override IEnumerator Execute()
     {
         KinectDeviceManager.Instance.BeginBodyTracking(true);
@@ -178,7 +152,7 @@ public class MotionMemoryHouse : Game
 
         BodyDisplay.Instance.OnBeginDisplay();
 
-        int remainingRounds = maximumRounds;
+        int remainingRounds = conf.maxRounds;
 
         unsolved = new List<MemoryCardHouse>(cards);
         tempStack = new List<MemoryCardHouse>();
@@ -192,14 +166,14 @@ public class MotionMemoryHouse : Game
 
             taskText.text = StringRes.Get("_MotionGuessHouse");
 
-            yield return timer.SimpleTimer(timeBetweenShowingAndGuessing);
+            yield return timer.SimpleTimer(conf.timeBetweenShowingAndGuessing);
 
             yield return CardGuessingPhase();
 
             if (remainingRounds == 0)
                 break;
 
-            yield return timer.SimpleTimer(timeBetweenRounds);
+            yield return timer.SimpleTimer(conf.timeBetweenRounds);
         }
 
         BodyDisplay.Instance.OnStopDisplay();
@@ -219,22 +193,20 @@ public class MotionMemoryHouse : Game
 
     public List<Motion> GetRandomSetOfPoses()
     {
-
-
-        if (amount > motions.Length)
+        if (conf.amount > motions.Length)
         {
             Debug.LogWarning("there are more windows than there are available poses");
-            amount = motions.Length;
+            conf.amount = motions.Length;
         }
 
-        if (amount > windowController.WindowAmount)
-            amount = windowController.WindowAmount;
+        if (conf.amount > windowController.WindowAmount)
+            conf.amount = windowController.WindowAmount;
 
         List<string> motionNames = new List<string>();
         motionNames.AddRange((string[])motions.Clone());
 
         List<Motion> poses = new List<Motion>();
-        for (int i = 0; i < amount; i++)
+        for (int i = 0; i < conf.amount; i++)
         {
             string motionName = motionNames[GetRandom(motionNames.Count)];
             motionNames.Remove(motionName);
@@ -258,22 +230,22 @@ public class MotionMemoryHouse : Game
 
         yield return timer.SimpleTimer(3f);
 
-        yield return timer.SimpleTimer(timeBetweenCardsShowing);
+        yield return timer.SimpleTimer(conf.timeBetweenCardsShowing);
 
-        int remainingGroupSize = unsolved.Count < maxGroupSize ? unsolved.Count : maxGroupSize;
+        int remainingGroupSize = unsolved.Count < conf.maxGroupSize ? unsolved.Count : conf.maxGroupSize;
         for (int i = 0; i < remainingGroupSize; i++)
         {
             MemoryCardHouse card = unsolved[GetRandom(unsolved.Count)];
             windowController.BeginOutline(card);
             windowController.BeginShowPose(card);
 
-            yield return windowController.OpenWindows(card.index, windowOpenCloseTime);
+            yield return windowController.OpenWindows(card.index, WINDOW_ANIM_TIME);
             //wait for minimum accuracy or minimum time to pass
             
             progressBar.enabled = true;
-            yield return timer.UITimer(cardShowingTime, progressBarMask, remainingTimeText);
+            yield return timer.UITimer(conf.cardShowingTime, progressBarMask, remainingTimeText);
             progressBar.enabled = false;
-            yield return windowController.CloseWindows(card.index, windowOpenCloseTime);
+            yield return windowController.CloseWindows(card.index, WINDOW_ANIM_TIME);
             windowController.StopShowPose(card);
             windowController.StopOutline(card);
 
@@ -281,7 +253,7 @@ public class MotionMemoryHouse : Game
             unsolved.Remove(card);
             if (i < remainingGroupSize)
             {
-                yield return timer.SimpleTimer(timeBetweenCardsShowing);
+                yield return timer.SimpleTimer(conf.timeBetweenCardsShowing);
             }
         }
     }
@@ -301,11 +273,11 @@ public class MotionMemoryHouse : Game
             int maxAccuracy = 0;
             windowController.BeginOutline(card);
 
-            float remainingTime = motionGuessingTime;
+            float remainingTime = conf.motionGuessingTime;
             comparePercentage.text = "";
             BodyDisplay.Instance.comparePercentage = 0;
 
-            yield return timer.SimpleTimer(timeBeforeMotionTracking);
+            yield return timer.SimpleTimer(conf.timeBeforeMotionTracking);
 
             Coroutine cR = StartCoroutine(BodyDisplay.Instance.BodyCompareCoroutine(card.pose.motion[0], remainingTime));
 
@@ -326,7 +298,7 @@ public class MotionMemoryHouse : Game
                 comparePercentage.text = StringRes.Get("_Accuracy") + ": " + maxAccuracy.ToString() + "%";
 
                 remainingTime -= Time.deltaTime;
-                progressBarMask.fillAmount = 1 - remainingTime / motionGuessingTime;
+                progressBarMask.fillAmount = 1 - remainingTime / conf.motionGuessingTime;
                 remainingTimeText.text = Mathf.RoundToInt(remainingTime).ToString();
                 yield return null;
             }
@@ -347,11 +319,11 @@ public class MotionMemoryHouse : Game
 
             windowController.BeginShowPose(card);
 
-            yield return windowController.OpenWindows(card.index, windowOpenCloseTime);
+            yield return windowController.OpenWindows(card.index, WINDOW_ANIM_TIME);
 
-            yield return timer.SimpleTimer(cardShowingTime);
+            yield return timer.SimpleTimer(conf.cardShowingTime);
 
-            yield return windowController.CloseWindows(card.index, windowOpenCloseTime);
+            yield return windowController.CloseWindows(card.index, WINDOW_ANIM_TIME);
 
             windowController.StopShowPose(card);
             windowController.StopOutline(card);
@@ -371,7 +343,7 @@ public class MotionMemoryHouse : Game
             tempStack.Remove(card);
 
             if (i < tempStackSize)
-                yield return timer.SimpleTimer(timeBetweenCardsGuessing);
+                yield return timer.SimpleTimer(conf.timeBetweenCardsGuessing);
         }
     }
 
@@ -380,7 +352,7 @@ public class MotionMemoryHouse : Game
 
         MemoryCardHouse[] memory = new MemoryCardHouse[j.Count];
         Material[] mats = windowController.MR.materials;
-        for (int i = 0; i < amount; i++)
+        for (int i = 0; i < conf.amount; i++)
         {
             MemoryCardHouse card = new MemoryCardHouse { index = i, pose = j[i], window = mat };
             memory[i] = card;

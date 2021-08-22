@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18284112, g: 0.22601481, b: 0.29228127, a: 1}
+  m_IndirectSpecularColor: {r: 0.18284073, g: 0.22601438, b: 0.29228067, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -479,6 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cde96b5fbfdf07f4291058edebad3d4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useAppConfig: 1
   countDownText: {fileID: 1642138983}
   answerFeedback: {fileID: 2046171843}
   countDownMask: {fileID: 1674890400}
@@ -489,14 +490,16 @@ MonoBehaviour:
   question: {fileID: 1459369035}
   panel: {fileID: 6927717684915526406, guid: ad325f4f6fdb814499249cea0d3e59fd, type: 3}
   panelHolder: {fileID: 451128421}
-  questionTime: 10
-  answerTime: 15
-  showCorrectAnswerTime: 5
-  questionAmount: 10
   e: {fileID: 2047638633}
   slider: {fileID: 679233648}
+  gameConfig:
+    questionAmount: 10
+    answeringMode: 1
+    flipX: 0
+    answerTime: 15
+    questionTime: 10
+    showCorrectAnswerTime: 5
   countMode: 0
-  answeringMode: 1
 --- !u!4 &191312573
 Transform:
   m_ObjectHideFlags: 0
@@ -1609,6 +1612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6275f6c2583afba42abbf18d978ef6c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useAppConfig: 1
   countDownText: {fileID: 1642138983}
   countDownMask: {fileID: 1674890400}
   countDownBar: {fileID: 876776420}
@@ -3139,7 +3143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 959.99994, y: -977.8185}
+  m_AnchoredPosition: {x: 959.9999, y: -977.8185}
   m_SizeDelta: {x: 500, y: 105}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2046171841

@@ -19,20 +19,18 @@ public class TriviaQuizLeftorRight : Game
 
     [SerializeField]
     Transform panelHolder;
-    [SerializeField, Range(0f, 30f)]
-    float questionTime = 4f, answerTime = 10f, showCorrectAnswerTime = 3f;
-    [SerializeField]
-    int questionAmount = 2;
+
     [SerializeField]
     VisualEffect e;
     [SerializeField]
     Slider slider;
 
+    [Header("GAME CONFIG")]
     [SerializeField]
-    CountMode countMode;
+    TriviaQuizConfiguration conf;
 
     [SerializeField]
-    AnsweringMode answeringMode;
+    CountMode countMode;
 
     enum CountMode
     {
@@ -66,10 +64,15 @@ public class TriviaQuizLeftorRight : Game
         PlayGame();
     }
 
+    protected override void ConfigSetup()
+    {
+        conf = AppManager.AppConfig.TriviaQuizConfiguration.Clone() as TriviaQuizConfiguration;
+    }
+
     protected override IEnumerator Init()
     {
         //get Questionary from json
-        questions = QuestionManager.Instance.GetQuestions(questionAmount);
+        questions = QuestionManager.Instance.GetQuestions(conf.questionAmount);
 
         panels = new AnswerPanel[2];
 
@@ -130,11 +133,11 @@ public class TriviaQuizLeftorRight : Game
         q.Reshuffle();
         InitQuestionUI(q);
 
-        yield return new WaitForSeconds(questionTime);
+        yield return new WaitForSeconds(conf.questionTime);
 
         bool correct = false;
 
-        switch (answeringMode)
+        switch (conf.answeringMode)
         {
             case AnsweringMode.MOVE_X_AXIS:
                 {
@@ -142,19 +145,23 @@ public class TriviaQuizLeftorRight : Game
 
                     ToggleSlider(true);
 
-                    float remainingTime = answerTime;
+                    float remainingTime = conf.answerTime;
                     countDownBar.enabled = true;
                     countDownMask.gameObject.SetActive(true);
                     while (remainingTime > 0f)
                     {
                         playerPosition = BodyDisplay.Instance.GetBodyPosition();
                         float adjustedX = Mathf.Clamp(playerPosition.x, -1, 1f);
+
+                        if (conf.flipX)
+                            adjustedX *= -1;
+
                         adjustedX *= 0.5f;
                         adjustedX += 0.5f;
                         slider.value = adjustedX;
 
                         remainingTime -= Time.deltaTime;
-                        countDownMask.fillAmount = 1 - remainingTime / answerTime;
+                        countDownMask.fillAmount = 1 - remainingTime / conf.answerTime;
                         countDownText.text = Mathf.RoundToInt(remainingTime).ToString();
                         yield return null;
                     }
@@ -173,13 +180,13 @@ public class TriviaQuizLeftorRight : Game
                 }
             case AnsweringMode.RAISE_HANDS:
                 {
-                    float remainingTime = answerTime / 2f;
+                    float remainingTime = conf.answerTime / 2f;
                     countDownBar.enabled = true;
                     countDownMask.gameObject.SetActive(true);
                     while (remainingTime > 0f)
                     {
                         remainingTime -= Time.deltaTime;
-                        countDownMask.fillAmount = 1 - remainingTime / answerTime;
+                        countDownMask.fillAmount = 1 - remainingTime / conf.answerTime;
                         countDownText.text = Mathf.RoundToInt(remainingTime).ToString();
                         yield return null;
                     }
@@ -229,7 +236,7 @@ public class TriviaQuizLeftorRight : Game
 
         centerImg.gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(showCorrectAnswerTime);
+        yield return new WaitForSeconds(conf.showCorrectAnswerTime);
 
         answerFeedback.gameObject.SetActive(false);
         countDownBar.gameObject.SetActive(true);
