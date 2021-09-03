@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3464123894834005201}
   - component: {fileID: 3464123894834005200}
   m_Layer: 5
-  m_Name: ChooseModeMenu
+  m_Name: MotionMemory_ChooseModeMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8683f5955b12fae4a993d6bda756db43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildIndizes: 0300000006000000
+  buildIndizes: 0300000004000000
   stringRes:
   - _MotionMemoryUI
   - _MotionMemoryHouse

@@ -58,7 +58,7 @@ public class MotionMemoryHouse : Game
     WindowController windowController;
 
     [SerializeField]
-    Camera cam;
+    Camera gameCamera;
 
     [SerializeField]
     Light mainLight;
@@ -78,23 +78,7 @@ public class MotionMemoryHouse : Game
 
     protected override IEnumerator Init()
     {
-        /*
-        if (AppManager.useVirtualWorld)
-        {
-            cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
-            cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
-            mainLight.enabled = false;
-            windowController.gameObject.SetActive(false);
-            sceneryGO.SetActive(false);
-            windowController = VirtualWorldController.Instance.windowController;
-            Transform house = windowController.transform;
-
-            Vector3 positionOffset = house.right * cameraPositionOffset.x + house.up * cameraPositionOffset.y + house.forward * cameraPositionOffset.z;
-            yield return StartCoroutine(Tween.TweenPositionAndRotation(cam.transform, house.position + positionOffset, house.rotation * cameraRotation, 3f));
-            //cam.transform.position = house.position + house.forward * 13f + house.up * 8.8f + house.right * 0.3f;
-            //cam.transform.rotation = VirtualWorldController.Instance.house.rotation * Quaternion.Euler(17f, 180f, 0f);
-        }*/
-
+        //choose Window Controller
         switch (conf.houseSize)
         {
             case HouseSize.SIZE_2X2:
@@ -118,6 +102,24 @@ public class MotionMemoryHouse : Game
         taskText.text = "";
         remainingTimeText.text = "";
         comparePercentage.text = "";
+
+        if (AppManager.useVirtualWorld)
+        {
+            //Debug.Log("?");
+            Camera virtualWorldCam = GameController.Instance.mainSceneCamera;
+            mainLight.enabled = false;
+            gameCamera.enabled = false;
+
+            windowController.gameObject.SetActive(false);
+            sceneryGO.SetActive(false);
+            windowController = VirtualWorldController.Instance.windowController;
+            Transform house = windowController.transform;
+
+            Vector3 positionOffset = house.right * cameraPositionOffset.x + house.up * cameraPositionOffset.y + house.forward * cameraPositionOffset.z;
+            yield return StartCoroutine(Tween.TweenPositionAndRotation(virtualWorldCam.transform, house.position + positionOffset, house.rotation * cameraRotation, 3f));
+            //cam.transform.position = house.position + house.forward * 13f + house.up * 8.8f + house.right * 0.3f;
+            //cam.transform.rotation = VirtualWorldController.Instance.house.rotation * Quaternion.Euler(17f, 180f, 0f);
+        }
 
         List<Motion> poses = GetRandomSetOfPoses();
         cards = ConstructUI(poses);

@@ -492,7 +492,8 @@ MonoBehaviour:
   panelHolder: {fileID: 451128421}
   e: {fileID: 2047638633}
   slider: {fileID: 679233648}
-  gameConfig:
+  gameCamera: {fileID: 1552139965}
+  conf:
     questionAmount: 10
     answeringMode: 1
     flipX: 0

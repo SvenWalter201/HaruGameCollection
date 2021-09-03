@@ -10,6 +10,8 @@ public class VirtualWorldController : Singleton<VirtualWorldController>
 
     public WindowController windowController;
     public PositionController positionController;
+    public RenderTexture triviaQuizRenderTarget;
+    public Transform chalkBoard;
     public bool InputState => inputState;
 
     public void AddInputSource(InputSource source) => mainSceneInputs.Add(source);
@@ -20,5 +22,10 @@ public class VirtualWorldController : Singleton<VirtualWorldController>
             i.active = !i.active;
 
         inputState = !inputState;
+    }
+
+    void Start()
+    {
+        AppManager.useVirtualWorld = true;    
     }
 }

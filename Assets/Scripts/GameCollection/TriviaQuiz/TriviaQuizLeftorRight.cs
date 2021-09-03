@@ -25,12 +25,18 @@ public class TriviaQuizLeftorRight : Game
     [SerializeField]
     Slider slider;
 
+    [SerializeField]
+    Camera gameCamera;
+
     [Header("GAME CONFIG")]
     [SerializeField]
     TriviaQuizConfiguration conf;
 
     [SerializeField]
     CountMode countMode;
+
+    readonly Vector3 cameraPositionOffset = new Vector3(0f, 2.5f, 4.5f);
+    readonly Quaternion cameraRotation = Quaternion.Euler(0f, 180f, 0f);
 
     enum CountMode
     {
@@ -71,6 +77,8 @@ public class TriviaQuizLeftorRight : Game
 
     protected override IEnumerator Init()
     {
+
+
         //get Questionary from json
         questions = QuestionManager.Instance.GetQuestions(conf.questionAmount);
 
@@ -85,6 +93,18 @@ public class TriviaQuizLeftorRight : Game
 
 
         ToggleSlider(false);
+
+        if (AppManager.useVirtualWorld)
+        {
+            gameCamera.targetTexture = VirtualWorldController.Instance.triviaQuizRenderTarget;
+
+            Camera virtualWorldCam = GameController.Instance.mainSceneCamera;
+            //gameCamera.enabled = false;
+
+            Transform chalkBoard = VirtualWorldController.Instance.chalkBoard;
+            Vector3 positionOffset = chalkBoard.right * cameraPositionOffset.x + chalkBoard.up * cameraPositionOffset.y + chalkBoard.forward * cameraPositionOffset.z;
+            yield return StartCoroutine(Tween.TweenPositionAndRotation(virtualWorldCam.transform, chalkBoard.position + positionOffset, chalkBoard.rotation * cameraRotation, 3f));
+        }
 
         hRC = BodyDisplay.handRaisedCompare;
 

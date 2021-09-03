@@ -18,7 +18,7 @@ class QuestionManager : Singleton<QuestionManager>
         else
         {*/
             this.allQuestions = defaultCatalogue.QuestionCards.ToArray();
-            Debug.Log("1st card later: "+this.allQuestions[0].Answers[1]);
+            //Debug.Log("1st card later: "+this.allQuestions[0].Answers[1]);
         //}
     }
 

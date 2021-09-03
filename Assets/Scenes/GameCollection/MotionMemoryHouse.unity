@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571427, b: 0.30692318, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028364, g: 0.22571458, b: 0.3069237, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -395,6 +395,7 @@ MonoBehaviour:
   mainSceneEventSystem: {fileID: 0}
   mainSceneLight: {fileID: 0}
   mainSceneCamera: {fileID: 0}
+  camFollow: {fileID: 0}
 --- !u!4 &35573545
 Transform:
   m_ObjectHideFlags: 0
@@ -6511,9 +6512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 983f5d2b679a57c4e89739ee0214f44f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overrideAppConfigSettings: 0
-  amount: 8
-  houseSize: 1
+  useAppConfig: 1
   wc2x2: {fileID: 449293972}
   wc3x3: {fileID: 1158899872}
   standaloneScene: 0
@@ -6523,16 +6522,19 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 0f050a83e0bd30a40b80d8824e350ae3, type: 2}
   cameraRenderTexture: {fileID: 8400000, guid: 8ba33789c6e227d4e8f0b21a7655f99c, type: 2}
   timeBeforeStart: 5
-  maxGroupSize: 2
-  maximumRounds: 3
-  cardShowingTime: 5
-  motionGuessingTime: 15
-  timeBeforeMotionTracking: 1
-  timeBetweenRounds: 3
-  timeBetweenShowingAndGuessing: 2
-  timeBetweenCardsShowing: 2
-  timeBetweenCardsGuessing: 2
-  windowOpenCloseTime: 1
+  conf:
+    houseSize: 0
+    amount: 4
+    solvePercentage: 85
+    maxGroupSize: 2
+    maxRounds: 2
+    cardShowingTime: 5
+    motionGuessingTime: 15
+    timeBeforeMotionTracking: 1
+    timeBetweenRounds: 3
+    timeBetweenShowingAndGuessing: 3
+    timeBetweenCardsShowing: 3
+    timeBetweenCardsGuessing: 3
   taskText: {fileID: 601264485}
   remainingTimeText: {fileID: 1484551271}
   progressBar: {fileID: 1553586070}
@@ -6543,7 +6545,7 @@ MonoBehaviour:
   e: {fileID: 630459248}
   semitransparentPanel: {fileID: 1408926338}
   sceneryGO: {fileID: 1614654947}
-  cam: {fileID: 793099370}
+  gameCamera: {fileID: 793099370}
   mainLight: {fileID: 420787560}
 --- !u!4 &2102186783
 Transform:

@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8683f5955b12fae4a993d6bda756db43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildIndizes: 07000000
+  buildIndizes: 05000000
   stringRes:
   - _DuplikName
   buttonPrefab: {fileID: 4123742417755318298, guid: 3b60e02c00866e44684bfc47dfcfc2ff, type: 3}

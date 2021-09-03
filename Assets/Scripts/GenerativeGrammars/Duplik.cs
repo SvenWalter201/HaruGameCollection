@@ -58,11 +58,10 @@ public class Duplik : Game
     PositionController positionController;
 
     [SerializeField]
-    Camera cam;
-
-    [SerializeField]
     Light mainLight;
 
+    [SerializeField]
+    Camera gameCamera;
 
     //[Header("Minimum of " + MAX_SENTENCES + " sentences" )]
     [SerializeField]
@@ -92,14 +91,21 @@ public class Duplik : Game
         //get the required resources from the virtual world
         if (AppManager.useVirtualWorld)
         {
-            cam.transform.position = GameController.Instance.mainSceneCamera.transform.position;
-            cam.transform.rotation = GameController.Instance.mainSceneCamera.transform.rotation;
-            mainLight.enabled = false;
+            positionController = VirtualWorldController.Instance.positionController;
             gras.SetActive(false);
-            Debug.Log(positionController.ToString());
-            curtain.transform.position = positionController.transform.right * curtainPositionOffset.x + positionController.transform.up * curtainPositionOffset.y + positionController.transform.forward * curtainPositionOffset.z;
-            Vector3 positionOffset = positionController.transform.right * cameraPositionOffset.x + positionController.transform.up * cameraPositionOffset.y + positionController.transform.forward * cameraPositionOffset.z;
-            yield return StartCoroutine(Tween.TweenPositionAndRotation(cam.transform, positionController.transform.position + positionOffset, positionController.transform.rotation * cameraRotation, 3f));
+
+            Camera cam = GameController.Instance.mainSceneCamera;
+            gameCamera.enabled = false;
+            mainLight.enabled = false;
+            //Debug.Log(positionController.ToString());
+
+            Transform grasT = positionController.transform;
+
+            curtain.transform.position = grasT.position + grasT.right * curtainPositionOffset.x + grasT.up * curtainPositionOffset.y + grasT.forward * curtainPositionOffset.z;
+            
+            Vector3 positionOffset = grasT.right * cameraPositionOffset.x + grasT.up * cameraPositionOffset.y + grasT.forward * cameraPositionOffset.z;
+            
+            yield return StartCoroutine(Tween.TweenPositionAndRotation(cam.transform, grasT.position + positionOffset, grasT.rotation * cameraRotation, 3f));
 
         }
 

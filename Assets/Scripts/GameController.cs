@@ -16,6 +16,8 @@ public class GameController : Singleton<GameController>
     Light mainSceneLight;
     [SerializeField]
     public Camera mainSceneCamera;
+    [SerializeField]
+    public CameraFollow camFollow;
 
     Game currentGame;
 
@@ -62,7 +64,8 @@ public class GameController : Singleton<GameController>
         mainsceneCanvas.enabled = !mainsceneCanvas.enabled;
         mainSceneAudioListener.enabled = !mainSceneAudioListener.enabled;
         mainSceneEventSystem.enabled = !mainSceneEventSystem.enabled;
+        camFollow.enabled = !camFollow.enabled;
         //mainSceneLight.enabled = !mainSceneLight.enabled;
-        mainSceneCamera.enabled = !mainSceneCamera.enabled;
+        //mainSceneCamera.enabled = !mainSceneCamera.enabled;
     }
 }

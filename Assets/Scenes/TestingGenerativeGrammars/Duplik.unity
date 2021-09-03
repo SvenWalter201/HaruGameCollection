@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.35237876, g: 0.72419035, b: 0.95839924, a: 1}
+  m_IndirectSpecularColor: {r: 0.35237232, g: 0.72443175, b: 0.9583093, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1964,7 +1964,7 @@ GameObject:
   - component: {fileID: 1839415771}
   - component: {fileID: 1839415773}
   m_Layer: 0
-  m_Name: TestingGenerativeGrammars
+  m_Name: Duplik
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2011,14 +2011,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560516840cd7f0b4390dcdaf17ec6f45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useAppConfig: 0
   curtain: {fileID: 418590388}
   gras: {fileID: 2073647301}
   character: {fileID: 0}
   count: 0
   radius: 1.5
-  drawingTime: 60
-  showingTime: 45
-  rounds: 1
+  conf:
+    sentenceAmount: 5
+    rounds: 1
+    drawingTime: 3
+    showingTime: 5
   Panel: {fileID: 1093716908}
   ProgressBar: {fileID: 1599325261}
   modeText: {fileID: 46120009}
@@ -2026,8 +2029,8 @@ MonoBehaviour:
   progressBar: {fileID: 1596478515}
   progressBarMask: {fileID: 1065039387}
   positionController: {fileID: 2073647302}
-  cam: {fileID: 1534429224}
   mainLight: {fileID: 857919492}
+  gameCamera: {fileID: 1534429224}
   sentence1: {fileID: 2145589363}
   sentence2: {fileID: 2031971402}
   sentence3: {fileID: 1041544643}
