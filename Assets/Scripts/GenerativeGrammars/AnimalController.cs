@@ -16,7 +16,10 @@ public class AnimalController : MonoBehaviour
         //CreateMaterial("ConstructionWorker");
     }
 
-
+    /// <summary>
+    /// loading the correct colourpaltte from resources
+    /// </summary>
+    /// <param name="fileName"> The <see cref="System.String"/> instance that represents the colourinformation </param>
     public void CreateColor(string fileName)
     {
         //Debug.Log(Application.dataPath + "/Resources/Textures/ColorPalettes/" + fileName + ".png");

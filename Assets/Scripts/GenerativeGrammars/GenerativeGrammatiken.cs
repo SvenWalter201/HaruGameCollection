@@ -86,8 +86,12 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     }
 
     public string PrintSentence() => sentence;
-    
 
+    /// <summary>
+    /// Creating a sentence by filling in a template with vocabulary from MasterData.json. working recursivley.
+    /// </summary>
+    /// <param name="template"> template which will be filled in</param>
+    /// <returns> <see cref="System.String"/> instance of the template partially or fully filled in </returns>
     public string FillInTemplate(string template)
     {
         if (template.Contains("@"))
@@ -186,6 +190,12 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     #region GENERATORS
     //------------------GENERATORS-------------------------
 
+    /// <summary>
+    /// resolving the correct gender grammar and returning the corrected adjective form
+    /// </summary>
+    /// <param name="adjective"></param>
+    /// <param name="gender"></param>
+    /// <returns> grammarly correct adjective</returns>
     private string GetCorrectKonjugationAdjective(string adjective, char gender)
     {
         switch (gender)
@@ -201,6 +211,10 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
     }
 
+    /// <summary>
+    /// randomly selecting a "person" object from all persons of MasterData.json
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of person </returns>
     private string GetPerson()
     {
         //avoid duplicates
@@ -227,7 +241,10 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return _persons[r].name;
     }
 
-
+    /// <summary>
+    /// randomly selecting a "animal" object from all animals of MasterData.json
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of animal </returns>
     private string GetAnimal()
     {
         //avoid duplicates
@@ -254,7 +271,10 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return _animals[r].name;
     }
 
-
+    /// <summary>
+    /// randomly selecting a "thing" object from all things of MasterData.json
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of thing </returns>
     private string GetThing()
     {
         //avoid duplicates
@@ -280,13 +300,22 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return _things[r].name;
     }
 
-    //returns GENDER, adding gender to sentenceStructrue
-    private char GetGender(int r)
+    /// <summary>
+    /// getting the gender of the current person,thing or animal
+    /// </summary>
+    /// <param name="r"></param>
+    /// <returns> <see cref="System.Char"/> instance of gender of the current person </returns>
+    private char GetGender()
     {
 
         return currentperson.gender;
     }
 
+    /// <summary>
+    /// randomly selecting a position for current object according to possible possitoins
+    /// of current object specified in the MasterData.json file
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of position </returns>
     private string GetPosition()
     {
 
@@ -320,6 +349,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return currentperson.positions[r];
     }
 
+    /// <summary>
+    /// randomly selecting a template for current sentence according to possible templates
+    /// specified in the MasterData.json file
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of template </returns>
     private string GetTemplate()
     {
 
@@ -339,6 +373,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     }
 
+    /// <summary>
+    /// randomly selecting a mood for current object according to possible moods
+    /// of current object specified in the MasterData.json file
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of mood </returns>
     private string GetMood()
     {
 
@@ -366,15 +405,7 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
                 si.Mood = masterData.moods[currentperson.moods[r]];
             }
-        }  
-        /*
-        WAS MACH ICH HIER WARUM????
-        //find correct adjective and insert in sentence
-        if (si.Mood != default)
-        {
-            return currentperson.moods[r];
-        }
-        */
+        } 
 
         if (si.Singular == true)
         {
@@ -397,8 +428,12 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
             return ""; //masterData.moods[currentperson.moods[r]].translation[1];
         }
     }
-        
 
+    /// <summary>
+    /// randomly selecting a action for current object according to possible actions
+    /// of current object specified in the MasterData.json file
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of action </returns>
     private string GetAction()
     {
 
@@ -434,6 +469,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         }
     }
 
+    /// <summary>
+    /// randomly selecting a linkingword according to possible linkingwords
+    /// specified in the MasterData.json file
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of linkingword </returns>
     private string GetLinkingword()
     {
         //avoid duplicates
@@ -457,6 +497,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     }
 
+    /// <summary>
+    /// randomly selecting a setting according to possible settings
+    /// specified in the MasterData.json file
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of setting </returns>
     private string GetSetting()
     {
         //avoid duplicates
@@ -480,6 +525,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
     }
 
 
+    /// <summary>
+    /// randomly selecting a colour for current object according to possible colours
+    /// of current object specified in the MasterData.json file
+    /// </summary>
+    /// <returns> <see cref="System.String"/> instance of colour </returns>
     private string GetColour()
     {
         //avoid duplicates
@@ -527,7 +577,10 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
 
     #region UTILITY
     //-------------------------------------UTILITY------------------------------------------
-    
+
+    /// <summary>
+    /// probability distribution
+    /// </summary>
     private void GetProbability()
     {
         //50/50 chance for plural or singular
@@ -539,12 +592,19 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         else probability = false;
     }
 
-
+    /// <summary>
+    /// clearing the global recentlyUsed list of gameobjects painted in the picture
+    /// </summary>
     public void ClearRecentlyUsed()
     {
         recentlyUsed.Clear();
     }
 
+    /// <summary>
+    /// resolving options in "[]" if the are seperated by ","
+    /// </summary>
+    /// <param name="text">options to choose from in "[]" seperated by ","</param>
+    /// <returns> <see cref="System.String"/> instance of chosen option </returns>
     public string resolveOptions(string text)
     {
         if (text.Contains("["))
@@ -558,12 +618,22 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return text;
     }
 
+    /// <summary>
+    /// choosing a random item from a string array
+    /// </summary>
+    /// <param name="list"> <see cref="System.Array"/> containing <see cref="System.String"/></param>
+    /// <returns> <see cref="System.String"/> instance of chosen item </returns>
     public string pickRandomFromList(string[] list)
     {
         int random_index = UnityEngine.Random.Range(0, list.Length);
         return list[random_index];
     }
 
+    /// <summary>
+    /// resolving correct verb form of to be according to grammar
+    /// </summary>
+    /// <param name="text"> <see cref="System.String"/> instance of sentence possibly containing "<>"</param>
+    /// <returns><see cref="System.String"/> instance of correct verbform of to be</returns>
     private string ResolveVerb(string text)
     {
         string verbform;
@@ -591,6 +661,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         return text;
     }
 
+    /// <summary>
+    /// resolving correct undefined article in a sentence containing "{}" at the position of an undefined article"
+    /// </summary>
+    /// <param name="text"> <see cref="System.String"/> of the sentence possibly containing "{}" </param>
+    /// <returns> <see cref="System.String"/> of correct undefined article </returns>
     private string ResolveUndefinedArticle(string text)
     {
         string article = "";
@@ -633,6 +708,11 @@ public class GenerativeGrammatiken : Singleton<GenerativeGrammatiken>
         else return text;
     }
 
+    /// <summary>
+    /// correct pluralization of certain words not following the normal pluralization pattern
+    /// </summary>
+    /// <param name="word"></param>
+    /// <returns> <see cref="System.String"/> of sentence with correct pluralized word from</returns>
     public string pluralize(string word)
     {
         si.Singular = false;

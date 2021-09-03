@@ -181,7 +181,9 @@ public class Duplik : Game
 
 
 
-   
+   /// <summary>
+   /// Is painting one object given by the gramar into the whole picture
+   /// </summary>
     public void PaintPicture()
     {
         SentenceInformation si = grammars.GenerateSentence();
@@ -212,6 +214,13 @@ public class Duplik : Game
 
     }
 
+    /// <summary>
+    /// spawning the given object by the information given in the string in the MasterData.json file, adding position and rotation
+    /// </summary>
+    /// <param name="placableObject"> the <see cref="System.String"/> instance that represents the name of the object supposed to spawn</param>
+    /// <param name="p"> <see cref="UnityEngine.Vector3"/> for the position</param>
+    /// <param name="q"> <see cref="UnityEngine.Vector3"/> for the rotation</param>
+    /// <returns> <see cref="UnityEngine.GameObject"/> instance of the object to be spawn </returns>
     private GameObject SpawnObject(string placableObject, Vector3 p, Quaternion q)
     {
         if(FileManager.LoadObject("Prefabs",placableObject,out UnityEngine.Object o))
@@ -226,7 +235,11 @@ public class Duplik : Game
 
     }
 
-    //retruns true if collides, retuns false if spot is free for other object
+    /// <summary>
+    /// retruns true if collides, retuns false if spot is free for other object
+    /// </summary>
+    /// <param name="b"></param>
+    /// <returns> <see cref="System.Boolean"/> whether the object can spawn at this position or not </returns>
     public bool ValidateSpawn(Bounds b)
     {
         for (int j = 0; j < colliderBounds.Count; j++)
@@ -240,7 +253,11 @@ public class Duplik : Game
     }
 
 
-    //seting location, scale and rotaion
+    /// <summary>
+    /// seting location, scale and rotaion by sentenceinformationobject
+    /// </summary>
+    /// <param name="si"> Sentenceinformationobject from grammar generation </param>
+    /// <returns> <see cref="System.Boolean"/> whether object could be placed or not</returns>
     private bool PlaceObjectAt(SentenceInformation si)
     {
         placed = false;
@@ -351,6 +368,10 @@ public class Duplik : Game
         return placed;
     }
 
+    /// <summary>
+    /// setting action (verb) of a "person" object according to sentenceinformation
+    /// </summary>
+    /// <param name="si"> Sentenceinformationobject from grammar generation </param>
     private void ChangeActionTo(SentenceInformation si)
     {
         //_renderHead = current.GetComponent<MeshRenderer>();
@@ -403,6 +424,11 @@ public class Duplik : Game
 
     }
 
+    /// <summary>
+    /// setting the assets of a "person" object to depict the type of person according to sentenceinformation. Information 
+    /// of related asset from MasterData.json file
+    /// </summary>
+    /// <param name="si"> Sentenceinformationobject from grammar generation </param>
     public void ChangePersonTo(SentenceInformation si)
     {
         if (current.TryGetComponent<AssetHolder>(out AssetHolder ah))
@@ -423,6 +449,10 @@ public class Duplik : Game
 
     }
 
+    /// <summary>
+    /// setting the color of a "animal" object according to sentenceinformation
+    /// </summary>
+    /// <param name="si"> Sentenceinformationobject from grammar generation </param>
     public void ChangeColorTo(SentenceInformation si)
     {
         if (current.TryGetComponent<AnimalController>(out AnimalController ac))
@@ -431,7 +461,10 @@ public class Duplik : Game
         }
     }
 
-
+    /// <summary>
+    /// setting the facial texture of a "person" object according to sentenceinformation to depict the specified mood
+    /// </summary>
+    /// <param name="si"> Sentenceinformationobject from grammar generation </param>
     public void ChangeMoodTo(SentenceInformation si)
     {
         if(si.Subject.type == "person")
