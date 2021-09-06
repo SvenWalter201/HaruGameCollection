@@ -53,6 +53,10 @@ public class CharacterController : MonoBehaviour
 
     #endregion ANIM
 
+    /// <summary>
+    /// loading the correct clothingmaterial from resources
+    /// </summary>
+    /// <param name="fileName">  The <see cref="System.String"/> instance that represents the clothingmaterial </param>
     public void CreateMaterial(string fileName)
     {
         //Application.dataPath +  "/Resources/
@@ -67,6 +71,10 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// loading the correct facial material from resources
+    /// </summary>
+    /// <param name="fileNames"> The <see cref="System.String"/> instance that represents the facial material/ mood </param>
     public void CreateFaceMaterial(string[] fileNames)
     {
         Texture2D[] textures = new Texture2D[fileNames.Length];

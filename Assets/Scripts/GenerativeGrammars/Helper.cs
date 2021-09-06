@@ -93,6 +93,12 @@ public static class Helper
         return text.Substring(beginIndex, endIndex - beginIndex).Trim();
     }
 
+    /// <summary>
+    /// looking and returning words from a sentence according to prioritylist
+    /// </summary>
+    /// <param name="text"> sentence/ template</param>
+    /// <param name="prioKeywords"> <see cref="System.Array"/> list of <see cref="System.String"/> containing priority keywords </param>
+    /// <returns> if present in the sentence, returning a word from the priority keywords list. otherwise the next word between "@"</returns>
     public static string LookForPriority(string text, string[] prioKeywords)
     {
         for (int i = 0; i < prioKeywords.Length; i++)
@@ -107,14 +113,5 @@ public static class Helper
             }
         }
         return Helper.FindTextBetween(text, '@');
-    }
-
-    /*retrun
-     * index of second time a char "tag" is seen in string "text"
-     */
-    static int SubstringOfSecond(string text, char tag)
-    {
-        int first = text.IndexOf(tag);
-        return text.Substring(first).IndexOf('@');
     }
 }
