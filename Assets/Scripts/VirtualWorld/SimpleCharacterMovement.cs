@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+
 public class SimpleCharacterMovement : InputSource
 {
     [SerializeField, Range(0f,100f)]
