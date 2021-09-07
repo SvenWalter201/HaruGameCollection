@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/GameCollection/MotionMemoryHouse.unity
     guid: 456302ff75d519f41a1fe785e3a51a73
   - enabled: 1
-    path: Assets/Scenes/TestingGenerativeGrammars/duplik.unity
+    path: Assets/Scenes/GameCollection/Duplik.unity
     guid: 11c3a1d889c0bcf4da5dce981f2b2060
   - enabled: 1
     path: Assets/Scenes/GameCollection/TriviaQuiz.unity

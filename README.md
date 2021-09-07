@@ -34,3 +34,8 @@ Press Play and click on the buttons for Image Tracking and Body Tracking.
 
 
 If you want to make a standalone Build you need to move the dlls from the RootExeFolder to the root folder of the build (The folder containing the .exe file) 
+
+
+## Working on the project
+
+A detailed explanation of how to navigate and add more content to the project can be found in `HOWTO.md` file located at the project root.

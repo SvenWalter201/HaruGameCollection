@@ -65,7 +65,7 @@ public class MotionMemoryHouse : Game
 
     List<MemoryCardHouse> unsolved, solved, tempStack;
     readonly CoroutineTimer timer = new CoroutineTimer();
-    readonly string[] motions = new string[] { "w", "m", "c", "a", "n", "chicken" };
+    readonly string[] motions = new string[] { "egyptianLeft", "m", "c", "a", "n", "chicken" };
     MemoryCardHouse[] cards;
 
     readonly Vector3 cameraPositionOffset = new Vector3(0.3f, 8.8f, 13f);
