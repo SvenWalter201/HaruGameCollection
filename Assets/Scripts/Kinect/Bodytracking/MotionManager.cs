@@ -33,27 +33,36 @@ public class MotionManager : Singleton<MotionManager>
 
     public void SaveMotion(string fileName)
     {
-        Motion motion = new Motion
+        if(FileManager.LoadJSONFromResources("DefaultPoses/" + fileName, out Motion m))
         {
-            fps = 30,
-            motion = currentMotion
-        };
+            Debug.LogWarning("The motion/pose you want to save has the same name as one of the default poses. Therefore it was not saved. Please retry with a different name!");
+            return;
+        }
 
         string path = Application.persistentDataPath + "/" + fileName + ".json";
-
         FileManager.SaveJSON(path, loadedMotion);
     }
 
     public Motion Load(string fileName)
     {
-        string path = Application.persistentDataPath + "/" + fileName + ".json";
-
-        if (FileManager.LoadJSON(path, out Motion motion))
+        Motion motion;
+        if (FileManager.LoadJSONFromResources("DefaultPoses/" + fileName, out motion))
         {
             loadedMotion = motion;
             AppManager.motionLoaded = true;
             return motion;
         }
+
+
+        string path = Application.persistentDataPath + "/" + fileName + ".json";
+
+        if (FileManager.LoadJSON(path, out motion))
+        {
+            loadedMotion = motion;
+            AppManager.motionLoaded = true;
+            return motion;
+        }
+
         AppManager.motionLoaded = false;
         return null;
     }

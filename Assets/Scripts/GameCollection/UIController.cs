@@ -275,7 +275,7 @@ public class UIController : Singleton<UIController>
 
     void CheckMotionLoaded(Motion motion)
     {
-        if (!AppManager.motionLoaded)
+        if (motion.motion == null)
         {
             bodyCompare.gameObject.SetActive(false);
             Debug.Log("couldn't load motion. File either doesn't exist or is broken");
